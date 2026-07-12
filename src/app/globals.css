@@ -1,0 +1,582 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════════════
+   JAPANESE-INSPIRED CORPORATE THEME  —  和 (Wa)
+   Shibui · Kanso · Ma · Seijaku
+   Clean, white, green primary, professional
+   ═══════════════════════════════════════════════════════════ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* === BACKGROUND === */
+  --background: #ffffff;
+  --foreground: #333333;
+
+  /* === CARD === */
+  --card: #ffffff;
+  --card-foreground: #333333;
+  --popover: #ffffff;
+  --popover-foreground: #333333;
+
+  /* === PRIMARY (Green #00a651) === */
+  --primary: #00a651;
+  --primary-foreground: #ffffff;
+
+  /* === SECONDARY === */
+  --secondary: #f0f0f0;
+  --secondary-foreground: #333333;
+
+  /* === MUTED === */
+  --muted: #f8f8f8;
+  --muted-foreground: #666666;
+
+  /* === ACCENT === */
+  --accent: #f5f5f5;
+  --accent-foreground: #333333;
+
+  /* === DESTRUCTIVE === */
+  --destructive: #dc2626;
+
+  /* === BORDERS & INPUTS === */
+  --border: #e8e8e8;
+  --input: #f5f5f5;
+  --ring: #00a651;
+
+  /* === CHART COLORS === */
+  --chart-1: #00a651;
+  --chart-2: #3b82f6;
+  --chart-3: #f59e0b;
+  --chart-4: #8b5cf6;
+  --chart-5: #ef4444;
+
+  /* === SIDEBAR === */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #666666;
+  --sidebar-primary: #00a651;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f7f3;
+  --sidebar-accent-foreground: #00a651;
+  --sidebar-border: #e8e8e8;
+  --sidebar-ring: #00a651;
+
+  /* === CUSTOM TOKENS === */
+  --green-primary: #00a651;
+  --green-dark: #008a40;
+  --green-light: #e8f5ee;
+  --green-hover: #009a4a;
+
+  --text-heading: #333333;
+  --text-body: #666666;
+  --text-muted-c: #999999;
+  --text-link: #00a651;
+
+  --border-light: #eeeeee;
+  --border-jp: #d4d4d4;
+  --bg-section: #fafafa;
+  --bg-input: #f5f5f5;
+
+  /* Japanese-inspired shadows — softer, more diffused */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.07);
+  --shadow-card-hover: 0 3px 16px rgba(0, 0, 0, 0.08);
+  --shadow-nav: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   JAPANESE ORNAMENTAL PATTERNS  —  和紋 (Wamon)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Seigaiha (青海波) — Wave pattern */
+.jp-seigaiha-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 C10 5, 20 5, 30 15 C40 25, 50 25, 60 15' fill='none' stroke='%2300a651' stroke-width='0.5' opacity='0.15'/%3E%3Cpath d='M0 25 C10 15, 20 15, 30 25 C40 35, 50 35, 60 25' fill='none' stroke='%2300a651' stroke-width='0.5' opacity='0.10'/%3E%3Cpath d='M0 5 C10 -5, 20 -5, 30 5 C40 15, 50 15, 60 5' fill='none' stroke='%2300a651' stroke-width='0.5' opacity='0.10'/%3E%3C/svg%3E");
+  background-size: 60px 30px;
+}
+
+/* Asanoha (麻の葉) — Hemp leaf geometric pattern */
+.jp-asanoha-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='56' height='100' viewBox='0 0 56 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28 66L0 50L28 34L56 50L28 66Z' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M28 34L0 18L28 2L56 18L28 34Z' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M28 98L0 82L28 66L56 82L28 98Z' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M14 83L28 74L42 83L28 92L14 83Z' fill='none' stroke='%2300a651' stroke-width='0.3' opacity='0.06'/%3E%3Cpath d='M14 49L28 40L42 49L28 58L14 49Z' fill='none' stroke='%2300a651' stroke-width='0.3' opacity='0.06'/%3E%3Cpath d='M14 15L28 6L42 15L28 24L14 15Z' fill='none' stroke='%2300a651' stroke-width='0.3' opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+}
+
+/* Washi (和紙) — Subtle Japanese paper texture */
+.jp-washi-bg {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(0, 166, 81, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 166, 81, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(0, 166, 81, 0.03) 0%, transparent 50%);
+}
+
+/* Shippou (七宝) — Seven treasures interlocking circles */
+.jp-shippou-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='0' cy='20' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='40' cy='20' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='20' cy='0' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='20' cy='40' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   JAPANESE ORNAMENTAL ELEMENTS  —  装飾 (Sōshoku)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Ornamental line — refined horizontal divider */
+.jp-ornament-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 20px;
+}
+.jp-ornament-line::before,
+.jp-ornament-line::after {
+  content: '';
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #d4d4d4, transparent);
+}
+
+/* Ornamental diamond — three dots divider */
+.jp-ornament-diamond {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 20px;
+}
+.jp-ornament-diamond::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: #00a651;
+  transform: rotate(45deg);
+  opacity: 0.4;
+}
+.jp-ornament-diamond::after {
+  content: '';
+  width: 3px;
+  height: 3px;
+  background: #00a651;
+  transform: rotate(45deg);
+  opacity: 0.25;
+}
+
+/* Corner accents — subtle L-shaped decorations */
+.jp-corner-accents {
+  position: relative;
+}
+.jp-corner-accents::before,
+.jp-corner-accents::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  opacity: 0.25;
+}
+.jp-corner-accents::before {
+  top: 8px;
+  left: 8px;
+  border-top: 1.5px solid #00a651;
+  border-left: 1.5px solid #00a651;
+}
+.jp-corner-accents::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 1.5px solid #00a651;
+  border-right: 1.5px solid #00a651;
+}
+
+/* Simple accent line — thin colored bar */
+.jp-simple-line {
+  height: 3px;
+  width: 40px;
+  border-radius: 2px;
+  background: #00a651;
+}
+
+/* Section separator — elegant Japanese divider */
+.jp-section-sep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+.jp-section-sep::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e0e0e0);
+}
+.jp-section-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to left, transparent, #e0e0e0);
+}
+.jp-section-sep-icon {
+  width: 8px;
+  height: 8px;
+  background: #00a651;
+  transform: rotate(45deg);
+  opacity: 0.35;
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Primary button */
+.btn-primary {
+  background: var(--green-primary);
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--green-dark);
+  box-shadow: 0 2px 12px rgba(0, 166, 81, 0.2);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background: transparent;
+  color: #333333;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #fafafa;
+  border-color: #d0d0d0;
+}
+
+/* Card component — Shibui: understated elegance */
+.corp-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+  overflow: hidden;
+}
+
+.corp-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: #d4d4d4;
+}
+
+/* Navigation bar — refined, minimal */
+.corp-nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Sidebar */
+.corp-sidebar {
+  background: #ffffff;
+  border-right: 1px solid var(--border-light);
+}
+
+/* Input — clean, refined focus */
+.corp-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #333333;
+  transition: all 0.3s ease;
+}
+
+.corp-input:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.08);
+  outline: none;
+  background: #ffffff;
+}
+
+.corp-input::placeholder {
+  color: #aaaaaa;
+  letter-spacing: 0.01em;
+}
+
+/* Section background — subtle warmth */
+.section-gray {
+  background: var(--bg-section);
+}
+
+/* Section heading — Kanso: clean, bold */
+.section-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: #333333;
+  letter-spacing: 0.02em;
+}
+
+.section-subheading {
+  font-size: 14px;
+  color: #999999;
+  margin-top: 8px;
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR  —  Minimal & Refined
+   ═══════════════════════════════════════════════════════════ */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d8d8d8;
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #c0c0c0;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e8e8e8;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d0d0d0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS  —  Subtle & Flowing (no bounce)
+   ═══════════════════════════════════════════════════════════ */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #f5f5f5 0%, #fafafa 50%, #f5f5f5 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0.08s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.16s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.24s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.32s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.40s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.48s; }
+
+/* Step number — refined circle */
+.step-num {
+  width: 36px;
+  height: 36px;
+  background: #00a651;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 166, 81, 0.2);
+}
+
+/* Connecting line — thinner */
+.connecting-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+}
+
+/* Divider — refined */
+.corp-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+  border: none;
+}
+
+/* Product card category tints — neutral elegant */
+.cat-tint-tumbler { background: #f5f7f5; }
+.cat-tint-plakat { background: #f8f7f3; }
+.cat-tint-lanyard { background: #f5f6f8; }
+.cat-tint-hardbox { background: #f7f5f8; }
+.cat-tint-goodie_bag { background: #f5f8f7; }
+.cat-tint-starter_kit { background: #f7f5f5; }
+
+/* KPI icon backgrounds — softer */
+.kpi-icon-green { background: #eef7f1; color: #00a651; }
+.kpi-icon-blue { background: #eff3f8; color: #3b82f6; }
+.kpi-icon-amber { background: #f8f5ee; color: #f59e0b; }
+.kpi-icon-rose { background: #f8f0f0; color: #ef4444; }
+
+/* Tag badges */
+.tag-green { background: #eef7f1; color: #008a40; }
+.tag-blue { background: #eff3f8; color: #2563eb; }
+.tag-amber { background: #f8f5ee; color: #d97706; }
+.tag-red { background: #f8f0f0; color: #dc2626; }
+.tag-purple { background: #f3f2f7; color: #7c3aed; }
+.tag-gray { background: #f5f5f5; color: #6b7280; }
+
+/* Table style */
+.corp-table {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   JAPANESE SECTION HEADER COMPONENT
+   ═══════════════════════════════════════════════════════════ */
+
+.jp-section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.jp-section-header .jp-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #00a651;
+  padding: 4px 14px;
+  border: 1px solid rgba(0, 166, 81, 0.2);
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+.jp-section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #333333;
+  letter-spacing: 0.02em;
+}
+
+.jp-section-header p {
+  font-size: 14px;
+  color: #999999;
+  margin-top: 8px;
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NO-SCROLLBAR UTILITY
+   ═══════════════════════════════════════════════════════════ */
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

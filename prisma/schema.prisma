@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "sqlite"
+  url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         String   @default("staff") // super_admin | staff
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  sessions  Session[]
+  quotes    Quote[]
+  documents Document[]
+  inventoryTransactions InventoryTransaction[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Client {
+  id           String   @id @default(cuid())
+  companyName  String
+  npwp         String?
+  alamat       String?
+  kota         String?
+  picName      String
+  picTitle     String?
+  whatsapp     String
+  email        String
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  quotes  Quote[]
+  orders  Order[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  category    String   // tumbler | plakat | lanyard | hardbox | goodie_bag
+  description String?
+  specs       String?  // JSON string
+  basePrice   Float    @default(0)
+  unit        String   @default("pcs")
+  minQty      Int      @default(1)
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images       ProductImage[]
+  pricingTiers PricingTier[]
+  quoteItems   QuoteItem[]
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  path      String
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model PricingTier {
+  id           String  @id @default(cuid())
+  productId    String
+  minQty       Int
+  maxQty       Int?
+  pricePerUnit Float
+  createdAt    DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Quote {
+  id             String    @id @default(cuid())
+  quoteNumber    String    @unique
+  clientId       String
+  status         String    @default("pending") // pending | diproses | dikirim | accepted | rejected
+  deadline       DateTime?
+  notes          String?
+  subtotal       Float     @default(0)
+  discPct        Float     @default(0)
+  discAmt        Float     @default(0)
+  total          Float     @default(0)
+  dpPct          Float     @default(50)
+  dpAmount       Float     @default(0)
+  validUntil     DateTime?
+  createdById    String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  client   Client      @relation(fields: [clientId], references: [id])
+  createdBy User        @relation(fields: [createdById], references: [id])
+  items    QuoteItem[]
+  order    Order?
+}
+
+model QuoteItem {
+  id                String  @id @default(cuid())
+  quoteId           String
+  productId         String?
+  customDescription String?
+  qty               Int
+  unitPrice         Float
+  subtotal          Float
+  notes             String?
+
+  quote   Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  orderNumber     String    @unique
+  quoteId         String    @unique
+  clientId        String
+  status          String    @default("dp_pending") // dp_pending | bahan_dipesan | produksi | qc | siap_kirim | dikirim | lunas
+  dpPaidAt        DateTime?
+  dpAmount        Float     @default(0)
+  balanceDue      Float     @default(0)
+  balancePaidAt   DateTime?
+  vendorTracking  String?
+  shippedAt       DateTime?
+  receivedAt      DateTime?
+  productionNotes String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  quote    Quote     @relation(fields: [quoteId], references: [id])
+  client   Client    @relation(fields: [clientId], references: [id])
+  inventoryTransactions InventoryTransaction[]
+}
+
+model Document {
+  id               String   @id @default(cuid())
+  documentableType String   // Quote | Order
+  documentableId   String
+  type             String   // quotation_pdf | invoice_pdf | kuitansi_pdf | po_upload | photo_progress
+  path             String
+  filename         String
+  notes            String?
+  createdById      String
+  createdAt        DateTime @default(now())
+
+  createdBy User @relation(fields: [createdById], references: [id])
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @default("")
+  updatedAt DateTime @updatedAt
+}
+
+model InventoryItem {
+  id            String   @id @default(cuid())
+  name          String
+  category      String   // barang_kosongan | bahan_cetak | bahan_kemas | lainnya
+  unit          String
+  currentStock  Float    @default(0)
+  minimumStock  Float    @default(0)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  transactions InventoryTransaction[]
+}
+
+model InventoryTransaction {
+  id         String   @id @default(cuid())
+  itemId     String
+  orderId    String?
+  type       String   // stock_in | stock_out | adjustment
+  qty        Float
+  refNumber  String?
+  notes      String?
+  createdById String
+  createdAt  DateTime @default(now())
+
+  item     InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  order    Order?        @relation(fields: [orderId], references: [id])
+  createdBy User         @relation(fields: [createdById], references: [id])
+}

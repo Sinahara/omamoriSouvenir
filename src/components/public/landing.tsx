@@ -81,11 +81,29 @@ export default function Landing() {
   const [loading, setLoading] = useState(true)
   const [imgErrors, setImgErrors] = useState<Set<string>>(new Set())
 
+  const [settings, setSettings] = useState({
+    hero_badge: 'Corporate Gift Terpercaya',
+    hero_title: 'Solusi Corporate Gift Premium untuk Bisnis Anda',
+    hero_subtitle: 'Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap.',
+    hero_btn_primary_text: 'Minta Penawaran',
+    hero_btn_secondary_text: 'Lihat Katalog',
+    hero_image: '/hero-3d-product.png',
+  })
+
   const handleImgError = (src: string) => {
     setImgErrors(prev => new Set(prev).add(src))
   }
 
   useEffect(() => {
+    fetch('/api/public/site-settings')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setSettings(prev => ({ ...prev, ...data }))
+        }
+      })
+      .catch((err) => console.error('Gagal memuat pengaturan:', err))
+
     fetch('/api/catalog')
       .then((r) => r.json())
       .then((data) => {
@@ -111,14 +129,13 @@ export default function Landing() {
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             >
               <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">
-                Corporate Gift Terpercaya
+                {settings.hero_badge}
               </span>
               <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-[#333333] leading-[1.2] tracking-tight">
-                Solusi Corporate Gift Premium untuk Bisnis Anda
+                {settings.hero_title}
               </h1>
               <p className="text-base text-[#999999] max-w-md mx-auto lg:mx-0 leading-relaxed">
-                Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory,
-                mockup premium, dokumen lengkap.
+                {settings.hero_subtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
                 <Button
@@ -126,7 +143,7 @@ export default function Landing() {
                   className="text-sm px-8 h-11 bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] tracking-wide"
                   onClick={() => navigate('request-quote')}
                 >
-                  Minta Penawaran
+                  {settings.hero_btn_primary_text}
                   <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
                 <Button
@@ -135,7 +152,7 @@ export default function Landing() {
                   className="text-sm px-8 h-11 border-[#e0e0e0] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] hover:border-[#d0d0d0] rounded-[4px] tracking-wide"
                   onClick={() => navigate('catalog')}
                 >
-                  Lihat Katalog
+                  {settings.hero_btn_secondary_text}
                 </Button>
               </div>
             </motion.div>
@@ -149,7 +166,7 @@ export default function Landing() {
             >
               <div className="absolute w-[70%] h-[70%] bg-linear-to-br from-emerald-50/80 to-emerald-100/40 rounded-full blur-3xl" />
               <motion.img
-                src="/hero-3d-product.png"
+                src={settings.hero_image || '/hero-3d-product.png'}
                 alt="Premium Corporate Gift Set"
                 width={640}
                 height={480}

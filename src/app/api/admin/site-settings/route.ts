@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { requireSuperAdmin } from '@/lib/auth'
+import { revalidatePath } from 'next/cache'
 
 // Allowed settings keys (whitelist)
 const ALLOWED_KEYS = new Set([
@@ -82,7 +83,7 @@ export async function PUT(req: NextRequest) {
         create: { key, value: sanitized },
       })
     }
-
+    revalidatePath('/', 'layout')
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Settings PUT error:', error)

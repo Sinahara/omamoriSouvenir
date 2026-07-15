@@ -4,10 +4,27 @@ import { requireSuperAdmin } from '@/lib/auth'
 
 // Allowed settings keys (whitelist)
 const ALLOWED_KEYS = new Set([
-  'hero_title', 'hero_subtitle', 'hero_cta', 'hero_image',
-  'about_description', 'about_advantages', 'about_benefits',
-  'about_whatsapp', 'about_email', 'about_address',
-  'about_vision', 'about_mission',
+  'hero_badge', 
+  'hero_title', 
+  'hero_subtitle', 
+  'hero_image',
+  'hero_btn_primary_text', 
+  'hero_btn_secondary_text',
+  'hero_cta', 
+  
+  'about_title',
+  'about_subtitle',
+  'about_description', 
+  'about_image',
+  'about_advantages', 
+  'about_benefits',
+  'about_whatsapp', 
+  'about_email', 
+  'about_phone',
+  'about_address',
+  'about_vision', 
+  'about_mission',
+  
   'testimonial_1_name', 'testimonial_1_company', 'testimonial_1_text',
   'testimonial_2_name', 'testimonial_2_company', 'testimonial_2_text',
   'testimonial_3_name', 'testimonial_3_company', 'testimonial_3_text',

@@ -90,6 +90,8 @@ export default function Landing() {
     hero_image: '/hero-3d-product.png',
   })
 
+  const [settingsLoaded, setSettingsLoaded] = useState(false)
+  
   const handleImgError = (src: string) => {
     setImgErrors(prev => new Set(prev).add(src))
   }
@@ -103,6 +105,9 @@ export default function Landing() {
         }
       })
       .catch((err) => console.error('Gagal memuat pengaturan:', err))
+      .finally(() => {
+        setSettingsLoaded(true) 
+      })
 
     fetch('/api/catalog')
       .then((r) => r.json())
@@ -128,7 +133,7 @@ export default function Landing() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             >
-              <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">
+              {/* <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">
                 {settings.hero_badge}
               </span>
               <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-[#333333] leading-[1.2] tracking-tight">
@@ -154,7 +159,50 @@ export default function Landing() {
                 >
                   {settings.hero_btn_secondary_text}
                 </Button>
-              </div>
+              </div> */}
+              {!settingsLoaded ? (
+                <div className="space-y-4 pt-4">
+                  <Skeleton className="h-6 w-48 mx-auto lg:mx-0 rounded-full" />
+                  <Skeleton className="h-12 md:h-14 w-full rounded-md" />
+                  <Skeleton className="h-12 md:h-14 w-3/4 mx-auto lg:mx-0 rounded-md" />
+                  <Skeleton className="h-20 w-full max-w-md mx-auto lg:mx-0 rounded-md" />
+                  <div className="flex gap-3 justify-center lg:justify-start pt-2">
+                    <Skeleton className="h-11 w-40 rounded-md" />
+                    <Skeleton className="h-11 w-32 rounded-md" />
+                  </div>
+                </div>
+              ) : (
+                /* JIKA DATA SUDAH SIAP, TAMPILKAN TEKS ASLI DARI DATABASE */
+                <>
+                  <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">
+                    {settings.hero_badge}
+                  </span>
+                  <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-[#333333] leading-[1.2] tracking-tight">
+                    {settings.hero_title}
+                  </h1>
+                  <p className="text-base text-[#999999] max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap">
+                    {settings.hero_subtitle}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
+                    <Button
+                      size="lg"
+                      className="text-sm px-8 h-11 bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] tracking-wide"
+                      onClick={() => navigate('request-quote')}
+                    >
+                      {settings.hero_btn_primary_text}
+                      <ArrowRight className="w-4 h-4 ml-1.5" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="text-sm px-8 h-11 border-[#e0e0e0] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] hover:border-[#d0d0d0] rounded-[4px] tracking-wide"
+                      onClick={() => navigate('catalog')}
+                    >
+                      {settings.hero_btn_secondary_text}
+                    </Button>
+                  </div>
+                </>
+              )}
             </motion.div>
 
             {/* Right — Floating Product */}

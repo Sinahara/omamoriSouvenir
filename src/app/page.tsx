@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect } from 'react'
+import { useEffect,useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore, initUrlRouter } from '@/lib/store'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -100,10 +100,11 @@ function AdminPageRouter() {
 
 export default function Home() {
   const { currentPage } = useAppStore()
-
+  const [isRouterReady, setIsRouterReady] = useState(false)
   // Initialize URL routing on first mount
   useEffect(() => {
     initUrlRouter()
+    setIsRouterReady(true)
   }, [])
 
   // Dynamic document title & meta description
@@ -122,7 +123,9 @@ export default function Home() {
       }
     }
   }, [currentPage])
-
+  if (!isRouterReady) {
+    return <div className="min-h-screen bg-white flex items-center justify-center"></div>
+  }
   const isPublic = publicPages.includes(currentPage as typeof publicPages[number])
 
   const renderPublicPage = () => {

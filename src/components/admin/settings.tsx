@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/hooks/use-toast'
 import { useAppStore } from '@/lib/store'
 import { adminFetch } from '@/lib/admin-fetch'
@@ -386,7 +387,38 @@ export default function AdminSettings() {
                 </Button>
               </div>
               <div className="bg-linear-to-br from-[#fafafa] to-[#f0f0f0] rounded-lg p-6 space-y-3">
-                {hero.hero_badge && (
+                {loadingHero ? (
+                  <div className="space-y-3">
+                    <Skeleton className="h-6 w-32 rounded-full" />
+                    <Skeleton className="h-8 w-full rounded-md" />
+                    <Skeleton className="h-4 w-3/4 rounded-md" />
+                    <div className="flex gap-2 pt-1">
+                      <Skeleton className="h-8 w-28 rounded-full" />
+                      <Skeleton className="h-8 w-28 rounded-full" />
+                    </div>
+                    <div className="pt-3 flex justify-center">
+                      <Skeleton className="h-32 w-48 rounded-lg" />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {hero.hero_badge && (
+                      <span className="inline-block text-xs px-3 py-1 text-[#00a651] border border-[#00a651]/30 rounded-full">{hero.hero_badge}</span>
+                    )}
+                    <h3 className="text-xl font-bold text-[#333333] leading-tight">{hero.hero_title || 'Judul Hero'}</h3>
+                    <p className="text-sm text-[#888888] leading-relaxed">{hero.hero_subtitle || 'Subjudul hero akan muncul di sini.'}</p>
+                    <div className="flex gap-2 pt-1">
+                      <span className="inline-block text-xs px-4 py-1.5 bg-[#00a651] text-white rounded-full">{hero.hero_btn_primary_text || 'Minta Penawaran'}</span>
+                      <span className="inline-block text-xs px-4 py-1.5 border border-[#eeeeee] text-[#888888] rounded-full">{hero.hero_btn_secondary_text || 'Lihat Katalog'}</span>
+                    </div>
+                    {hero.hero_image && (
+                      <div className="pt-3 flex justify-center">
+                        <img src={hero.hero_image} alt="Hero Preview" className="max-h-40 object-contain rounded-lg" />
+                      </div>
+                    )}
+                  </>
+                )}
+                {/* {hero.hero_badge && (
                   <span className="inline-block text-xs px-3 py-1 text-[#00a651] border border-[#00a651]/30 rounded-full">{hero.hero_badge}</span>
                 )}
                 <h3 className="text-xl font-bold text-[#333333] leading-tight">{hero.hero_title || 'Judul Hero'}</h3>
@@ -399,7 +431,7 @@ export default function AdminSettings() {
                   <div className="pt-3 flex justify-center">
                     <img src={hero.hero_image} alt="Hero Preview" className="max-h-40 object-contain rounded-lg" />
                   </div>
-                )}
+                )} */}
               </div>
             </div>
 

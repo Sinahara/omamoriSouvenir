@@ -25,6 +25,14 @@ const ALLOWED_KEYS = new Set([
   'about_address',
   'about_vision', 
   'about_mission',
+
+  'companyName',
+  'alamat',
+  'kota',
+  'npwp',
+  'telepon',
+  'email',
+  'website',
   
   'testimonial_1_name', 'testimonial_1_company', 'testimonial_1_text',
   'testimonial_2_name', 'testimonial_2_company', 'testimonial_2_text',

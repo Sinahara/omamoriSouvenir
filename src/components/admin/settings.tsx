@@ -134,16 +134,17 @@ export default function AdminSettings() {
   const aboutFileRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
 
-  useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(STORAGE_KEY)
-      if (stored) setCompany({ ...defaultCompany, ...JSON.parse(stored) })
-    } catch { /* ignore */ }
-  }, [])
+  // useEffect(() => {
+  //   try {
+  //     const stored = sessionStorage.getItem(STORAGE_KEY)
+  //     if (stored) setCompany({ ...defaultCompany, ...JSON.parse(stored) })
+  //   } catch { /* ignore */ }
+  // }, [])
 
   useEffect(() => {
     loadHeroSettings()
     loadAboutSettings()
+    loadCompanySettings()
   }, [])
 
   const loadHeroSettings = async () => {
@@ -194,6 +195,25 @@ export default function AdminSettings() {
       setLoadingAbout(false)
     }
   }
+  const loadCompanySettings = async () => {
+  try {
+    const res = await adminFetch('/api/admin/site-settings')
+    if (res.ok) {
+      const data = await res.json()
+      if (data && typeof data === 'object') {
+        setCompany(prev => ({
+          companyName: data.companyName || prev.companyName,
+          alamat: data.alamat || prev.alamat,
+          kota: data.kota || prev.kota,
+          npwp: data.npwp || prev.npwp,
+          telepon: data.telepon || prev.telepon,
+          email: data.email || prev.email,
+          website: data.website || prev.website,
+        }))
+      }
+    }
+  } catch { /* ignore */ }
+}
 
   const updateCompanyField = (field: keyof CompanySettings, value: string) => {
     setCompany(prev => ({ ...prev, [field]: value }))
@@ -207,17 +227,25 @@ export default function AdminSettings() {
     setAbout(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleSaveCompany = () => {
-    setSavingCompany(true)
-    try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(company))
-      toast({ title: 'Berhasil', description: 'Pengaturan perusahaan tersimpan.' })
-    } catch {
-      toast({ title: 'Error', description: 'Gagal menyimpan pengaturan.', variant: 'destructive' })
-    } finally {
-      setSavingCompany(false)
+  const handleSaveCompany = async () => {
+  setSavingCompany(true)
+  try {
+    const res = await adminFetch('/api/admin/site-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ settings: company }),
+    })
+    if (!res.ok) {
+      toast({ title: 'Error', description: 'Gagal menyimpan profil perusahaan.', variant: 'destructive' })
+      return
     }
+    toast({ title: 'Berhasil', description: 'Profil perusahaan tersimpan permanen ke database.' })
+  } catch {
+    toast({ title: 'Error', description: 'Gagal terhubung ke server.', variant: 'destructive' })
+  } finally {
+    setSavingCompany(false)
   }
+}
 
   const handleSaveHero = async () => {
     setSavingHero(true)

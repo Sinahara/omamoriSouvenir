@@ -153,7 +153,7 @@ export default function AdminQuoteDetail() {
         body: JSON.stringify({ quoteId: quote.id }),
       })
       if (!res.ok) { const d = await res.json(); toast({ title: 'Error', description: d.error || 'Gagal convert.', variant: 'destructive' }); return }
-      toast({ title: 'Berhasil', description: 'Quote dikonversi ke order.' })
+      toast({ title: 'Berhasil', description: 'Penawaran diubah menjadi pesanan.' })
       fetchQuote()
     } catch {
       toast({ title: 'Error', description: 'Gagal terhubung ke server.', variant: 'destructive' })
@@ -187,23 +187,23 @@ export default function AdminQuoteDetail() {
   }
 
   if (!quote) {
-    return <p className="text-[#999999]">Penawaran tidak ditemukan.</p>
+    return <p className="text-ink-muted">Penawaran tidak ditemukan.</p>
   }
 
   const canConvert = ['accepted'].includes(quote.status) && !quote.order
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" size="sm" onClick={() => navigate('admin-quotes')} className="text-[#666666]">
+      <Button variant="ghost" size="sm" onClick={() => navigate('admin-quotes')} className="text-ink-soft">
         <ArrowLeft className="w-4 h-4 mr-2" />Kembali ke Daftar
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Quote Info */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="corp-card rounded-[10px] p-5 space-y-4">
+          <div className="corp-card p-5 space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <h3 className="text-lg font-semibold text-[#333333]">{quote.quoteNumber}</h3>
+              <h3 className="text-lg font-semibold text-ink">{quote.quoteNumber}</h3>
               <Badge className={getStatusColor(quote.status, QUOTE_STATUSES)}>
                 {getStatusLabel(quote.status, QUOTE_STATUSES)}
               </Badge>
@@ -211,12 +211,12 @@ export default function AdminQuoteDetail() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Klien</Label>
-                <p className="text-sm font-medium text-[#333333]">{quote.client?.companyName ?? '-'}</p>
-                <p className="text-xs text-[#999999]">{quote.client?.picName} — {quote.client?.whatsapp}</p>
+                <Label className="text-xs text-ink-muted">Klien</Label>
+                <p className="text-sm font-medium text-ink">{quote.client?.companyName ?? '-'}</p>
+                <p className="text-xs text-ink-muted">{quote.client?.picName} — {quote.client?.whatsapp}</p>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Status</Label>
+                <Label className="text-xs text-ink-muted">Status</Label>
                 <Select value={quote.status} onValueChange={v => updateQuote('status', v)}>
                   <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -225,48 +225,48 @@ export default function AdminQuoteDetail() {
                 </Select>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Valid Until</Label>
+                <Label className="text-xs text-ink-muted">Berlaku Sampai</Label>
                 <Input type="date" value={quote.validUntil?.split('T')[0] || ''} onChange={e => updateQuote('validUntil', e.target.value)} />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Deadline</Label>
+                <Label className="text-xs text-ink-muted">Deadline</Label>
                 <Input type="date" value={quote.deadline?.split('T')[0] || ''} onChange={e => updateQuote('deadline', e.target.value)} />
               </div>
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs text-[#999999]">Catatan</Label>
+              <Label className="text-xs text-ink-muted">Catatan</Label>
               <Textarea rows={2} value={quote.notes || ''} onChange={e => updateQuote('notes', e.target.value)} />
             </div>
           </div>
 
           {/* Items Table */}
-          <div className="corp-card rounded-[10px] p-5">
-            <h4 className="font-semibold text-[#333333] mb-3">Item Penawaran</h4>
+          <div className="corp-card p-5">
+            <h4 className="font-semibold text-ink mb-3">Item Penawaran</h4>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="w-10 text-[#666666]">No</TableHead>
-                    <TableHead className="text-[#666666]">Produk</TableHead>
-                    <TableHead className="text-right text-[#666666]">Qty</TableHead>
-                    <TableHead className="text-right text-[#666666]">Harga Satuan</TableHead>
-                    <TableHead className="text-right text-[#666666]">Subtotal</TableHead>
-                    <TableHead className="text-[#666666]">Notes</TableHead>
+                    <TableHead className="w-10 text-ink-soft">No</TableHead>
+                    <TableHead className="text-ink-soft">Produk</TableHead>
+                    <TableHead className="text-right text-ink-soft">Qty</TableHead>
+                    <TableHead className="text-right text-ink-soft">Harga Satuan</TableHead>
+                    <TableHead className="text-right text-ink-soft">Subtotal</TableHead>
+                    <TableHead className="text-ink-soft">Notes</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {quote.items?.map((item, i) => (
-                    <TableRow key={item.id} className="hover:bg-[#f8f8f8]">
-                      <TableCell className="text-sm text-[#666666]">{i + 1}</TableCell>
-                      <TableCell className="text-sm font-medium text-[#333333]">{item.product?.name || item.customDescription || '-'}</TableCell>
+                    <TableRow key={item.id} className="hover:bg-muted">
+                      <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                      <TableCell className="text-sm font-medium text-ink">{item.product?.name || item.customDescription || '-'}</TableCell>
                       <TableCell>
                         <Input type="number" className="w-20 text-right" value={item.qty} onChange={e => updateItem(i, 'qty', e.target.value)} />
                       </TableCell>
                       <TableCell>
                         <Input type="number" className="w-28 text-right" value={item.unitPrice} onChange={e => updateItem(i, 'unitPrice', e.target.value)} />
                       </TableCell>
-                      <TableCell className="text-right text-sm text-[#333333]">{formatRupiah(item.subtotal)}</TableCell>
+                      <TableCell className="text-right text-sm text-ink">{formatRupiah(item.subtotal)}</TableCell>
                       <TableCell>
                         <Input className="text-xs" placeholder="Notes" value={item.notes || ''} onChange={e => updateItem(i, 'notes', e.target.value)} />
                       </TableCell>
@@ -276,37 +276,37 @@ export default function AdminQuoteDetail() {
               </Table>
             </div>
 
-            <Separator className="my-4 bg-[#e0e0e0]" />
+            <Separator className="my-4 bg-line-strong" />
 
             {/* Pricing Summary */}
             <div className="space-y-2 text-sm max-w-xs ml-auto">
-              <div className="flex justify-between"><span className="text-[#666666]">Subtotal</span><span className="text-[#333333]">{formatRupiah(quote.subtotal)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-soft">Subtotal</span><span className="text-ink">{formatRupiah(quote.subtotal)}</span></div>
               <div className="flex items-center gap-2 justify-end">
-                <span className="text-[#666666]">Diskon (%)</span>
+                <span className="text-ink-soft">Diskon (%)</span>
                 <Input type="number" className="w-20 text-right h-8 text-sm" value={quote.discPct} onChange={e => {
                   const pct = Number(e.target.value) || 0
                   const amt = Math.round(quote.subtotal * (pct / 100))
                   setQuote(prev => prev ? { ...prev, discPct: pct, discAmt: amt, total: prev.subtotal - amt } : prev)
                 }} />
               </div>
-              <div className="flex justify-between"><span className="text-[#666666]">Diskon (Rp)</span><span className="text-[#333333]">{formatRupiah(quote.discAmt)}</span></div>
-              <Separator className="bg-[#e0e0e0]" />
-              <div className="flex justify-between font-semibold text-base"><span className="text-[#333333]">Total</span><span className="text-[#00a651]">{formatRupiah(quote.total)}</span></div>
+              <div className="flex justify-between"><span className="text-ink-soft">Diskon (Rp)</span><span className="text-ink">{formatRupiah(quote.discAmt)}</span></div>
+              <Separator className="bg-line-strong" />
+              <div className="flex justify-between font-semibold text-base"><span className="text-ink">Total</span><span className="text-primary">{formatRupiah(quote.total)}</span></div>
               <div className="flex items-center gap-2 justify-end mt-2">
-                <span className="text-[#666666]">DP (%)</span>
+                <span className="text-ink-soft">DP (%)</span>
                 <Input type="number" className="w-20 text-right h-8 text-sm" value={quote.dpPct} onChange={e => updateQuote('dpPct', Number(e.target.value) || 0)} />
               </div>
-              <div className="flex justify-between"><span className="text-[#666666]">Amount DP</span><span className="text-[#333333]">{formatRupiah(Math.round(quote.total * quote.dpPct / 100))}</span></div>
+              <div className="flex justify-between"><span className="text-ink-soft">Jumlah DP</span><span className="text-ink">{formatRupiah(Math.round(quote.total * quote.dpPct / 100))}</span></div>
             </div>
           </div>
         </div>
 
         {/* Right: Actions */}
         <div className="space-y-4">
-          <div className="corp-card rounded-[10px] p-5 space-y-4">
-            <h4 className="font-semibold text-[#333333]">Aksi</h4>
+          <div className="corp-card p-5 space-y-4">
+            <h4 className="font-semibold text-ink">Aksi</h4>
             <div className="space-y-1">
-              <Label className="text-xs text-[#999999]">Update Status</Label>
+              <Label className="text-xs text-ink-muted">Ubah Status</Label>
               <Select value={quote.status} onValueChange={v => updateQuote('status', v)}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -315,28 +315,28 @@ export default function AdminQuoteDetail() {
               </Select>
             </div>
 
-            <Button className="w-full bg-[#00a651] hover:bg-[#008a40] text-white" onClick={handleSave} disabled={saving}>
+            <Button className="w-full bg-primary hover:bg-primary-hover text-white" onClick={handleSave} disabled={saving}>
               <Save className="w-4 h-4 mr-2" />{saving ? 'Menyimpan...' : 'Simpan Perubahan'}
             </Button>
 
-            <Button variant="outline" className="w-full text-[#00a651] border-[#00a651] hover:bg-[#e8f5ee]" onClick={handleDownloadPdf} disabled={pdfLoading}>
+            <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary-soft" onClick={handleDownloadPdf} disabled={pdfLoading}>
               <FileDown className="w-4 h-4 mr-2" />{pdfLoading ? 'Membuat PDF...' : 'Download PDF'}
             </Button>
 
             {canConvert && (
               <Button variant="outline" className="w-full" onClick={handleConvert} disabled={converting}>
-                <ArrowRightLeft className="w-4 h-4 mr-2" />{converting ? 'Mengkonversi...' : 'Convert ke Order'}
+                <ArrowRightLeft className="w-4 h-4 mr-2" />{converting ? 'Memproses...' : 'Jadikan Pesanan'}
               </Button>
             )}
 
-            <Button variant="outline" className="w-full text-[#00a651] border-[#00a651] hover:bg-[#e8f5ee]" onClick={handleAiDraft} disabled={aiLoading}>
+            <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary-soft" onClick={handleAiDraft} disabled={aiLoading}>
               <Sparkles className="w-4 h-4 mr-2" />{aiLoading ? 'Generating...' : 'Generate Draft AI'}
             </Button>
           </div>
 
-          <div className="corp-card rounded-[10px] p-5">
-            <h4 className="font-semibold text-[#333333] mb-2">Info</h4>
-            <div className="text-sm space-y-1 text-[#999999]">
+          <div className="corp-card p-5">
+            <h4 className="font-semibold text-ink mb-2">Info</h4>
+            <div className="text-sm space-y-1 text-ink-muted">
               <p>Dibuat: {formatDate(quote.createdAt)}</p>
               <p>Diupdate: {formatDate(quote.updatedAt)}</p>
             </div>
@@ -346,9 +346,9 @@ export default function AdminQuoteDetail() {
 
       {/* AI Draft Dialog */}
       <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh] bg-white">
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] bg-white">
           <DialogHeader>
-            <DialogTitle className="text-[#333333]">Draft Surat Penawaran</DialogTitle>
+            <DialogTitle className="text-ink">Draft Surat Penawaran</DialogTitle>
             <DialogDescription className="sr-only">Draft surat penawaran yang dihasilkan</DialogDescription>
           </DialogHeader>
           <Textarea rows={20} value={aiResult} readOnly />

@@ -100,19 +100,19 @@ export default function AdminOrderDetail() {
   }
 
   if (!order) {
-    return <p className="text-[#999999]">Pesanan tidak ditemukan.</p>
+    return <p className="text-ink-muted">Pesanan tidak ditemukan.</p>
   }
 
   const currentIdx = ORDER_STATUSES.findIndex(s => s.value === order.status)
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" size="sm" onClick={() => navigate('admin-orders')} className="text-[#666666]">
+      <Button variant="ghost" size="sm" onClick={() => navigate('admin-orders')} className="text-ink-soft">
         <ArrowLeft className="w-4 h-4 mr-2" />Kembali ke Daftar
       </Button>
 
       {/* Status Pipeline */}
-      <div className="corp-card rounded-[10px] p-5 overflow-x-auto">
+      <div className="corp-card p-5 overflow-x-auto">
         <div className="flex items-center gap-1 min-w-max">
           {ORDER_STATUSES.map((stage, i) => {
             const isActive = i === currentIdx
@@ -121,16 +121,16 @@ export default function AdminOrderDetail() {
               <div key={stage.value} className="flex items-center">
                 <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                   isActive
-                    ? 'bg-[#e8f5ee] text-[#00a651] ring-2 ring-[#00a651]/30'
+                    ? 'bg-primary-soft text-primary ring-2 ring-primary/30'
                     : isCompleted
-                      ? 'bg-[#e8f5ee] text-[#00a651]'
-                      : 'bg-[#f3f4f6] text-[#9ca3af]'
+                      ? 'bg-primary-soft text-primary'
+                      : 'bg-accent text-ink-muted'
                 }`}>
                   {stageIcons[stage.value]}
                   <span className="hidden sm:inline">{stage.label}</span>
                 </div>
                 {i < ORDER_STATUSES.length - 1 && (
-                  <div className={`w-6 h-0.5 mx-1 ${i < currentIdx ? 'bg-[#00a651]' : 'bg-[#e0e0e0]'}`} />
+                  <div className={`w-6 h-0.5 mx-1 ${i < currentIdx ? 'bg-primary' : 'bg-line-strong'}`} />
                 )}
               </div>
             )
@@ -141,9 +141,9 @@ export default function AdminOrderDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Order Info */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="corp-card rounded-[10px] p-5 space-y-4">
+          <div className="corp-card p-5 space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <h3 className="text-lg font-semibold text-[#333333]">{order.orderNumber}</h3>
+              <h3 className="text-lg font-semibold text-ink">{order.orderNumber}</h3>
               <Badge className={getStatusColor(order.status, ORDER_STATUSES)}>
                 {getStatusLabel(order.status, ORDER_STATUSES)}
               </Badge>
@@ -151,88 +151,88 @@ export default function AdminOrderDetail() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Klien</Label>
-                <p className="text-sm font-medium text-[#333333]">{order.client?.companyName ?? '-'}</p>
-                <p className="text-xs text-[#999999]">{order.client?.picName} — {order.client?.whatsapp}</p>
+                <Label className="text-xs text-ink-muted">Klien</Label>
+                <p className="text-sm font-medium text-ink">{order.client?.companyName ?? '-'}</p>
+                <p className="text-xs text-ink-muted">{order.client?.picName} — {order.client?.whatsapp}</p>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Referensi Quote</Label>
-                <p className="text-sm text-[#333333]">{order.quote?.quoteNumber ?? '-'}</p>
+                <Label className="text-xs text-ink-muted">Referensi Penawaran</Label>
+                <p className="text-sm text-ink">{order.quote?.quoteNumber ?? '-'}</p>
               </div>
             </div>
           </div>
 
           {/* Payment Info */}
-          <div className="corp-card rounded-[10px] p-5 space-y-4">
-            <h4 className="font-semibold text-[#333333]">Pembayaran</h4>
+          <div className="corp-card p-5 space-y-4">
+            <h4 className="font-semibold text-ink">Pembayaran</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">DP Amount</Label>
-                <p className="text-sm font-medium text-[#333333]">{formatRupiah(order.dpAmount)}</p>
+                <Label className="text-xs text-ink-muted">Jumlah DP</Label>
+                <p className="text-sm font-medium text-ink">{formatRupiah(order.dpAmount)}</p>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Tanggal Bayar DP</Label>
+                <Label className="text-xs text-ink-muted">Tanggal Bayar DP</Label>
                 <Input type="date" value={order.dpPaidAt?.split('T')[0] || ''} onChange={e => updateOrder('dpPaidAt', e.target.value || null)} />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Sisa Tagihan</Label>
-                <p className="text-sm font-medium text-[#333333]">{formatRupiah(order.balanceDue)}</p>
+                <Label className="text-xs text-ink-muted">Sisa Tagihan</Label>
+                <p className="text-sm font-medium text-ink">{formatRupiah(order.balanceDue)}</p>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Tanggal Lunas</Label>
+                <Label className="text-xs text-ink-muted">Tanggal Lunas</Label>
                 <Input type="date" value={order.balancePaidAt?.split('T')[0] || ''} onChange={e => updateOrder('balancePaidAt', e.target.value || null)} />
               </div>
             </div>
           </div>
 
           {/* Shipping & Tracking */}
-          <div className="corp-card rounded-[10px] p-5 space-y-4">
-            <h4 className="font-semibold text-[#333333]">Pengiriman & Tracking</h4>
+          <div className="corp-card p-5 space-y-4">
+            <h4 className="font-semibold text-ink">Pengiriman & Tracking</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">No. Resi Vendor</Label>
+                <Label className="text-xs text-ink-muted">No. Resi Vendor</Label>
                 <Input placeholder="Masukkan no. resi" value={order.vendorTracking || ''} onChange={e => updateOrder('vendorTracking', e.target.value || null)} />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Tanggal Dikirim</Label>
+                <Label className="text-xs text-ink-muted">Tanggal Dikirim</Label>
                 <Input type="date" value={order.shippedAt?.split('T')[0] || ''} onChange={e => updateOrder('shippedAt', e.target.value || null)} />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#999999]">Tanggal Diterima</Label>
+                <Label className="text-xs text-ink-muted">Tanggal Diterima</Label>
                 <Input type="date" value={order.receivedAt?.split('T')[0] || ''} onChange={e => updateOrder('receivedAt', e.target.value || null)} />
               </div>
             </div>
           </div>
 
           {/* Production Notes */}
-          <div className="corp-card rounded-[10px] p-5 space-y-3">
-            <Label className="text-sm font-semibold text-[#333333]">Catatan Produksi</Label>
+          <div className="corp-card p-5 space-y-3">
+            <Label className="text-sm font-semibold text-ink">Catatan Produksi</Label>
             <Textarea rows={3} placeholder="Catatan produksi..." value={order.productionNotes || ''} onChange={e => updateOrder('productionNotes', e.target.value || null)} />
           </div>
 
           {/* Items from Quote */}
           {quoteItems.length > 0 && (
-            <div className="corp-card rounded-[10px] p-5">
-              <h4 className="font-semibold text-[#333333] mb-3">Item Pesanan (dari Quote)</h4>
+            <div className="corp-card p-5">
+              <h4 className="font-semibold text-ink mb-3">Item Pesanan (dari Penawaran)</h4>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="text-[#666666]">No</TableHead>
-                      <TableHead className="text-[#666666]">Produk</TableHead>
-                      <TableHead className="text-right text-[#666666]">Qty</TableHead>
-                      <TableHead className="text-right text-[#666666]">Harga</TableHead>
-                      <TableHead className="text-right text-[#666666]">Subtotal</TableHead>
+                      <TableHead className="text-ink-soft">No</TableHead>
+                      <TableHead className="text-ink-soft">Produk</TableHead>
+                      <TableHead className="text-right text-ink-soft">Qty</TableHead>
+                      <TableHead className="text-right text-ink-soft">Harga</TableHead>
+                      <TableHead className="text-right text-ink-soft">Subtotal</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {quoteItems.map((item, i) => (
-                      <TableRow key={item.id} className="hover:bg-[#f8f8f8]">
-                        <TableCell className="text-sm text-[#666666]">{i + 1}</TableCell>
-                        <TableCell className="text-sm text-[#333333]">{item.product?.name || item.customDescription || '-'}</TableCell>
-                        <TableCell className="text-right text-sm text-[#333333]">{item.qty}</TableCell>
-                        <TableCell className="text-right text-sm text-[#333333]">{formatRupiah(item.unitPrice)}</TableCell>
-                        <TableCell className="text-right text-sm text-[#333333]">{formatRupiah(item.subtotal)}</TableCell>
+                      <TableRow key={item.id} className="hover:bg-muted">
+                        <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                        <TableCell className="text-sm text-ink">{item.product?.name || item.customDescription || '-'}</TableCell>
+                        <TableCell className="text-right text-sm text-ink">{item.qty}</TableCell>
+                        <TableCell className="text-right text-sm text-ink">{formatRupiah(item.unitPrice)}</TableCell>
+                        <TableCell className="text-right text-sm text-ink">{formatRupiah(item.subtotal)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -244,10 +244,10 @@ export default function AdminOrderDetail() {
 
         {/* Right: Actions */}
         <div className="space-y-4">
-          <div className="corp-card rounded-[10px] p-5 space-y-4">
-            <h4 className="font-semibold text-[#333333]">Aksi</h4>
+          <div className="corp-card p-5 space-y-4">
+            <h4 className="font-semibold text-ink">Aksi</h4>
             <div className="space-y-1">
-              <Label className="text-xs text-[#999999]">Update Status</Label>
+              <Label className="text-xs text-ink-muted">Ubah Status</Label>
               <Select value={order.status} onValueChange={v => updateOrder('status', v)}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -255,14 +255,14 @@ export default function AdminOrderDetail() {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="w-full bg-[#00a651] hover:bg-[#008a40] text-white" onClick={handleSave} disabled={saving}>
+            <Button className="w-full bg-primary hover:bg-primary-hover text-white" onClick={handleSave} disabled={saving}>
               <Save className="w-4 h-4 mr-2" />{saving ? 'Menyimpan...' : 'Simpan Perubahan'}
             </Button>
           </div>
 
-          <div className="corp-card rounded-[10px] p-5">
-            <h4 className="font-semibold text-[#333333] mb-2">Info</h4>
-            <div className="text-sm space-y-1 text-[#999999]">
+          <div className="corp-card p-5">
+            <h4 className="font-semibold text-ink mb-2">Info</h4>
+            <div className="text-sm space-y-1 text-ink-muted">
               <p>Dibuat: {formatDateTime(order.createdAt)}</p>
               <p>Diupdate: {formatDateTime(order.updatedAt)}</p>
             </div>

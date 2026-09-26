@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import SectionHeader from '@/components/public/section-header';
 import { useAppStore } from '@/lib/store';
 
 /* ── Animation Variants ───────────────────────────────── */
@@ -69,17 +70,6 @@ const defaultBenefits = [
 
 const defaultContact = { whatsapp: '6281234567890', email: 'info@omamorisouvenir.id', phone: '031-1234-5678', address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia' };
 
-/* ── Section Header ────────────────────────────────────── */
-function SectionHeader({ badge, title, subtitle }: { badge: string; title: string; subtitle?: string }) {
-  return (
-    <div className="text-center mb-12">
-      <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm mb-4">{badge}</span>
-      <h2 className="text-2xl md:text-3xl font-bold text-[#333333] tracking-tight">{title}</h2>
-      {subtitle && <p className="text-[#999999] mt-3 max-w-md mx-auto">{subtitle}</p>}
-    </div>
-  );
-}
-
 interface Settings {
   about_title?: string; about_subtitle?: string; about_description?: string;
   about_image?: string; about_advantages?: string; about_benefits?: string;
@@ -122,12 +112,12 @@ export default function About() {
     <div className="min-h-screen flex flex-col">
 
       {/* ═══ 1. HERO BANNER ═══ */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 bg-linear-to-br from-[#00a651] to-emerald-700 text-white overflow-hidden">
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 bg-linear-to-br from-primary to-emerald-700 text-white overflow-hidden">
         <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}>
-            <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-white/80 border border-white/20 px-4 py-1 rounded-sm mb-6">
-              About Us
+            <span className="inline-block eyebrow text-white/80 border border-white/20 px-4 py-1 rounded-sm mb-6">
+              Tentang Kami
             </span>
           </motion.div>
           <motion.h1
@@ -218,25 +208,25 @@ export default function About() {
                 <>
                   <div className="flex items-center gap-3 mb-5">
                     <div className="jp-simple-line" />
-                    <span className="text-[11px] font-semibold text-[#00a651] uppercase tracking-[0.15em]">Tentang Kami</span>
+                    <span className="eyebrow text-primary">Profil Perusahaan</span>
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-6 leading-tight tracking-tight">
-                    Kenapa Memilih Omamori Souvenir?
+                  <h2 className="text-2xl md:text-3xl font-bold text-ink mb-6 leading-tight tracking-tight">
+                    Siapa Kami
                   </h2>
                   {description.split('\n').filter(Boolean).map((para, idx) => (
-                    <div key={idx} className="text-[#999999] leading-relaxed mb-4 text-[15px]">{para}</div>
+                    <div key={idx} className="text-ink-muted leading-relaxed mb-4 text-[15px]">{para}</div>
                   ))}
                   <div className="corp-divider my-6" />
                   <div className="flex flex-wrap gap-3">
                     <Button
-                      className="bg-[#00a651] hover:bg-[#008a40] text-white font-medium px-6 rounded-[4px] text-sm tracking-wide"
+                      className="bg-primary hover:bg-primary-hover text-white font-medium px-6 rounded-sm text-sm tracking-wide"
                       onClick={() => navigate('request-quote')}
                     >
                       Minta Penawaran <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
-                      className="border-[#d4d4d4] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] font-medium px-6 rounded-[4px] text-sm tracking-wide"
+                      className="border-line-hover text-ink-soft hover:text-ink hover:bg-surface font-medium px-6 rounded-sm text-sm tracking-wide"
                       onClick={() => navigate('catalog')}
                     >
                       Lihat Katalog
@@ -252,9 +242,9 @@ export default function About() {
       {/* ═══ 3. KEUNGULAN KAMI — 6 Cards ═══ */}
       <section className="py-16 md:py-24 section-gray jp-asanoha-bg">
         <div className="max-w-6xl mx-auto px-4">
-          <SectionHeader badge="Keunggulan Kami" title="Apa yang Membuat Kami Berbeda" subtitle="Keunggulan layanan dan produk kami" />
+          <SectionHeader badge="Keunggulan Kami" title="Apa yang Membuat Kami Berbeda" />
           <motion.div
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children"
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -272,8 +262,8 @@ export default function About() {
                   <div className={`w-11 h-11 ${getColor(item.icon)} rounded-lg flex items-center justify-center mb-4`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-[#333333] text-[15px] mb-2">{item.title}</h3>
-                  <div className="text-[#999999] text-sm leading-relaxed">{item.desc}</div>
+                  <h3 className="font-semibold text-ink text-[15px] mb-2">{item.title}</h3>
+                  <div className="text-ink-muted text-sm leading-relaxed">{item.desc}</div>
                 </motion.div>
               );
             })}
@@ -284,7 +274,7 @@ export default function About() {
       {/* ═══ 4. KEUNTUNGAN PRODUK — 4 Items ═══ */}
       <section className="py-16 md:py-24 jp-washi-bg">
         <div className="max-w-5xl mx-auto px-4">
-          <SectionHeader badge="Keuntungan Produk" title="Manfaat untuk Bisnis Anda" subtitle="Nilai tambah dari setiap produk yang kami sediakan" />
+          <SectionHeader badge="Keuntungan Produk" title="Manfaat untuk Bisnis Anda" />
           <motion.div
             className="grid sm:grid-cols-2 gap-5"
             variants={staggerContainer}
@@ -297,7 +287,7 @@ export default function About() {
               return (
                 <motion.div
                   key={i}
-                  className="flex gap-5 p-6 rounded-lg border border-[#eeeeee] bg-white hover:border-[#d4d4d4] transition-all duration-300"
+                  className="flex gap-5 p-6 rounded-lg border border-line bg-white hover:border-line-hover transition-all duration-200"
                   variants={fadeInUp}
                   custom={i}
                 >
@@ -305,8 +295,8 @@ export default function About() {
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-[#333333] text-[15px] mb-1.5">{item.title}</h3>
-                    <div className="text-[#999999] text-sm leading-relaxed">{item.desc}</div>
+                    <h3 className="font-semibold text-ink text-[15px] mb-1.5">{item.title}</h3>
+                    <div className="text-ink-muted text-sm leading-relaxed">{item.desc}</div>
                   </div>
                 </motion.div>
               );
@@ -331,7 +321,7 @@ export default function About() {
               { icon: MessageCircle, label: 'WhatsApp', value: `+${contact.whatsapp}`, href: `https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`, external: true },
               { icon: Mail, label: 'Email', value: contact.email, href: `mailto:${(contact.email || '').replace(/[^\w@.\-+]/g, '')}`, external: false },
               { icon: Phone, label: 'Telepon', value: contact.phone, href: `tel:${(contact.phone || '').replace(/[^\d+]/g, '')}`, external: false },
-              { icon: MapPin, label: 'Lokasi', value: contact.address, href: '#', external: false },
+              { icon: MapPin, label: 'Lokasi', value: contact.address, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`, external: true },
             ].map((c, i) => (
               <motion.a
                 key={i}
@@ -344,8 +334,8 @@ export default function About() {
                 <div className="w-11 h-11 kpi-icon-green rounded-lg flex items-center justify-center mx-auto mb-3">
                   <c.icon className="w-5 h-5" />
                 </div>
-                <div className="font-semibold text-[#333333] text-sm mb-1">{c.label}</div>
-                <div className="text-[#999999] text-xs leading-snug wrap-break-word">{c.value}</div>
+                <div className="font-semibold text-ink text-sm mb-1">{c.label}</div>
+                <div className="text-ink-muted text-xs leading-snug wrap-break-word">{c.value}</div>
               </motion.a>
             ))}
           </motion.div>
@@ -358,16 +348,21 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6, ease: 'easeOut' }}
           >
-            <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white rounded-full border border-[#eeeeee] text-sm text-[#999999]">
-              <Clock className="w-4 h-4 text-[#00a651] shrink-0" />
-              <span>Senin — Jumat: 08.00 — 17.00 WIB &nbsp;·&nbsp; Sabtu: 08.00 — 12.00 WIB</span>
+            <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white rounded-2xl sm:rounded-full border border-line text-sm text-ink-muted">
+              <Clock className="w-4 h-4 text-primary shrink-0" />
+              {/* one line per schedule on phones, a single row from sm up */}
+              <span className="flex flex-col sm:flex-row sm:gap-2">
+                <span>Senin — Jumat: 08.00 — 17.00 WIB</span>
+                <span className="hidden sm:inline" aria-hidden="true">·</span>
+                <span>Sabtu: 08.00 — 12.00 WIB</span>
+              </span>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ═══ 6. CTA SECTION ═══ */}
-      <section className="py-16 md:py-24 bg-[#00a651] text-white relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-primary text-white relative overflow-hidden">
         <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
           <motion.div
@@ -383,11 +378,11 @@ export default function About() {
               Siap Memulai Pesanan?
             </h2>
             <p className="text-white/75 text-[15px] mb-8 max-w-md mx-auto leading-relaxed">
-              Hubungi tim kami sekarang dan dapatkan penawaran terbaik untuk kebutuhan corporate gift Anda.
+              Kirim kebutuhan Anda, quotation resmi kami kirim dalam 1×24&nbsp;jam. Konsultasi gratis.
             </p>
             <Button
               size="lg"
-              className="bg-white text-[#00a651] hover:bg-white/90 font-semibold px-8 h-11 rounded-[4px] text-sm tracking-wide"
+              className="bg-white text-primary hover:bg-white/90 font-semibold px-8 h-11 rounded-sm text-sm tracking-wide"
               onClick={() => navigate('request-quote')}
             >
               Minta Penawaran Sekarang <ArrowRight className="ml-2 h-4 w-4" />

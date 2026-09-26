@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect,useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useAppStore, initUrlRouter } from '@/lib/store'
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion'
+import { useAppStore, initUrlRouter, takePendingScroll, restoreScroll } from '@/lib/store'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ErrorBoundary } from '@/components/error-boundary'
 
@@ -66,6 +66,12 @@ const AdminSettings = dynamic(() => import('@/components/admin/settings'), { ssr
 
 const publicPages = ['landing', 'about', 'catalog', 'product-detail', 'request-quote', 'track'] as const
 
+// Runs once the outgoing page has faded out, so it never visibly scrolls
+function applyPendingScroll() {
+  const y = takePendingScroll()
+  if (y !== null) restoreScroll(y)
+}
+
 function AdminPageRouter() {
   const { currentPage } = useAppStore()
 
@@ -101,11 +107,22 @@ function AdminPageRouter() {
 export default function Home() {
   const { currentPage } = useAppStore()
   const [isRouterReady, setIsRouterReady] = useState(false)
-  // Initialize URL routing on first mount
+  const isPublic = publicPages.includes(currentPage as typeof publicPages[number])
+
+  // Initialize URL routing on first mount. Render only after the session check,
+  // otherwise a logged-in admin briefly sees the landing page on refresh.
   useEffect(() => {
-    initUrlRouter()
-    setIsRouterReady(true)
+    let active = true
+    initUrlRouter().finally(() => {
+      if (active) setIsRouterReady(true)
+    })
+    return () => { active = false }
   }, [])
+
+  // Switching between the public site and admin has no exit animation
+  useEffect(() => {
+    applyPendingScroll()
+  }, [isPublic])
 
   // Dynamic document title & meta description
   useEffect(() => {
@@ -126,7 +143,6 @@ export default function Home() {
   if (!isRouterReady) {
     return <div className="min-h-screen bg-white flex items-center justify-center"></div>
   }
-  const isPublic = publicPages.includes(currentPage as typeof publicPages[number])
 
   const renderPublicPage = () => {
     switch (currentPage) {
@@ -149,10 +165,10 @@ export default function Home() {
 
   if (!isPublic) {
     return (
-      <>
+      <MotionConfig reducedMotion="user">
         <AdminLayout>
           <ErrorBoundary>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" onExitComplete={applyPendingScroll}>
               <motion.div
                 key={currentPage}
                 initial={{ opacity: 0, y: 8 }}
@@ -165,29 +181,31 @@ export default function Home() {
             </AnimatePresence>
           </ErrorBoundary>
         </AdminLayout>
-      </>
+      </MotionConfig>
     )
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <Navbar />
-      <main className="flex-1 py-4">
-        <ErrorBoundary>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPage}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-            >
-              {renderPublicPage()}
-            </motion.div>
-          </AnimatePresence>
-        </ErrorBoundary>
-      </main>
-      <Footer />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navbar />
+        <main className="flex-1">
+          <ErrorBoundary>
+            <AnimatePresence mode="wait" onExitComplete={applyPendingScroll}>
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              >
+                {renderPublicPage()}
+              </motion.div>
+            </AnimatePresence>
+          </ErrorBoundary>
+        </main>
+        <Footer />
+      </div>
+    </MotionConfig>
   )
 }

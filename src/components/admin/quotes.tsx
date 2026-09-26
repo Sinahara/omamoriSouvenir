@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { ArrowRightLeft, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowRightLeft, Search, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,6 +33,7 @@ export default function AdminQuotes() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [convertingId, setConvertingId] = useState<string | null>(null)
   const searchTimer = useRef<NodeJS.Timeout>(null)
   const { selectQuote } = useAppStore()
   const { toast } = useToast()
@@ -74,6 +75,8 @@ export default function AdminQuotes() {
 
   const handleConvert = async (e: React.MouseEvent, quote: Quote) => {
     e.stopPropagation()
+    if (convertingId) return
+    setConvertingId(quote.id)
     try {
       const res = await adminFetch('/api/admin/convert-quote', {
         method: 'POST',
@@ -81,26 +84,24 @@ export default function AdminQuotes() {
         body: JSON.stringify({ quoteId: quote.id }),
       })
       if (!res.ok) { const d = await res.json(); toast({ title: 'Error', description: d.error || 'Gagal convert.', variant: 'destructive' }); return }
-      toast({ title: 'Berhasil', description: 'Quote berhasil dikonversi ke order.' })
+      toast({ title: 'Berhasil', description: 'Penawaran berhasil diubah menjadi pesanan.' })
       fetchQuotes()
     } catch {
       toast({ title: 'Error', description: 'Gagal terhubung ke server.', variant: 'destructive' })
+    } finally {
+      setConvertingId(null)
     }
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-[#333333]">Manajemen Penawaran</h2>
-      </div>
-
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="flex-wrap h-auto gap-1 bg-transparent p-0 border-b border-[#e0e0e0]">
+        <TabsList className="flex-wrap h-auto gap-1 bg-transparent p-0 border-b border-line-strong">
           {statusTabs.map(tab => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="data-[state=active]:text-[#00a651] data-[state=active]:border-b-2 data-[state=active]:border-[#00a651] rounded-none px-3 py-2 text-sm text-[#666666] hover:text-[#333333] transition-colors bg-transparent shadow-none"
+              className="data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-3 py-2 text-sm text-ink-soft hover:text-ink transition-colors bg-transparent shadow-none"
             >
               {tab.label}
             </TabsTrigger>
@@ -109,52 +110,54 @@ export default function AdminQuotes() {
       </Tabs>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#999999] pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
         <Input
-          placeholder="Cari no. quotation atau klien..."
+          placeholder="Cari no. penawaran atau klien..."
           value={searchInput}
           onChange={e => handleSearchChange(e.target.value)}
-          className="pl-9 mb-3 corp-input"
+          className="pl-9 mb-3"
         />
       </div>
 
-      <div className="corp-card rounded-[10px] p-4 overflow-x-auto">
+      <div className="corp-card p-4 overflow-x-auto">
         {loading ? (
           <div className="space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-10 text-[#666666]">No</TableHead>
-                <TableHead className="text-[#666666]">No. Quotation</TableHead>
-                <TableHead className="text-[#666666]">Klien</TableHead>
-                <TableHead className="text-right text-[#666666]">Total</TableHead>
-                <TableHead className="text-[#666666]">Status</TableHead>
-                <TableHead className="text-[#666666]">Deadline</TableHead>
-                <TableHead className="text-[#666666]">Tanggal</TableHead>
-                <TableHead className="text-right text-[#666666]">Aksi</TableHead>
+                <TableHead className="w-10 text-ink-soft">No</TableHead>
+                <TableHead className="text-ink-soft">No. Penawaran</TableHead>
+                <TableHead className="text-ink-soft">Klien</TableHead>
+                <TableHead className="text-right text-ink-soft">Total</TableHead>
+                <TableHead className="text-ink-soft">Status</TableHead>
+                <TableHead className="text-ink-soft">Deadline</TableHead>
+                <TableHead className="text-ink-soft">Tanggal</TableHead>
+                <TableHead className="text-right text-ink-soft table-sticky-action">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {quotes.length === 0 ? (
-                <TableRow><TableCell colSpan={8} className="text-center text-[#999999] py-8">Tidak ada penawaran.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={8} className="text-center text-ink-muted py-8">Tidak ada penawaran.</TableCell></TableRow>
               ) : quotes.map((q, i) => (
-                <TableRow key={q.id} className="cursor-pointer hover:bg-[#f8f8f8]" onClick={() => selectQuote(q.id)}>
-                  <TableCell className="text-sm text-[#666666]">{i + 1}</TableCell>
-                  <TableCell className="font-medium text-sm text-[#333333]">{q.quoteNumber}</TableCell>
-                  <TableCell className="text-sm text-[#666666]">{q.client?.companyName ?? '-'}</TableCell>
-                  <TableCell className="text-right text-sm text-[#333333]">{formatRupiah(q.total)}</TableCell>
+                <TableRow key={q.id} tabIndex={0} className="cursor-pointer hover:bg-muted" onClick={() => selectQuote(q.id)} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); selectQuote(q.id) } }}>
+                  <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                  <TableCell className="font-medium text-sm text-ink">{q.quoteNumber}</TableCell>
+                  <TableCell className="text-sm text-ink-soft">{q.client?.companyName ?? '-'}</TableCell>
+                  <TableCell className="text-right text-sm text-ink">{formatRupiah(q.total)}</TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(q.status, QUOTE_STATUSES)}>
                       {getStatusLabel(q.status, QUOTE_STATUSES)}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-[#999999]">{formatDate(q.deadline)}</TableCell>
-                  <TableCell className="text-sm text-[#999999]">{formatDate(q.createdAt)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-sm text-ink-muted">{formatDate(q.deadline)}</TableCell>
+                  <TableCell className="text-sm text-ink-muted">{formatDate(q.createdAt)}</TableCell>
+                  <TableCell className="text-right table-sticky-action">
                     {q.status === 'accepted' && !q.order && (
-                      <Button variant="outline" size="sm" onClick={(e) => handleConvert(e, q)}>
-                        <ArrowRightLeft className="w-3 h-3 mr-1" />Convert
+                      <Button variant="outline" size="sm" onClick={(e) => handleConvert(e, q)} disabled={convertingId === q.id}>
+                        {convertingId === q.id
+                          ? <><Loader2 className="w-3 h-3 mr-1 animate-spin" />Memproses...</>
+                          : <><ArrowRightLeft className="w-3 h-3 sm:mr-1" /><span className="sr-only sm:not-sr-only">Jadikan Pesanan</span></>}
                       </Button>
                     )}
                   </TableCell>
@@ -166,7 +169,7 @@ export default function AdminQuotes() {
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[#999999]">Halaman {page} dari {totalPages || 1}</p>
+        <p className="text-sm text-ink-muted">Halaman {page} dari {totalPages || 1}</p>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="w-4 h-4 mr-1" />Sebelumnya</Button>
           <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Selanjutnya<ChevronRight className="w-4 h-4 ml-1" /></Button>

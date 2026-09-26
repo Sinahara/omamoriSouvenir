@@ -24,7 +24,7 @@ const categories = [
 ]
 
 export default function Footer() {
-  const { navigate, setCatalogCategory } = useAppStore()
+  const { navigate, setCatalogCategory, currentPage } = useAppStore()
   const year = new Date().getFullYear()
   const [contact, setContact] = useState(defaultContact)
 
@@ -45,16 +45,16 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto">
-      <div className="bg-white border-t border-[#eeeeee]">
+      <div className="bg-white border-t border-line">
         <div className="max-w-6xl mx-auto px-4 py-16 pb-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
             {/* Company Info */}
             <div className="space-y-5">
               <div className="flex items-center gap-2.5">
               <img src="/logo.png" alt="Omamori Souvenir" className="h-7 w-auto object-contain" />
-                <span className="font-bold text-[17px] text-[#333333] tracking-tight">Omamori Souvenir</span>
+                <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
               </div>
-              <p className="text-[13px] text-[#999999] leading-relaxed">
+              <p className="text-[13px] text-ink-muted leading-relaxed">
                 Solusi corporate gift premium untuk kebutuhan bisnis Anda. Dari tumbler custom
                 hingga employee onboarding kit lengkap, kami siap membantu.
               </p>
@@ -63,7 +63,7 @@ export default function Footer() {
                   href="https://instagram.com/omamorisouvenir.id"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-[4px] bg-[#fafafa] border border-[#eeeeee] flex items-center justify-center text-[#999999] hover:text-[#00a651] hover:border-[#00a651]/20 transition-colors duration-300"
+                  className="w-8 h-8 pointer-coarse:size-11 rounded-sm bg-surface border border-line flex items-center justify-center text-ink-muted hover:text-primary hover:border-primary/20 transition-colors duration-200"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-4 h-4" />
@@ -72,27 +72,27 @@ export default function Footer() {
                   href="https://linkedin.com/company/omamorisouvenir"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-[4px] bg-[#fafafa] border border-[#eeeeee] flex items-center justify-center text-[#999999] hover:text-[#00a651] hover:border-[#00a651]/20 transition-colors duration-300"
+                  className="w-8 h-8 pointer-coarse:size-11 rounded-sm bg-surface border border-line flex items-center justify-center text-ink-muted hover:text-primary hover:border-primary/20 transition-colors duration-200"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="w-4 h-4" />
                 </a>
               </div>
-              <div className="flex items-start gap-2 text-[13px] text-[#999999]">
-                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#cccccc]" />
+              <div className="flex items-start gap-2 text-[13px] text-ink-muted">
+                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-ink-faint" />
                 <span>{contact.address}</span>
               </div>
             </div>
 
             {/* Quick Links */}
             <div className="space-y-5">
-              <h3 className="text-[11px] font-semibold text-[#333333] tracking-[0.15em] uppercase">Quick Links</h3>
-              <nav className="flex flex-col gap-2.5" role="navigation">
+              <h3 className="eyebrow text-ink">Quick Links</h3>
+              <nav className="flex flex-col gap-2.5 pointer-coarse:gap-0" role="navigation">
                 {quickLinks.map((link) => (
                   <button
                     key={link.page}
                     onClick={() => navigate(link.page)}
-                    className="text-[13px] text-[#999999] hover:text-[#00a651] text-left transition-colors duration-300"
+                    className="pointer-coarse:min-h-11 text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
                   >
                     {link.label}
                   </button>
@@ -102,17 +102,17 @@ export default function Footer() {
 
             {/* Kategori */}
             <div className="space-y-5">
-              <h3 className="text-[11px] font-semibold text-[#333333] tracking-[0.15em] uppercase">Kategori</h3>
-              <div className="flex flex-col gap-2.5">
+              <h3 className="eyebrow text-ink">Kategori</h3>
+              <div className="flex flex-col gap-2.5 pointer-coarse:gap-0">
                 {categories.map((cat) => {
                   const Icon = cat.icon
                   return (
                     <button
                       key={cat.label}
                       onClick={() => { setCatalogCategory(cat.value); navigate('catalog') }}
-                      className="flex items-center gap-2.5 text-[13px] text-[#999999] hover:text-[#00a651] text-left transition-colors duration-300"
+                      className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
                     >
-                      <Icon className="w-4 h-4 text-[#cccccc]" />
+                      <Icon className="w-4 h-4 text-ink-faint" />
                       {cat.label}
                     </button>
                   )
@@ -122,22 +122,22 @@ export default function Footer() {
 
             {/* Kontak */}
             <div className="space-y-5">
-              <h3 className="text-[11px] font-semibold text-[#333333] tracking-[0.15em] uppercase">Kontak</h3>
-              <div className="flex flex-col gap-3">
+              <h3 className="eyebrow text-ink">Kontak</h3>
+              <div className="flex flex-col gap-3 pointer-coarse:gap-0">
                 <a
                   href={`https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-[13px] text-[#999999] hover:text-[#00a651] transition-colors duration-300"
+                  className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
                 >
-                  <MessageCircle className="w-4 h-4 shrink-0 text-[#cccccc]" />
+                  <MessageCircle className="w-4 h-4 shrink-0 text-ink-faint" />
                   +{contact.whatsapp}
                 </a>
                 <a
                   href={`mailto:${(contact.email || '').replace(/[^\w@.\-+]/g, '')}`}
-                  className="flex items-center gap-2.5 text-[13px] text-[#999999] hover:text-[#00a651] transition-colors duration-300"
+                  className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
                 >
-                  <Mail className="w-4 h-4 shrink-0 text-[#cccccc]" />
+                  <Mail className="w-4 h-4 shrink-0 text-ink-faint" />
                   {contact.email}
                 </a>
               </div>
@@ -146,22 +146,25 @@ export default function Footer() {
 
           <div className="corp-divider my-10" />
 
-          <p className="text-center text-[12px] text-[#cccccc] tracking-wide">
+          <p className="text-center text-[12px] text-ink-faint tracking-wide">
             &copy; {year} Omamori Souvenir. All rights reserved.
           </p>
         </div>
       </div>
 
-      {/* WhatsApp Floating Button */}
-      <a
-        href={`https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-40 w-12 h-12 bg-[#00a651] hover:bg-[#008a40] text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-        aria-label="Hubungi via WhatsApp"
-      >
-        <MessageCircle className="w-5 h-5" />
-      </a>
+      {/* WhatsApp Floating Button — hidden on the quote form, where it would cover
+          the form's action buttons on phones (the footer still links to WhatsApp) */}
+      {currentPage !== 'request-quote' && (
+        <a
+          href={`https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 right-6 z-40 w-12 h-12 bg-primary hover:bg-primary-hover text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+          aria-label="Hubungi via WhatsApp"
+        >
+          <MessageCircle className="w-5 h-5" />
+        </a>
+      )}
     </footer>
   )
 }

@@ -218,61 +218,60 @@ export default function AdminInventory() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-[#333333]">Inventaris Bahan Baku</h2>
-        <Button onClick={openCreate} className="bg-[#00a651] hover:bg-[#008a40] text-white"><Plus className="w-4 h-4 mr-2" />Tambah Item</Button>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
+        <Button onClick={openCreate} className="bg-primary hover:bg-primary-hover text-white"><Plus className="w-4 h-4 mr-2" />Tambah Item</Button>
       </div>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#999999] pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
         <Input
           placeholder="Cari nama atau kategori..."
           value={searchInput}
           onChange={e => handleSearchChange(e.target.value)}
-          className="pl-9 mb-3 corp-input"
+          className="pl-9 mb-3"
         />
       </div>
 
-      <div className="corp-card rounded-[10px] p-4 overflow-x-auto">
+      <div className="corp-card p-4 overflow-x-auto">
         {loading ? (
           <div className="space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-10 text-[#666666]">No</TableHead>
-                <TableHead className="text-[#666666]">Nama</TableHead>
-                <TableHead className="text-[#666666]">Kategori</TableHead>
-                <TableHead className="text-right text-[#666666]">Stok Saat Ini</TableHead>
-                <TableHead className="text-right text-[#666666]">Min. Stok</TableHead>
-                <TableHead className="text-[#666666]">Satuan</TableHead>
-                <TableHead className="text-[#666666]">Status</TableHead>
-                <TableHead className="text-right text-[#666666]">Aksi</TableHead>
+                <TableHead className="w-10 text-ink-soft">No</TableHead>
+                <TableHead className="text-ink-soft">Nama</TableHead>
+                <TableHead className="text-ink-soft">Kategori</TableHead>
+                <TableHead className="text-right text-ink-soft">Stok Saat Ini</TableHead>
+                <TableHead className="text-right text-ink-soft">Min. Stok</TableHead>
+                <TableHead className="text-ink-soft">Satuan</TableHead>
+                <TableHead className="text-ink-soft">Status</TableHead>
+                <TableHead className="text-right text-ink-soft table-sticky-action">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.length === 0 ? (
-                <TableRow><TableCell colSpan={8} className="text-center text-[#999999] py-8">Tidak ada item inventaris.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={8} className="text-center text-ink-muted py-8">Tidak ada item inventaris.</TableCell></TableRow>
               ) : items.map((item, i) => {
                 const status = getStockStatus(item)
                 const isLow = item.currentStock <= item.minimumStock
                 return (
-                  <TableRow key={item.id} className={`${isLow ? 'bg-amber-50' : 'hover:bg-[#f8f8f8]'}`}>
-                    <TableCell className="text-sm text-[#666666]">{i + 1}</TableCell>
-                    <TableCell className="font-medium text-sm text-[#333333]">{item.name}</TableCell>
-                    <TableCell className="text-sm text-[#666666]">{item.category || '-'}</TableCell>
-                    <TableCell className={`text-right text-sm font-medium ${isLow ? 'text-amber-700' : 'text-[#333333]'}`}>{item.currentStock}</TableCell>
-                    <TableCell className="text-right text-sm text-[#666666]">{item.minimumStock}</TableCell>
-                    <TableCell className="text-sm text-[#666666]">{item.unit}</TableCell>
+                  <TableRow key={item.id} className={`${isLow ? 'bg-amber-50' : 'hover:bg-muted'}`}>
+                    <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                    <TableCell className="font-medium text-sm text-ink">{item.name}</TableCell>
+                    <TableCell className="text-sm text-ink-soft">{item.category || '-'}</TableCell>
+                    <TableCell className={`text-right text-sm font-medium ${isLow ? 'text-amber-700' : 'text-ink'}`}>{item.currentStock}</TableCell>
+                    <TableCell className="text-right text-sm text-ink-soft">{item.minimumStock}</TableCell>
+                    <TableCell className="text-sm text-ink-soft">{item.unit}</TableCell>
                     <TableCell><Badge variant={status.variant}>{status.label}</Badge></TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right table-sticky-action">
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="sm" onClick={() => openTxDialog(item.id)} title="Catat Stok">
+                        <Button variant="ghost" size="sm" onClick={() => openTxDialog(item.id)} aria-label={`Catat stok ${item.name}`} title="Catat Stok">
                           {item.currentStock <= item.minimumStock ? <ArrowDownCircle className="w-4 h-4 text-green-600" /> : <ArrowUpCircle className="w-4 h-4 text-amber-600" />}
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => openHistory(item)} title="Riwayat"><History className="w-4 h-4" /></Button>
-                        <Button variant="ghost" size="sm" onClick={() => openEdit(item)}><Pencil className="w-4 h-4" /></Button>
-                        <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(item.id)}><Trash2 className="w-4 h-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => openHistory(item)} aria-label={`Riwayat stok ${item.name}`} title="Riwayat"><History className="w-4 h-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => openEdit(item)} aria-label={`Edit ${item.name}`} title="Edit"><Pencil className="w-4 h-4" /></Button>
+                        <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(item.id)} aria-label={`Hapus ${item.name}`} title="Hapus"><Trash2 className="w-4 h-4" /></Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -284,7 +283,7 @@ export default function AdminInventory() {
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[#999999]">Halaman {page} dari {totalPages || 1}</p>
+        <p className="text-sm text-ink-muted">Halaman {page} dari {totalPages || 1}</p>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="w-4 h-4 mr-1" />Sebelumnya</Button>
           <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Selanjutnya<ChevronRight className="w-4 h-4 ml-1" /></Button>
@@ -293,37 +292,37 @@ export default function AdminInventory() {
 
       {/* Item Form Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-md bg-white">
+        <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
-            <DialogTitle className="text-[#333333]">{editId ? 'Edit Item' : 'Tambah Item'}</DialogTitle>
+            <DialogTitle className="text-ink">{editId ? 'Edit Item' : 'Tambah Item'}</DialogTitle>
             <DialogDescription className="sr-only">Form untuk {editId ? 'mengedit' : 'menambahkan'} item inventaris</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-[#333333]">Nama *</Label>
+              <Label className="text-ink">Nama *</Label>
               <Input value={form.name} onChange={e => updateField('name', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">Kategori</Label>
+              <Label className="text-ink">Kategori</Label>
               <Input value={form.category} onChange={e => updateField('category', e.target.value)} />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-[#333333]">Satuan</Label>
+                <Label className="text-ink">Satuan</Label>
                 <Input value={form.unit} onChange={e => updateField('unit', e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Min. Stok</Label>
+                <Label className="text-ink">Min. Stok</Label>
                 <Input type="number" value={form.minimumStock} onChange={e => updateField('minimumStock', e.target.value)} />
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">Catatan</Label>
+              <Label className="text-ink">Catatan</Label>
               <Textarea rows={2} value={form.notes} onChange={e => updateField('notes', e.target.value)} />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <Button variant="outline" onClick={() => setDialogOpen(false)}>Batal</Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-[#00a651] hover:bg-[#008a40] text-white">{saving ? 'Menyimpan...' : 'Simpan'}</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary-hover text-white">{saving ? 'Menyimpan...' : 'Simpan'}</Button>
             </div>
           </div>
         </DialogContent>
@@ -331,14 +330,14 @@ export default function AdminInventory() {
 
       {/* Transaction Dialog */}
       <Dialog open={txDialogOpen} onOpenChange={setTxDialogOpen}>
-        <DialogContent className="max-w-md bg-white">
+        <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
-            <DialogTitle className="text-[#333333]">Catat Stok</DialogTitle>
+            <DialogTitle className="text-ink">Catat Stok</DialogTitle>
             <DialogDescription className="sr-only">Form pencatatan transaksi stok masuk atau keluar</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-[#333333]">Tipe</Label>
+              <Label className="text-ink">Tipe</Label>
               <Select value={txForm.type} onValueChange={v => setTxForm(prev => ({ ...prev, type: v }))}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -348,20 +347,20 @@ export default function AdminInventory() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">Jumlah *</Label>
+              <Label className="text-ink">Jumlah *</Label>
               <Input type="number" value={txForm.qty} onChange={e => setTxForm(prev => ({ ...prev, qty: e.target.value }))} />
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">No. Referensi</Label>
+              <Label className="text-ink">No. Referensi</Label>
               <Input value={txForm.refNumber} onChange={e => setTxForm(prev => ({ ...prev, refNumber: e.target.value }))} />
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">Catatan</Label>
+              <Label className="text-ink">Catatan</Label>
               <Textarea rows={2} value={txForm.notes} onChange={e => setTxForm(prev => ({ ...prev, notes: e.target.value }))} />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <Button variant="outline" onClick={() => setTxDialogOpen(false)}>Batal</Button>
-              <Button onClick={handleTxSave} disabled={txSaving} className="bg-[#00a651] hover:bg-[#008a40] text-white">{txSaving ? 'Menyimpan...' : 'Simpan'}</Button>
+              <Button onClick={handleTxSave} disabled={txSaving} className="bg-primary hover:bg-primary-hover text-white">{txSaving ? 'Menyimpan...' : 'Simpan'}</Button>
             </div>
           </div>
         </DialogContent>
@@ -369,9 +368,9 @@ export default function AdminInventory() {
 
       {/* History Dialog */}
       <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
-        <DialogContent className="max-w-lg bg-white">
+        <DialogContent className="sm:max-w-lg bg-white">
           <DialogHeader>
-            <DialogTitle className="text-[#333333]">Riwayat Stok — {historyItem?.name}</DialogTitle>
+            <DialogTitle className="text-ink">Riwayat Stok — {historyItem?.name}</DialogTitle>
             <DialogDescription className="sr-only">Riwayat transaksi stok untuk {historyItem?.name}</DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-96">
@@ -379,16 +378,16 @@ export default function AdminInventory() {
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="text-[#666666]">Tipe</TableHead>
-                    <TableHead className="text-right text-[#666666]">Qty</TableHead>
-                    <TableHead className="text-[#666666]">Ref</TableHead>
-                    <TableHead className="text-[#666666]">Tanggal</TableHead>
-                    <TableHead className="text-[#666666]">Catatan</TableHead>
+                    <TableHead className="text-ink-soft">Tipe</TableHead>
+                    <TableHead className="text-right text-ink-soft">Qty</TableHead>
+                    <TableHead className="text-ink-soft">Ref</TableHead>
+                    <TableHead className="text-ink-soft">Tanggal</TableHead>
+                    <TableHead className="text-ink-soft">Catatan</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {historyItem.transactions.map((tx) => (
-                    <TableRow key={tx.id} className="hover:bg-[#f8f8f8]">
+                    <TableRow key={tx.id} className="hover:bg-muted">
                       <TableCell>
                         <Badge variant={tx.type === 'stock_in' ? 'default' : 'secondary'}>
                           {tx.type === 'stock_in' ? 'Masuk' : 'Keluar'}
@@ -397,15 +396,15 @@ export default function AdminInventory() {
                       <TableCell className={`text-right font-medium ${tx.type === 'stock_in' ? 'text-green-600' : 'text-red-600'}`}>
                         {tx.type === 'stock_in' ? '+' : '-'}{tx.qty}
                       </TableCell>
-                      <TableCell className="text-sm text-[#666666]">{tx.refNumber || '-'}</TableCell>
-                      <TableCell className="text-sm text-[#999999]">{formatDateTime(tx.createdAt)}</TableCell>
-                      <TableCell className="text-sm text-[#666666]">{tx.notes || '-'}</TableCell>
+                      <TableCell className="text-sm text-ink-soft">{tx.refNumber || '-'}</TableCell>
+                      <TableCell className="text-sm text-ink-muted">{formatDateTime(tx.createdAt)}</TableCell>
+                      <TableCell className="text-sm text-ink-soft">{tx.notes || '-'}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             ) : (
-              <p className="text-center text-[#999999] py-8">Tidak ada riwayat transaksi.</p>
+              <p className="text-center text-ink-muted py-8">Tidak ada riwayat transaksi.</p>
             )}
           </ScrollArea>
         </DialogContent>
@@ -415,8 +414,8 @@ export default function AdminInventory() {
       <AlertDialog open={!!deleteId} onOpenChange={(open) => { if (!open) setDeleteId(null) }}>
         <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-[#333333]">Hapus Item?</AlertDialogTitle>
-            <AlertDialogDescription className="text-[#666666]">Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
+            <AlertDialogTitle className="text-ink">Hapus Item?</AlertDialogTitle>
+            <AlertDialogDescription className="text-ink-soft">Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>

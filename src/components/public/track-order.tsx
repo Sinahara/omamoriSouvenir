@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import SectionHeader from '@/components/public/section-header'
 import { ORDER_STATUSES, getStatusLabel, getStatusColor, formatDate } from '@/lib/types'
 
 interface TrackResult {
@@ -74,29 +75,27 @@ export default function TrackOrder() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 md:py-20 space-y-8">
       {/* Header */}
-      <div className="text-center">
-        <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">Lacak</span>
-        <h2 className="text-2xl md:text-3xl font-bold text-[#333333] tracking-tight mt-3">Lacak Pesanan</h2>
-        <p className="text-[#999999] mt-4 text-[15px]">Masukkan nomor pesanan untuk melihat status terbaru</p>
-      </div>
+      <SectionHeader as="h1" badge="Lacak" title="Lacak Pesanan" subtitle="Masukkan nomor pesanan untuk melihat status terbaru" />
 
       {/* Search */}
       <div className="corp-card jp-corner-accents p-6">
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#aaaaaa]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" />
             <Input
               placeholder="Contoh: ORD/2025/01/001"
+              aria-label="Nomor pesanan"
               value={orderNumber}
               onChange={(e) => setOrderNumber(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="corp-input pl-10 h-10"
+              className="pl-10 h-10"
             />
           </div>
           <Button
             onClick={handleTrack}
             disabled={loading || !orderNumber.trim()}
-            className="bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] text-[13px] tracking-wide px-5"
+            aria-label={loading ? 'Mencari pesanan' : undefined}
+            className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white rounded-sm text-[13px] tracking-wide px-5"
           >
             {loading ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -127,10 +126,10 @@ export default function TrackOrder() {
       {/* Error */}
       {searched && !loading && error && (
         <div className="corp-card jp-corner-accents p-8 text-center">
-          <AlertCircle className="w-10 h-10 text-[#e74c3c] mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-[#333333] mb-1">Tidak Ditemukan</h3>
-          <p className="text-[15px] text-[#999999]">{error}</p>
-          <p className="text-[12px] text-[#888888] mt-2">Pastikan nomor pesanan sesuai format ORD/YYYY/MM/XXXX</p>
+          <AlertCircle className="w-10 h-10 text-destructive mx-auto mb-4" />
+          {/* The server message ("Pesanan tidak ditemukan", rate limit, …) is the headline */}
+          <h3 role="alert" className="text-lg font-medium text-ink mb-1">{error}</h3>
+          <p className="text-sm text-ink-muted mt-2">Pastikan nomor pesanan sesuai format ORD/YYYY/MM/XXXX</p>
         </div>
       )}
 
@@ -141,17 +140,17 @@ export default function TrackOrder() {
           <div className="space-y-2">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div>
-                <p className="text-[11px] font-semibold text-[#999999] tracking-[0.15em] uppercase">Nomor Pesanan</p>
-                <p className="font-mono font-semibold text-lg text-[#333333] mt-0.5">{result.orderNumber}</p>
+                <p className="eyebrow text-ink-muted">Nomor Pesanan</p>
+                <p className="font-mono font-semibold text-lg text-ink mt-0.5">{result.orderNumber}</p>
               </div>
               <Badge className={getStatusColor(result.status, ORDER_STATUSES)}>
                 {getStatusLabel(result.status, ORDER_STATUSES)}
               </Badge>
             </div>
-            <p className="text-[13px] text-[#999999]">
-              Perusahaan: <span className="text-[#333333] font-medium">{result.companyName || '-'}</span>
+            <p className="text-[13px] text-ink-muted">
+              Perusahaan: <span className="text-ink font-medium">{result.companyName || '-'}</span>
             </p>
-            <p className="text-[12px] text-[#cccccc]">
+            <p className="text-[12px] text-ink-faint">
               Terakhir diperbarui: {formatDate(result.updatedAt)}
             </p>
           </div>
@@ -160,7 +159,7 @@ export default function TrackOrder() {
 
           {/* Timeline */}
           <div>
-            <h3 className="text-[11px] font-semibold text-[#333333] mb-4 tracking-[0.15em] uppercase">Status Pesanan</h3>
+            <h3 className="eyebrow text-ink mb-4">Status Pesanan</h3>
             <div className="space-y-0">
               {ORDER_STATUSES.map((stage, idx) => {
                 const isCompleted = idx <= currentIdx
@@ -173,28 +172,28 @@ export default function TrackOrder() {
                 return (
                   <div key={stage.value} className="flex gap-4">
                     <div className="flex flex-col items-center">
-                      <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
                         isCompleted
-                          ? 'bg-[#00a651] text-white'
-                          : 'bg-[#f5f5f5] text-[#cccccc]'
-                      } ${isCurrent ? 'ring-4 ring-[#00a651]/15' : ''}`}>
+                          ? 'bg-primary text-white'
+                          : 'bg-accent text-ink-faint'
+                      } ${isCurrent ? 'ring-4 ring-primary/15' : ''}`}>
                         <Icon className="w-4 h-4" />
                       </div>
                       {!isLast && (
-                        <div className={`w-px flex-1 min-h-8 my-1 transition-all duration-300 ${
-                          idx < currentIdx ? 'bg-[#00a651]' : 'bg-[#eeeeee]'
+                        <div className={`w-px flex-1 min-h-8 my-1 transition-all duration-200 ${
+                          idx < currentIdx ? 'bg-primary' : 'bg-line'
                         }`} />
                       )}
                     </div>
                     <div className={`pb-6 ${isLast ? 'pb-0' : ''}`}>
-                      <p className={`text-[13px] font-medium ${isCompleted ? 'text-[#333333]' : 'text-[#cccccc]'}`}>
+                      <p className={`text-[13px] font-medium ${isCompleted ? 'text-ink' : 'text-ink-faint'}`}>
                         {stage.label}
                       </p>
                       {isCurrent && (
-                        <p className="text-[11px] text-[#00a651] font-medium mt-0.5 tracking-wide">Status saat ini</p>
+                        <p className="text-[11px] text-primary font-medium mt-0.5 tracking-wide">Status saat ini</p>
                       )}
                       {isUpcoming && (
-                        <p className="text-[11px] text-[#cccccc] mt-0.5">Menunggu</p>
+                        <p className="text-[11px] text-ink-faint mt-0.5">Menunggu</p>
                       )}
                     </div>
                   </div>
@@ -207,13 +206,13 @@ export default function TrackOrder() {
           {result.vendorTracking && (
             <>
               <div className="corp-divider" />
-              <div className="flex items-center justify-between p-4 rounded-lg bg-[#fafafa]">
+              <div className="flex items-center justify-between p-4 rounded-lg bg-surface">
                 <div>
-                  <p className="text-[11px] font-semibold text-[#999999] tracking-[0.15em] uppercase">Nomor Resi / Tracking</p>
-                  <p className="font-mono font-medium text-[#333333] mt-0.5">{result.vendorTracking}</p>
+                  <p className="eyebrow text-ink-muted">Nomor Resi / Tracking</p>
+                  <p className="font-mono font-medium text-ink mt-0.5">{result.vendorTracking}</p>
                 </div>
                 {result.shippedAt && (
-                  <p className="text-[12px] text-[#cccccc]">
+                  <p className="text-[12px] text-ink-faint">
                     Dikirim: {formatDate(result.shippedAt)}
                   </p>
                 )}

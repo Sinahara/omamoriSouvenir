@@ -37,15 +37,15 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-7 h-7 text-red-400" />
             </div>
-            <h3 className="text-lg font-semibold text-[#333333]">Terjadi Kesalahan</h3>
-            <p className="text-sm text-[#999999] max-w-sm mx-auto">
+            <h3 className="text-lg font-semibold text-ink">Terjadi Kesalahan</h3>
+            <p className="text-sm text-ink-muted max-w-sm mx-auto">
               Halaman ini mengalami error. Silakan coba lagi.
             </p>
             <Button
               variant="outline"
               size="sm"
               onClick={this.handleReset}
-              className="border-[#eeeeee] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] rounded-[4px] text-[13px]"
+              className="border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm text-[13px]"
             >
               <RefreshCw className="w-4 h-4 mr-1.5" />
               Coba Lagi

@@ -10,13 +10,14 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import SectionHeader from '@/components/public/section-header'
 import { useAppStore } from '@/lib/store'
 import { CATEGORIES, formatRupiah, type Product } from '@/lib/types'
 
 const categoryCards = [
   { value: 'tumbler', label: 'Tumbler', icon: CupSoda, desc: 'Tumbler custom untuk souvenir perusahaan & event' },
   { value: 'plakat', label: 'Plakat', icon: Award, desc: 'Plakat penghargaan premium & certificate frame' },
-  { value: 'lanyard', label: 'Lanyard', icon: IdCard, desc: 'ID card lanyard & tali name tag berkualitas' },
+  { value: 'lanyard', label: 'Lanyard', icon: IdCard, desc: 'Tali ID card & name tag dengan cetak logo' },
   { value: 'hardbox', label: 'Hardbox', icon: Box, desc: 'Packaging hardbox premium untuk gift set' },
   { value: 'goodie_bag', label: 'Goodie Bag', icon: ShoppingBag, desc: 'Goodie bag custom untuk event & seminar' },
   { value: 'starter_kit', label: 'Starter Kit', icon: Briefcase, desc: 'Paket starter kit lengkap untuk employee onboarding & welcome gift' },
@@ -27,19 +28,19 @@ const howItWorks = [
     step: 1,
     icon: Upload,
     title: 'Kirim Permintaan',
-    desc: 'Upload brief atau isi form RFQ, tim kami akan merespon dalam 1x24 jam',
+    desc: 'Kirim brief atau isi form Minta Penawaran. Tim kami merespons dalam 1×24 jam.',
   },
   {
     step: 2,
     icon: ClipboardCheck,
     title: 'Proses Produksi',
-    desc: 'Setelah DP masuk, produksi dimulai dengan update progress berkala',
+    desc: 'Produksi dimulai setelah DP masuk, dan Anda mendapat kabar progresnya secara berkala.',
   },
   {
     step: 3,
     icon: Truck,
     title: 'Pengiriman',
-    desc: 'Quality check ketat, pengiriman tepat waktu dengan tracking real-time',
+    desc: 'Barang dicek sebelum dikirim. Statusnya bisa dipantau di halaman Lacak Pesanan.',
   },
 ]
 
@@ -47,33 +48,22 @@ const usps = [
   {
     icon: Package,
     title: 'Zero Inventory',
-    desc: 'Tidak perlu stok, produksi setelah DP. Minim risiko, maksimal fleksibilitas.',
+    desc: 'Barang diproduksi setelah DP masuk, jadi Anda tidak perlu menyimpan stok.',
     iconClass: 'kpi-icon-green',
   },
   {
     icon: FileText,
     title: 'Dokumen Lengkap',
-    desc: 'Quotation, invoice, kuitansi bermeterai. Semua administrasi terurus.',
+    desc: 'Quotation, invoice, dan kuitansi bermeterai kami siapkan untuk administrasi kantor Anda.',
     iconClass: 'kpi-icon-amber',
   },
   {
     icon: Sparkles,
     title: 'Mockup Premium',
-    desc: 'Visualisasi produk dengan mockup AI berkualitas tinggi sebelum produksi.',
+    desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai.',
     iconClass: 'kpi-icon-blue',
   },
 ]
-
-/* ── Section Header ─────────────────────────── */
-function SectionHeader({ badge, title, subtitle }: { badge: string; title: string; subtitle: string }) {
-  return (
-    <div className="text-center mb-12">
-      <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm mb-4">{badge}</span>
-      <h2 className="text-2xl md:text-3xl font-bold text-[#333333] tracking-tight">{title}</h2>
-      <p className="text-[#999999] mt-3 max-w-md mx-auto">{subtitle}</p>
-    </div>
-  )
-}
 
 export default function Landing() {
   const { navigate, selectProduct, setCatalogCategory } = useAppStore()
@@ -120,7 +110,7 @@ export default function Landing() {
   }, [])
 
   return (
-    <div className="pb-16">
+    <div>
       {/* ═══ Hero Section ═══ */}
       <section className="relative">
         <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.03]" />
@@ -133,19 +123,19 @@ export default function Landing() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             >
-              {/* <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">
+              {/* <span className="inline-block eyebrow text-primary border border-primary/20 px-4 py-1 rounded-sm">
                 {settings.hero_badge}
               </span>
-              <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-[#333333] leading-[1.2] tracking-tight">
+              <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-ink leading-[1.2] tracking-tight">
                 {settings.hero_title}
               </h1>
-              <p className="text-base text-[#999999] max-w-md mx-auto lg:mx-0 leading-relaxed">
+              <p className="text-base text-ink-muted max-w-md mx-auto lg:mx-0 leading-relaxed">
                 {settings.hero_subtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
                 <Button
                   size="lg"
-                  className="text-sm px-8 h-11 bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] tracking-wide"
+                  className="text-sm px-8 h-11 bg-primary hover:bg-primary-hover text-white rounded-sm tracking-wide"
                   onClick={() => navigate('request-quote')}
                 >
                   {settings.hero_btn_primary_text}
@@ -154,7 +144,7 @@ export default function Landing() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="text-sm px-8 h-11 border-[#e0e0e0] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] hover:border-[#d0d0d0] rounded-[4px] tracking-wide"
+                  className="text-sm px-8 h-11 border-line-strong text-ink-soft hover:text-ink hover:bg-surface hover:border-line-hover rounded-sm tracking-wide"
                   onClick={() => navigate('catalog')}
                 >
                   {settings.hero_btn_secondary_text}
@@ -174,19 +164,19 @@ export default function Landing() {
               ) : (
                 /* JIKA DATA SUDAH SIAP, TAMPILKAN TEKS ASLI DARI DATABASE */
                 <>
-                  <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">
+                  <span className="inline-block eyebrow text-primary border border-primary/20 px-4 py-1 rounded-sm">
                     {settings.hero_badge}
                   </span>
-                  <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-[#333333] leading-[1.2] tracking-tight">
+                  <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-ink leading-[1.2] tracking-tight">
                     {settings.hero_title}
                   </h1>
-                  <p className="text-base text-[#999999] max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-base text-ink-muted max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap">
                     {settings.hero_subtitle}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
                     <Button
                       size="lg"
-                      className="text-sm px-8 h-11 bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] tracking-wide"
+                      className="text-sm px-8 h-11 bg-primary hover:bg-primary-hover text-white rounded-sm tracking-wide"
                       onClick={() => navigate('request-quote')}
                     >
                       {settings.hero_btn_primary_text}
@@ -195,7 +185,7 @@ export default function Landing() {
                     <Button
                       variant="outline"
                       size="lg"
-                      className="text-sm px-8 h-11 border-[#e0e0e0] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] hover:border-[#d0d0d0] rounded-[4px] tracking-wide"
+                      className="text-sm px-8 h-11 border-line-strong text-ink-soft hover:text-ink hover:bg-surface hover:border-line-hover rounded-sm tracking-wide"
                       onClick={() => navigate('catalog')}
                     >
                       {settings.hero_btn_secondary_text}
@@ -241,9 +231,9 @@ export default function Landing() {
           <SectionHeader
             badge="Kategori"
             title="Kategori Produk"
-            subtitle="Berbagai pilihan corporate gift untuk setiap kebutuhan"
+            subtitle="Enam kategori, semuanya bisa disesuaikan dengan identitas brand Anda"
           />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-5 mt-12 stagger-children">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-5 stagger-children">
             {categoryCards.map((cat) => {
               const Icon = cat.icon
               return (
@@ -251,14 +241,15 @@ export default function Landing() {
                   key={cat.value}
                   onClick={() => { setCatalogCategory(cat.value); navigate('catalog') }}
                   whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="corp-card jp-corner-accents p-6 text-left cursor-pointer group"
+                  className="corp-card jp-corner-accents p-6 text-left cursor-pointer group flex flex-col"
                 >
                   <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mb-4">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-[#333333] mb-1.5 text-[15px]">{cat.label}</h3>
-                  <p className="text-sm text-[#999999] leading-relaxed">{cat.desc}</p>
+                  <h3 className="font-semibold text-ink mb-1.5 text-[15px]">{cat.label}</h3>
+                  <p className="text-sm text-ink-muted leading-relaxed">{cat.desc}</p>
                 </motion.button>
               )
             })}
@@ -272,11 +263,11 @@ export default function Landing() {
           <SectionHeader
             badge="Unggulan"
             title="Produk Unggulan"
-            subtitle="Produk terbaik kami yang siap untuk bisnis Anda"
+            subtitle="Harga per unit turun untuk pesanan dalam jumlah besar"
           />
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="corp-card overflow-hidden">
                   <Skeleton className="h-48 w-full" />
@@ -288,22 +279,34 @@ export default function Landing() {
               ))}
             </div>
           ) : featured.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-[#999999]">Belum ada produk yang tersedia.</p>
+            <div className="corp-card max-w-md mx-auto px-6 py-10 text-center">
+              <Package className="w-10 h-10 text-ink-faint mx-auto mb-3" />
+              <p className="font-medium text-ink">Produk belum bisa ditampilkan</p>
+              <p className="text-sm text-ink-muted mt-1 mb-5">
+                Anda tetap bisa mengirim kebutuhan lewat form penawaran, tim kami akan membantu memilih produknya.
+              </p>
+              <Button
+                variant="outline"
+                className="border-line-strong text-ink-soft hover:text-ink hover:bg-surface rounded-sm"
+                onClick={() => navigate('request-quote')}
+              >
+                Minta Penawaran
+              </Button>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featured.map((product) => (
                   <motion.button
                     key={product.id}
                     onClick={() => selectProduct(product.slug)}
                     whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="corp-card overflow-hidden text-left cursor-pointer group"
+                    className="corp-card overflow-hidden text-left cursor-pointer group flex flex-col"
                   >
                     <div className="p-3 pb-0">
-                      <div className="h-44 bg-[#1a1a1a] rounded-2xl flex items-center justify-center relative overflow-hidden">
+                      <div className="h-44 bg-media rounded-2xl flex items-center justify-center relative overflow-hidden">
                         {product.images?.[0]?.path && !imgErrors.has(product.images[0].path) ? (
                           <img
                             src={product.images[0].path}
@@ -314,20 +317,20 @@ export default function Landing() {
                             className="w-full h-full object-cover rounded-2xl group-hover:scale-[1.03] transition-transform duration-700"
                           />
                         ) : (
-                          <Package className="w-16 h-16 text-[#cccccc] group-hover:text-[#aaaaaa] transition-colors" />
+                          <Package className="w-16 h-16 text-ink-faint group-hover:text-ink-muted transition-colors" />
                         )}
                         <div className="absolute top-3 left-3">
-                          <Badge variant="secondary" className="text-[10px] tracking-wide bg-white/80 text-[#666666] rounded-sm">
+                          <Badge variant="secondary" className="text-[10px] tracking-wide bg-white/80 text-ink-soft rounded-sm">
                             {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
                           </Badge>
                         </div>
                       </div>
                     </div>
-                    <div className="px-5 pb-5 pt-4 space-y-2">
-                      <h3 className="font-semibold text-[#333333] line-clamp-2 group-hover:text-[#00a651] transition-colors text-[15px]">
+                    <div className="flex flex-1 flex-col gap-2 px-5 pb-5 pt-4">
+                      <h3 className="font-semibold text-ink line-clamp-2 group-hover:text-primary transition-colors text-[15px]">
                         {product.name}
                       </h3>
-                      <p className="text-sm text-[#00a651] font-semibold">
+                      <p className="mt-auto text-sm text-primary font-semibold">
                         Mulai dari {formatRupiah(product.basePrice)}
                       </p>
                     </div>
@@ -338,7 +341,7 @@ export default function Landing() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-[#d4d4d4] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] hover:border-[#b0b0b0] rounded-[4px] tracking-wide px-6 h-10"
+                  className="border-line-hover text-ink-soft hover:text-ink hover:bg-surface hover:border-line-hover rounded-sm tracking-wide px-6 h-10"
                   onClick={() => navigate('catalog')}
                 >
                   Lihat Semua Produk
@@ -356,9 +359,9 @@ export default function Landing() {
           <SectionHeader
             badge="Proses"
             title="Cara Kerja"
-            subtitle="Proses pemesanan yang mudah dan transparan"
+            subtitle="Tiga tahap dari brief sampai barang diterima"
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative">
             <div className="hidden md:block absolute top-[18px] left-[calc(16.67%+18px)] right-[calc(16.67%+18px)] connecting-line" />
 
             {howItWorks.map((item) => {
@@ -379,8 +382,8 @@ export default function Landing() {
                     <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mx-auto mb-4">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <h3 className="font-semibold text-[#333333] mb-2 text-[15px]">{item.title}</h3>
-                    <p className="text-sm text-[#999999] leading-relaxed">{item.desc}</p>
+                    <h3 className="font-semibold text-ink mb-2 text-[15px]">{item.title}</h3>
+                    <p className="text-sm text-ink-muted leading-relaxed">{item.desc}</p>
                   </div>
                 </motion.div>
               )
@@ -394,10 +397,10 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto px-4">
           <SectionHeader
             badge="Keunggulan"
-            title="Mengapa Memilih Kami?"
-            subtitle="Keunggulan yang membedakan kami dari yang lain"
+            title="Yang Kami Tangani untuk Anda"
+            subtitle="Stok, desain, dan dokumen administrasi tidak perlu Anda urus sendiri"
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 stagger-children">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-children">
             {usps.map((usp) => {
               const Icon = usp.icon
               return (
@@ -410,8 +413,8 @@ export default function Landing() {
                   <div className={`w-10 h-10 rounded-lg ${usp.iconClass} flex items-center justify-center mb-4`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-[#333333] mb-2 text-[15px]">{usp.title}</h3>
-                  <p className="text-sm text-[#999999] leading-relaxed">{usp.desc}</p>
+                  <h3 className="font-semibold text-ink mb-2 text-[15px]">{usp.title}</h3>
+                  <p className="text-sm text-ink-muted leading-relaxed">{usp.desc}</p>
                 </motion.div>
               )
             })}
@@ -427,7 +430,7 @@ export default function Landing() {
             title="Dipercaya oleh Ratusan Perusahaan"
             subtitle="Apa kata klien kami tentang layanan Omamori Souvenir"
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {[
               {
                 quote: "Kualitas tumbler custom sangat baik dan pengiriman tepat waktu. Tim Omamori Souvenir sangat responsif dan profesional dari awal konsultasi hingga barang diterima.",
@@ -453,18 +456,18 @@ export default function Landing() {
                 transition={{ duration: 0.6, delay: i * 0.1, ease: 'easeOut' }}
                 className="corp-card jp-corner-accents p-6 flex flex-col"
               >
-                <Quote className="w-6 h-6 text-[#00a651]/15 mb-4 shrink-0" />
-                <p className="text-[15px] text-[#666666] leading-relaxed flex-1">
+                <Quote className="w-6 h-6 text-primary/15 mb-4 shrink-0" />
+                <p className="text-[15px] text-ink-soft leading-relaxed flex-1">
                   &ldquo;{item.quote}&rdquo;
                 </p>
                 <div className="corp-divider my-4" />
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#e8f5ee] flex items-center justify-center text-sm font-semibold text-[#00a651] shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-primary-soft flex items-center justify-center text-sm font-semibold text-primary shrink-0">
                     {item.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#333333]">{item.name}</p>
-                    <p className="text-xs text-[#999999] mt-0.5">{item.title}</p>
+                    <p className="text-sm font-semibold text-ink">{item.name}</p>
+                    <p className="text-xs text-ink-muted mt-0.5">{item.title}</p>
                   </div>
                 </div>
               </motion.div>
@@ -476,19 +479,19 @@ export default function Landing() {
       {/* ═══ Final CTA ═══ */}
       <section className="py-16 md:py-24 jp-seigaiha-bg">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="relative bg-[#00a651] rounded-lg p-10 md:p-14 text-center text-white overflow-hidden">
+          <div className="relative bg-primary rounded-lg p-10 md:p-14 text-center text-white overflow-hidden">
             <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
             <div className="relative">
               <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">
                 Siap Memulai Pesanan?
               </h2>
               <p className="text-white/75 max-w-md mx-auto mb-8 leading-relaxed text-[15px]">
-                Dapatkan penawaran terbaik untuk kebutuhan corporate gift perusahaan Anda.
-                Gratis konsultasi.
+                Kirim kebutuhan Anda, quotation resmi kami kirim dalam 1×24&nbsp;jam.
+                Konsultasi gratis.
               </p>
               <Button
                 size="lg"
-                className="bg-white text-[#00a651] hover:bg-white/90 text-sm px-8 h-11 rounded-[4px] font-semibold tracking-wide"
+                className="bg-white text-primary hover:bg-white/90 text-sm px-8 h-11 rounded-sm font-semibold tracking-wide"
                 onClick={() => navigate('request-quote')}
               >
                 Minta Penawaran Sekarang

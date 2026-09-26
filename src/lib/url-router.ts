@@ -166,12 +166,11 @@ export function urlToPage(pathname: string, search: string): UrlParseResult {
           selectedInventoryId: null, catalogCategory: 'all',
         }
       }
-      // /admin/klien/baru or /admin/klien/:id
+      // /admin/klien/baru or /admin/klien/:id → map back to list (the form is a dialog there)
       return {
-        page: 'admin-clients-form',
+        page: 'admin-clients',
         selectedProductSlug: null, selectedQuoteId: null,
-        selectedOrderId: null,
-        selectedClientId: segments[1] === 'baru' ? null : segments[1],
+        selectedOrderId: null, selectedClientId: null,
         selectedInventoryId: null, catalogCategory: 'all',
       }
     }
@@ -186,13 +185,12 @@ export function urlToPage(pathname: string, search: string): UrlParseResult {
           selectedInventoryId: null, catalogCategory: 'all',
         }
       }
-      // /admin/stok/baru or /admin/stok/:id
+      // /admin/stok/baru or /admin/stok/:id → map back to list (the form is a dialog there)
       return {
-        page: 'admin-inventory-form',
+        page: 'admin-inventory',
         selectedProductSlug: null, selectedQuoteId: null,
         selectedOrderId: null, selectedClientId: null,
-        selectedInventoryId: segments[1] === 'baru' ? null : segments[1],
-        catalogCategory: 'all',
+        selectedInventoryId: null, catalogCategory: 'all',
       }
     }
 

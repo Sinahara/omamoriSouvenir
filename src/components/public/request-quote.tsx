@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import {
   ArrowLeft, ArrowRight, Plus, Trash2, Loader2, CheckCircle2, Building2, User, Package,
 } from 'lucide-react'
@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
+import SectionHeader from '@/components/public/section-header'
 import { useAppStore } from '@/lib/store'
 import { useToast } from '@/hooks/use-toast'
 import { formatRupiah, type Product, type PricingTier } from '@/lib/types'
@@ -64,8 +65,15 @@ function generateId() {
 }
 
 export default function RequestQuote() {
-  const { rfqProductSlug, setRfqProductSlug, navigate } = useAppStore()
+  const { rfqProductSlug, setRfqProductSlug, navigate, navigateBack, previousPage } = useAppStore()
   const { toast } = useToast()
+  const stepsRef = useRef<HTMLOListElement>(null)
+
+  // Return to the page the visitor came from; a direct visit (or one from Beranda) goes to Beranda
+  const goBack = () => {
+    if (previousPage === 'landing' || previousPage === 'request-quote') navigate('landing')
+    else navigateBack()
+  }
 
   const [step, setStep] = useState(1)
   const [company, setCompany] = useState<CompanyForm>({ ...emptyCompany })
@@ -78,6 +86,17 @@ export default function RequestQuote() {
   const [captchaAnswer, setCaptchaAnswer] = useState('')
   const [captchaError, setCaptchaError] = useState('')
   const [captchaLoading, setCaptchaLoading] = useState(false)
+
+  // Next/Back are pressed at the bottom of the form: bring the new step's top into view
+  useEffect(() => {
+    const el = stepsRef.current
+    if (el && el.getBoundingClientRect().top < 0) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [step])
+
+  // The success message replaces the form, which may leave the visitor looking at the footer
+  useEffect(() => {
+    if (submitted) window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [submitted])
 
   // Fetch products for the select dropdown
   useEffect(() => {
@@ -176,9 +195,19 @@ export default function RequestQuote() {
 
   const totalEstimated = order.items.reduce((sum, i) => sum + i.subtotal, 0)
 
+  // On small screens the first invalid field can sit above the fold: bring it into view
+  const focusFirstError = () => {
+    requestAnimationFrame(() => {
+      const el = document.querySelector<HTMLElement>('[aria-invalid="true"], [data-error-anchor]')
+      if (!el) return
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      el.focus({ preventScroll: true })
+    })
+  }
+
   const handleNext = () => {
-    if (step === 1 && !validateStep1()) return
-    if (step === 2 && !validateStep2()) return
+    if (step === 1 && !validateStep1()) return focusFirstError()
+    if (step === 2 && !validateStep2()) return focusFirstError()
     setStep(prev => Math.min(prev + 1, 3))
   }
 
@@ -212,8 +241,10 @@ export default function RequestQuote() {
     // Validate CAPTCHA answer
     const userAnswer = Number(captchaAnswer.trim())
     if (isNaN(userAnswer) || userAnswer !== captcha.a + captcha.b) {
-      setCaptchaError('Jawaban verifikasi salah, silakan coba lagi.')
+      // Refresh first: refreshCaptcha clears captchaError, so setting it before would hide the message
       await refreshCaptcha()
+      setCaptchaError('Jawaban verifikasi salah, silakan coba lagi.')
+      focusFirstError()
       return
     }
 
@@ -250,7 +281,7 @@ export default function RequestQuote() {
         throw new Error(data.error || 'Gagal mengirim penawaran')
       }
 
-      toast({ title: 'Penawaran Terkirim!', description: 'Tim kami akan menghubungi Anda dalam 1x24 jam.' })
+      toast({ title: 'Penawaran Terkirim!', description: 'Tim kami akan menghubungi Anda dalam 1×24 jam.' })
       setCompany({ ...emptyCompany })
       setOrder({ items: [{ id: generateId(), productId: '', qty: 0, notes: '', product: null, pricePerUnit: 0, subtotal: 0 }], deadline: '', notes: '' })
       await refreshCaptcha()
@@ -273,18 +304,18 @@ export default function RequestQuote() {
       {/* Success State */}
       {submitted ? (
         <div className="text-center py-16 space-y-6 animate-fade-in-up">
-          <div className="w-20 h-20 rounded-full bg-[#00a651]/10 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-10 h-10 text-[#00a651]" />
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+            <CheckCircle2 className="w-10 h-10 text-primary" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#333333]">Penawaran Berhasil Terkirim!</h2>
-          <p className="text-[#999999] max-w-md mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-ink">Penawaran Berhasil Terkirim!</h2>
+          <p className="text-ink-muted max-w-md mx-auto">
             Tim kami akan menghubungi Anda dalam 1×24 jam melalui WhatsApp atau email untuk mengirimkan quotation resmi.
           </p>
           <div className="flex gap-3 justify-center pt-4">
-            <Button onClick={() => navigate('catalog')} variant="outline" className="border-[#eeeeee] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] rounded-[4px]">
+            <Button onClick={() => navigate('catalog')} variant="outline" className="border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm">
               Lihat Katalog
             </Button>
-            <Button onClick={() => { setSubmitted(false); setStep(1) }} className="bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px]">
+            <Button onClick={() => { setSubmitted(false); setStep(1) }} className="bg-primary hover:bg-primary-hover text-white rounded-sm">
               Buat Penawaran Baru
             </Button>
           </div>
@@ -292,87 +323,80 @@ export default function RequestQuote() {
       ) : (
       <>
       {/* Header */}
-      <section>
-        <div>
-        <Button variant="ghost" size="sm" className="text-[#666666] hover:text-[#333333] mb-4" onClick={() => navigate('landing')}>
-          <ArrowLeft className="w-4 h-4 mr-1" /> Kembali
-        </Button>
-        <span className="inline-block text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00a651] border border-[#00a651]/20 px-4 py-1 rounded-sm">Formulir</span>
-        <h2 className="text-2xl md:text-3xl font-bold text-[#333333] tracking-tight mt-3">Minta Penawaran</h2>
-        <p className="text-[#999999] mt-3">Isi form di bawah untuk mendapatkan penawaran terbaik</p>
-      </div>
-      </section>
+      <Button variant="ghost" size="sm" className="text-ink-soft hover:text-ink mb-4" onClick={goBack}>
+        <ArrowLeft className="w-4 h-4 mr-1" /> Kembali
+      </Button>
+      <SectionHeader as="h1" align="left" badge="Formulir" title="Minta Penawaran" subtitle="Quotation resmi kami kirim dalam 1×24 jam setelah form ini dikirim" />
 
-      {/* Progress Indicator */}
-      <div className="flex items-center justify-between max-w-md mx-auto">
+      {/* Progress Indicator — equal columns so it never overflows narrow screens */}
+      <ol ref={stepsRef} className="grid grid-cols-3 max-w-md mx-auto">
         {steps.map((s, i) => {
           const Icon = s.icon
           const isActive = step === s.num
           const isDone = step > s.num
           return (
-            <div key={s.num} className="flex items-center">
-              <div className="flex flex-col items-center gap-1.5">
-                <div className={`w-9 h-9 rounded-[4px] flex items-center justify-center transition-all ${
-                  isDone
-                    ? 'bg-[#00a651] text-white'
-                    : isActive
-                      ? 'bg-[#00a651] text-white'
-                      : 'bg-[#fafafa] text-[#999999] border border-[#eeeeee]'
-                }`}>
-                  {isDone ? <CheckCircle2 className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
-                </div>
-                <span className={`text-[11px] font-semibold tracking-[0.15em] uppercase ${isActive || isDone ? 'text-[#00a651]' : 'text-[#999999]'}`}>
-                  {s.label}
-                </span>
-              </div>
-              {i < steps.length - 1 && (
-                <div className={`w-16 sm:w-24 h-px mx-2 mb-5 transition-all ${step > s.num ? 'bg-[#00a651]' : 'bg-[#eeeeee]'}`} />
+            <li key={s.num} className="relative flex flex-col items-center gap-1.5 text-center" aria-current={isActive ? 'step' : undefined}>
+              {i > 0 && (
+                <span
+                  aria-hidden="true"
+                  className={`absolute top-[18px] right-[calc(50%+26px)] w-[calc(100%-52px)] h-px transition-colors ${step >= s.num ? 'bg-primary' : 'bg-line'}`}
+                />
               )}
-            </div>
+              <div className={`w-9 h-9 rounded-sm flex items-center justify-center transition-all ${
+                isDone || isActive
+                  ? 'bg-primary text-white'
+                  : 'bg-surface text-ink-muted border border-line'
+              }`}>
+                {isDone ? <CheckCircle2 className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
+              </div>
+              <span className={`eyebrow ${isActive || isDone ? 'text-primary' : 'text-ink-muted'}`}>
+                {s.label}
+              </span>
+            </li>
           )
         })}
-      </div>
+      </ol>
 
-      <Separator className="bg-[#eeeeee]" />
+      <Separator className="bg-line" />
 
       {/* Step 1: Company Info */}
       {step === 1 && (
         <section>
         <div className="corp-card jp-corner-accents p-6 space-y-5 animate-fade-in-up">
-          <h2 className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[#999999]">Langkah 1</h2>
-          <h3 className="text-lg font-semibold text-[#333333]">Informasi Perusahaan</h3>
+          <h2 className="eyebrow text-ink-muted">Langkah 1</h2>
+          <h3 className="text-lg font-semibold text-ink">Informasi Perusahaan</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <Label htmlFor="companyName" className="text-[13px] text-[#333333]">Nama Perusahaan <span className="text-red-500">*</span></Label>
-              <Input id="companyName" required aria-required="true" placeholder="PT. Contoh Indonesia" value={company.companyName} onChange={(e) => updateCompany('companyName', e.target.value)} className={`corp-input mt-1.5 ${errors.companyName ? 'border-destructive' : ''}`} />
-              {errors.companyName && <p className="text-xs text-destructive mt-1">{errors.companyName}</p>}
+              <Label htmlFor="companyName" className="text-[13px] text-ink">Nama Perusahaan <span className="text-red-500">*</span></Label>
+              <Input id="companyName" required aria-required="true" placeholder="PT. Contoh Indonesia" value={company.companyName} onChange={(e) => updateCompany('companyName', e.target.value)} aria-invalid={!!errors.companyName} className={`mt-1.5 ${errors.companyName ? 'border-destructive' : ''}`} />
+              {errors.companyName && <p role="alert" className="text-xs text-destructive mt-1">{errors.companyName}</p>}
             </div>
             <div>
-              <Label htmlFor="picName" className="text-[13px] text-[#333333]">Nama PIC <span className="text-red-500">*</span></Label>
-              <Input id="picName" required aria-required="true" placeholder="Budi Santoso" value={company.picName} onChange={(e) => updateCompany('picName', e.target.value)} className={`corp-input mt-1.5 ${errors.picName ? 'border-destructive' : ''}`} />
-              {errors.picName && <p className="text-xs text-destructive mt-1">{errors.picName}</p>}
+              <Label htmlFor="picName" className="text-[13px] text-ink">Nama PIC <span className="text-red-500">*</span></Label>
+              <Input id="picName" required aria-required="true" placeholder="Budi Santoso" value={company.picName} onChange={(e) => updateCompany('picName', e.target.value)} aria-invalid={!!errors.picName} className={`mt-1.5 ${errors.picName ? 'border-destructive' : ''}`} />
+              {errors.picName && <p role="alert" className="text-xs text-destructive mt-1">{errors.picName}</p>}
             </div>
             <div>
-              <Label htmlFor="picTitle" className="text-[13px] text-[#333333]">Jabatan PIC</Label>
-              <Input id="picTitle" placeholder="Purchasing Manager" value={company.picTitle} onChange={(e) => updateCompany('picTitle', e.target.value)} className="corp-input mt-1.5" />
+              <Label htmlFor="picTitle" className="text-[13px] text-ink">Jabatan PIC</Label>
+              <Input id="picTitle" placeholder="Purchasing Manager" value={company.picTitle} onChange={(e) => updateCompany('picTitle', e.target.value)} className="mt-1.5" />
             </div>
             <div>
-              <Label htmlFor="whatsapp" className="text-[13px] text-[#333333]">No. HP / WhatsApp <span className="text-red-500">*</span></Label>
-              <Input id="whatsapp" required aria-required="true" placeholder="081234567890" value={company.whatsapp} onChange={(e) => updateCompany('whatsapp', e.target.value)} className={`corp-input mt-1.5 ${errors.whatsapp ? 'border-destructive' : ''}`} />
-              {errors.whatsapp && <p className="text-xs text-destructive mt-1">{errors.whatsapp}</p>}
+              <Label htmlFor="whatsapp" className="text-[13px] text-ink">No. HP / WhatsApp <span className="text-red-500">*</span></Label>
+              <Input id="whatsapp" required aria-required="true" placeholder="081234567890" value={company.whatsapp} onChange={(e) => updateCompany('whatsapp', e.target.value)} aria-invalid={!!errors.whatsapp} className={`mt-1.5 ${errors.whatsapp ? 'border-destructive' : ''}`} />
+              {errors.whatsapp && <p role="alert" className="text-xs text-destructive mt-1">{errors.whatsapp}</p>}
             </div>
             <div>
-              <Label htmlFor="email" className="text-[13px] text-[#333333]">Email <span className="text-red-500">*</span></Label>
-              <Input id="email" type="email" required aria-required="true" placeholder="budi@contoh.co.id" value={company.email} onChange={(e) => updateCompany('email', e.target.value)} className={`corp-input mt-1.5 ${errors.email ? 'border-destructive' : ''}`} />
-              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+              <Label htmlFor="email" className="text-[13px] text-ink">Email <span className="text-red-500">*</span></Label>
+              <Input id="email" type="email" required aria-required="true" placeholder="budi@contoh.co.id" value={company.email} onChange={(e) => updateCompany('email', e.target.value)} aria-invalid={!!errors.email} className={`mt-1.5 ${errors.email ? 'border-destructive' : ''}`} />
+              {errors.email && <p role="alert" className="text-xs text-destructive mt-1">{errors.email}</p>}
             </div>
             <div>
-              <Label htmlFor="kota" className="text-[13px] text-[#333333]">Kota</Label>
-              <Input id="kota" placeholder="Surabaya" value={company.kota} onChange={(e) => updateCompany('kota', e.target.value)} className="corp-input mt-1.5" />
+              <Label htmlFor="kota" className="text-[13px] text-ink">Kota</Label>
+              <Input id="kota" placeholder="Surabaya" value={company.kota} onChange={(e) => updateCompany('kota', e.target.value)} className="mt-1.5" />
             </div>
             <div>
-              <Label htmlFor="alamat" className="text-[13px] text-[#333333]">Alamat</Label>
-              <Input id="alamat" placeholder="Jl. Raya Darmo No. 123" value={company.alamat} onChange={(e) => updateCompany('alamat', e.target.value)} className="corp-input mt-1.5" />
+              <Label htmlFor="alamat" className="text-[13px] text-ink">Alamat</Label>
+              <Input id="alamat" placeholder="Jl. Raya Darmo No. 123" value={company.alamat} onChange={(e) => updateCompany('alamat', e.target.value)} className="mt-1.5" />
             </div>
           </div>
         </div>
@@ -381,17 +405,17 @@ export default function RequestQuote() {
 
       {/* Step 2: Order Details */}
       {step === 2 && (
-        <section>
+        <section className="space-y-4">
           {errors.items && (
-            <p className="text-sm text-destructive">{errors.items}</p>
+            <p role="alert" data-error-anchor tabIndex={-1} className="text-sm text-destructive">{errors.items}</p>
           )}
 
           {order.items.map((item, idx) => (
             <div key={item.id} className="corp-card jp-corner-accents p-4 sm:p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-[#333333]">Produk #{idx + 1}</h3>
+                <h3 className="font-medium text-ink">Produk #{idx + 1}</h3>
                 {order.items.length > 1 && (
-                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8" onClick={() => removeItem(item.id)}>
+                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8" onClick={() => removeItem(item.id)} aria-label={`Hapus produk #${idx + 1}`}>
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 )}
@@ -399,9 +423,9 @@ export default function RequestQuote() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
-                  <Label className="text-[13px] text-[#333333]">Pilih Produk</Label>
+                  <Label htmlFor={`product-${item.id}`} className="text-[13px] text-ink">Pilih Produk</Label>
                   <Select value={item.productId} onValueChange={(val) => updateItem(item.id, 'productId', val)}>
-                    <SelectTrigger className="corp-input mt-1.5 w-full">
+                    <SelectTrigger id={`product-${item.id}`} className="mt-1.5 w-full">
                       <SelectValue placeholder="Pilih produk..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -413,7 +437,7 @@ export default function RequestQuote() {
                 </div>
 
                 <div>
-                  <Label htmlFor={`qty-${item.id}`} className="text-[13px] text-[#333333]">Jumlah</Label>
+                  <Label htmlFor={`qty-${item.id}`} className="text-[13px] text-ink">Jumlah</Label>
                   <Input
                     id={`qty-${item.id}`}
                     type="number"
@@ -421,32 +445,32 @@ export default function RequestQuote() {
                     value={item.qty || ''}
                     onChange={(e) => updateItem(item.id, 'qty', Number(e.target.value))}
                     placeholder={item.product ? `Min. ${item.product.minQty}` : '0'}
-                    className="corp-input mt-1.5"
+                    className="mt-1.5"
                   />
                   {item.product && (
-                    <p className="text-xs text-[#999999] mt-1">Min. order: {item.product.minQty} {item.product.unit}</p>
+                    <p className="text-xs text-ink-muted mt-1">Minimal pemesanan: {item.product.minQty} {item.product.unit}</p>
                   )}
                 </div>
 
                 <div className="flex items-end">
                   <div className="w-full">
-                    <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[#999999] mb-1">Harga/Unit</p>
+                    <p className="eyebrow text-ink-muted mb-1">Harga/Unit</p>
                     {item.productId && item.qty > 0 ? (
-                      <p className="text-lg font-semibold text-[#00a651]">{formatRupiah(item.pricePerUnit)}</p>
+                      <p className="text-lg font-semibold text-primary">{formatRupiah(item.pricePerUnit)}</p>
                     ) : (
-                      <p className="text-sm text-[#999999]">Pilih produk & jumlah</p>
+                      <p className="text-sm text-ink-muted">Pilih produk & jumlah</p>
                     )}
                   </div>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <Label htmlFor={`notes-${item.id}`} className="text-[13px] text-[#333333]">Catatan</Label>
+                  <Label htmlFor={`notes-${item.id}`} className="text-[13px] text-ink">Catatan</Label>
                   <Textarea
                     id={`notes-${item.id}`}
                     placeholder="Catatan khusus untuk produk ini..."
                     value={item.notes}
                     onChange={(e) => updateItem(item.id, 'notes', e.target.value)}
-                    className="corp-input mt-1.5"
+                    className="mt-1.5"
                     rows={2}
                   />
                 </div>
@@ -458,31 +482,31 @@ export default function RequestQuote() {
             variant="outline"
             size="sm"
             onClick={addItem}
-            className="w-full sm:w-auto border-[#eeeeee] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] rounded-[4px] tracking-wide text-[13px]"
+            className="w-full sm:w-auto border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm tracking-wide text-[13px]"
           >
             <Plus className="w-4 h-4 mr-1" /> Tambah Produk
           </Button>
 
           <div className="corp-card jp-corner-accents p-4 sm:p-6 space-y-4">
-            <h3 className="font-medium text-[#333333]">Pengiriman & Catatan</h3>
+            <h3 className="font-medium text-ink">Pengiriman & Catatan</h3>
             <div>
-              <Label htmlFor="deadline" className="text-[13px] text-[#333333]">Deadline Pengiriman</Label>
+              <Label htmlFor="deadline" className="text-[13px] text-ink">Deadline Pengiriman</Label>
               <Input
                 id="deadline"
                 type="date"
                 value={order.deadline}
                 onChange={(e) => setOrder(prev => ({ ...prev, deadline: e.target.value }))}
-                className="corp-input mt-1.5"
+                className="mt-1.5"
               />
             </div>
             <div>
-              <Label htmlFor="orderNotes" className="text-[13px] text-[#333333]">Catatan Tambahan</Label>
+              <Label htmlFor="orderNotes" className="text-[13px] text-ink">Catatan Tambahan</Label>
               <Textarea
                 id="orderNotes"
                 placeholder="Catatan tambahan untuk pesanan ini..."
                 value={order.notes}
                 onChange={(e) => setOrder(prev => ({ ...prev, notes: e.target.value }))}
-                className="corp-input mt-1.5"
+                className="mt-1.5"
                 rows={3}
               />
             </div>
@@ -495,66 +519,66 @@ export default function RequestQuote() {
         <section>
         <div className="space-y-4 animate-fade-in-up">
           <div className="corp-card jp-corner-accents p-6 space-y-4">
-            <h3 className="font-semibold text-[#333333] flex items-center gap-2">
+            <h3 className="font-semibold text-ink flex items-center gap-2">
               <Building2 className="w-5 h-5" /> Informasi Perusahaan
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div><span className="text-[#999999]">Nama Perusahaan:</span><p className="font-medium text-[#333333]">{company.companyName}</p></div>
-              <div><span className="text-[#999999]">PIC:</span><p className="font-medium text-[#333333]">{company.picName}{company.picTitle ? ` — ${company.picTitle}` : ''}</p></div>
-              <div><span className="text-[#999999]">WhatsApp:</span><p className="font-medium text-[#333333]">{company.whatsapp}</p></div>
-              <div><span className="text-[#999999]">Email:</span><p className="font-medium text-[#333333]">{company.email}</p></div>
+              <div><span className="text-ink-muted">Nama Perusahaan:</span><p className="font-medium text-ink">{company.companyName}</p></div>
+              <div><span className="text-ink-muted">PIC:</span><p className="font-medium text-ink">{company.picName}{company.picTitle ? ` — ${company.picTitle}` : ''}</p></div>
+              <div><span className="text-ink-muted">WhatsApp:</span><p className="font-medium text-ink">{company.whatsapp}</p></div>
+              <div><span className="text-ink-muted">Email:</span><p className="font-medium text-ink">{company.email}</p></div>
               {(company.kota || company.alamat) && (
-                <div className="sm:col-span-2"><span className="text-[#999999]">Alamat:</span><p className="font-medium text-[#333333]">{company.alamat}{company.kota ? `, ${company.kota}` : ''}</p></div>
+                <div className="sm:col-span-2"><span className="text-ink-muted">Alamat:</span><p className="font-medium text-ink">{company.alamat}{company.kota ? `, ${company.kota}` : ''}</p></div>
               )}
             </div>
           </div>
 
           <div className="corp-card jp-corner-accents p-6 space-y-4">
-            <h3 className="font-semibold text-[#333333] flex items-center gap-2">
+            <h3 className="font-semibold text-ink flex items-center gap-2">
               <Package className="w-5 h-5" /> Detail Pesanan
             </h3>
             <div className="space-y-3">
               {order.items.filter(i => i.productId && i.qty > 0).map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-3 rounded-[10px] bg-[#fafafa] text-sm">
+                <div key={item.id} className="flex items-center justify-between p-3 rounded-lg bg-surface text-sm">
                   <div>
-                    <p className="font-medium text-[#333333]">{item.product?.name}</p>
-                    <p className="text-[#999999]">{item.qty} {item.product?.unit || 'pcs'} × {formatRupiah(item.pricePerUnit)}</p>
-                    {item.notes && <p className="text-xs text-[#999999] mt-0.5">Catatan: {item.notes}</p>}
+                    <p className="font-medium text-ink">{item.product?.name}</p>
+                    <p className="text-ink-muted">{item.qty} {item.product?.unit || 'pcs'} × {formatRupiah(item.pricePerUnit)}</p>
+                    {item.notes && <p className="text-xs text-ink-muted mt-0.5">Catatan: {item.notes}</p>}
                   </div>
-                  <p className="font-semibold text-[#333333]">{formatRupiah(item.subtotal)}</p>
+                  <p className="font-semibold text-ink">{formatRupiah(item.subtotal)}</p>
                 </div>
               ))}
             </div>
 
             {order.deadline && (
-              <p className="text-sm text-[#999999]">
+              <p className="text-sm text-ink-muted">
                 Deadline: {new Date(order.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
             )}
             {order.notes && (
-              <p className="text-sm text-[#999999]">
+              <p className="text-sm text-ink-muted">
                 Catatan: {order.notes}
               </p>
             )}
 
-            <Separator className="bg-[#eeeeee]" />
+            <Separator className="bg-line" />
 
             <div className="flex items-center justify-between">
-              <span className="font-medium text-[#333333]">Estimasi Total</span>
-              <span className="text-xl font-bold text-[#00a651]">{formatRupiah(totalEstimated)}</span>
+              <span className="font-medium text-ink">Estimasi Total</span>
+              <span className="text-xl font-bold text-primary">{formatRupiah(totalEstimated)}</span>
             </div>
-            <p className="text-xs text-[#999999]">
+            <p className="text-xs text-ink-muted">
               *Harga estimasi berdasarkan tier harga. Harga final akan dikonfirmasi melalui quotation resmi.
             </p>
           </div>
 
           {/* CAPTCHA Verification */}
           <div className="corp-card jp-corner-accents p-6 space-y-4">
-            <h3 className="font-semibold text-[#333333]">Verifikasi</h3>
-            <p className="text-sm text-[#999999]">Untuk mencegah spam, jawab pertanyaan berikut:</p>
+            <h3 className="font-semibold text-ink">Verifikasi</h3>
+            <p className="text-sm text-ink-muted">Untuk mencegah spam, jawab pertanyaan berikut:</p>
             <div className="flex items-center gap-3">
               <div className="flex-1 sm:w-auto">
-                <Label htmlFor="captcha-question" className="text-[13px] text-[#333333]">
+                <Label htmlFor="captcha-question" className="text-[13px] text-ink">
                   {captcha.a} + {captcha.b} = ?
                 </Label>
               </div>
@@ -565,7 +589,8 @@ export default function RequestQuote() {
                   value={captchaAnswer}
                   onChange={(e) => { setCaptchaAnswer(e.target.value); setCaptchaError('') }}
                   placeholder="Jawaban"
-                  className={`corp-input mt-0 ${captchaError ? 'border-destructive' : ''}`}
+                  aria-invalid={!!captchaError}
+                  className={`mt-0 ${captchaError ? 'border-destructive' : ''}`}
                   aria-label="Jawaban verifikasi"
                 />
               </div>
@@ -573,14 +598,15 @@ export default function RequestQuote() {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="shrink-0 text-[#999999] hover:text-[#333333]"
+                className="shrink-0 text-ink-muted hover:text-ink"
                 onClick={refreshCaptcha}
+                disabled={captchaLoading}
                 aria-label="Refresh soal verifikasi"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                <svg className={captchaLoading ? 'animate-spin' : undefined} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
               </Button>
             </div>
-            {captchaError && <p className="text-xs text-destructive">{captchaError}</p>}
+            {captchaError && <p role="alert" className="text-xs text-destructive">{captchaError}</p>}
           </div>
         </div>
         </section>
@@ -593,7 +619,7 @@ export default function RequestQuote() {
             variant="outline"
             onClick={handlePrev}
             disabled={submitting}
-            className="border-[#eeeeee] text-[#666666] hover:text-[#333333] hover:bg-[#fafafa] rounded-[4px] tracking-wide text-[13px]"
+            className="border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm tracking-wide text-[13px]"
           >
             <ArrowLeft className="w-4 h-4 mr-1" /> Sebelumnya
           </Button>
@@ -602,11 +628,11 @@ export default function RequestQuote() {
         )}
 
         {step < 3 ? (
-          <Button onClick={handleNext} className="bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px]">
+          <Button onClick={handleNext} className="bg-primary hover:bg-primary-hover text-white rounded-sm">
             Selanjutnya <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         ) : (
-          <Button onClick={handleSubmit} disabled={submitting} className="bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px]">
+          <Button onClick={handleSubmit} disabled={submitting} className="bg-primary hover:bg-primary-hover text-white rounded-sm">
             {submitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-1 animate-spin" /> Mengirim...

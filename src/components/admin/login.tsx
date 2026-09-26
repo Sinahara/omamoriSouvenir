@@ -45,19 +45,19 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f8f8] flex items-center justify-center p-4">
-      <div className="corp-card rounded-[10px] p-8 w-full max-w-md">
+    <div className="min-h-screen bg-muted flex items-center justify-center p-4">
+      <div className="corp-card p-8 w-full max-w-md">
         <div className="flex items-center justify-center gap-3 mb-8">
           <img src="/logo.png" alt="Omamori Souvenir" className="h-11 w-auto object-contain" />
           <div>
-            <h1 className="text-xl font-bold text-[#333333]">Omamori Souvenir Admin</h1>
-            <p className="text-xs text-[#999999]">Panel Manajemen</p>
+            <h1 className="text-xl font-bold text-ink">Omamori Souvenir Admin</h1>
+            <p className="text-xs text-ink-muted">Panel Manajemen</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-[#333333]">Email</Label>
+            <Label htmlFor="email" className="text-ink">Email</Label>
             <Input
               id="email"
               type="email"
@@ -69,7 +69,7 @@ export default function AdminLogin() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-[#333333]">Password</Label>
+            <Label htmlFor="password" className="text-ink">Password</Label>
             <Input
               id="password"
               type="password"
@@ -80,7 +80,7 @@ export default function AdminLogin() {
             />
           </div>
 
-          <Button type="submit" className="w-full bg-[#00a651] hover:bg-[#008a40] text-white" disabled={loading}>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary-hover text-white" disabled={loading}>
             {loading ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />

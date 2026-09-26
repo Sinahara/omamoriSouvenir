@@ -16,6 +16,8 @@ const navLinks = [
 export default function Navbar() {
   const { currentPage, navigate } = useAppStore()
   const [open, setOpen] = useState(false)
+  // Product pages belong to the catalog section
+  const activePage = currentPage === 'product-detail' ? 'catalog' : currentPage
 
   const handleNav = (page: 'landing' | 'about' | 'catalog' | 'track') => {
     navigate(page)
@@ -28,10 +30,10 @@ export default function Navbar() {
         {/* Logo */}
         <button
           onClick={() => handleNav('landing')}
-          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity duration-300"
+          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity duration-200"
         >
           <img src="/logo.png" alt="Omamori Souvenir" className="h-7 w-auto object-contain" />
-          <span className="font-bold text-[17px] text-[#333333] tracking-tight">Omamori Souvenir</span>
+          <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
         </button>
 
         {/* Desktop Nav */}
@@ -40,10 +42,11 @@ export default function Navbar() {
             <button
               key={link.page}
               onClick={() => handleNav(link.page)}
-              className={`px-3.5 py-1.5 rounded-[3px] text-[13px] font-medium tracking-wide transition-all duration-300 ${
-                currentPage === link.page
-                  ? 'text-[#00a651] bg-[#00a651]/6'
-                  : 'text-[#999999] hover:text-[#333333] hover:bg-[#fafafa]'
+              aria-current={activePage === link.page ? 'page' : undefined}
+              className={`px-3.5 py-1.5 rounded-sm text-[13px] font-medium tracking-wide transition-all duration-200 ${
+                activePage === link.page
+                  ? 'text-primary bg-primary-soft'
+                  : 'text-ink-muted hover:text-ink hover:bg-surface'
               }`}
             >
               {link.label}
@@ -56,7 +59,8 @@ export default function Navbar() {
           <Button
             size="sm"
             onClick={() => navigate('request-quote')}
-            className="bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] text-[13px] tracking-wide h-8 px-4"
+            aria-current={currentPage === 'request-quote' ? 'page' : undefined}
+            className="bg-primary hover:bg-primary-hover text-white rounded-sm text-[13px] tracking-wide h-8 px-4"
           >
             Minta Penawaran
           </Button>
@@ -65,36 +69,37 @@ export default function Navbar() {
         {/* Mobile Hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden text-[#333333]">
+            <Button variant="ghost" size="icon" className="md:hidden text-ink">
               <Menu className="w-5 h-5" />
               <span className="sr-only">Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-72 bg-white p-0 border-l border-[#eeeeee]">
+          <SheetContent side="right" className="w-72 bg-white p-0 border-l border-line">
             <SheetTitle className="sr-only">Menu Navigasi</SheetTitle>
             <div className="flex flex-col h-full">
-              <div className="flex items-center gap-2.5 px-6 pt-6 pb-5 border-b border-[#eeeeee]">
+              <div className="flex items-center gap-2.5 px-6 pt-6 pb-5 border-b border-line">
                 <img src="/logo.png" alt="Omamori Souvenir" className="h-7 w-auto object-contain" />
-                <span className="font-bold text-[17px] text-[#333333] tracking-tight">Omamori Souvenir</span>
+                <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
               </div>
               <nav className="flex-1 px-4 py-4 flex flex-col gap-0.5" role="navigation">
                 {navLinks.map((link) => (
                   <button
                     key={link.page}
                     onClick={() => handleNav(link.page)}
-                    className={`px-4 py-2.5 rounded-[3px] text-[13px] font-medium tracking-wide text-left transition-all duration-300 ${
-                      currentPage === link.page
-                        ? 'text-[#00a651] bg-[#00a651]/6'
-                        : 'text-[#999999] hover:text-[#333333] hover:bg-[#fafafa]'
+                    aria-current={activePage === link.page ? 'page' : undefined}
+                    className={`min-h-11 px-4 py-2.5 rounded-sm text-[13px] font-medium tracking-wide text-left transition-all duration-200 ${
+                      activePage === link.page
+                        ? 'text-primary bg-primary-soft'
+                        : 'text-ink-muted hover:text-ink hover:bg-surface'
                     }`}
                   >
                     {link.label}
                   </button>
                 ))}
               </nav>
-              <div className="px-4 pb-6 flex flex-col gap-2 border-t border-[#eeeeee] pt-4">
+              <div className="px-4 pb-6 flex flex-col gap-2 border-t border-line pt-4">
                 <Button
-                  className="w-full bg-[#00a651] hover:bg-[#008a40] text-white rounded-[4px] text-[13px] tracking-wide"
+                  className="w-full bg-primary hover:bg-primary-hover text-white rounded-sm text-[13px] tracking-wide"
                   onClick={() => {
                     navigate('request-quote')
                     setOpen(false)

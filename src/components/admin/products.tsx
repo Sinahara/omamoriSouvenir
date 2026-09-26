@@ -249,8 +249,7 @@ export default function AdminProducts() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-[#333333]">Kelola Produk</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex items-center gap-3">
           <Select value={filterCategory} onValueChange={v => { setFilterCategory(v); setPage(1) }}>
             <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
@@ -259,51 +258,51 @@ export default function AdminProducts() {
               {categoryOptions.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Button onClick={openCreate} className="bg-[#00a651] hover:bg-[#008a40] text-white"><Plus className="w-4 h-4 mr-2" />Tambah Produk</Button>
+          <Button onClick={openCreate} className="bg-primary hover:bg-primary-hover text-white"><Plus className="w-4 h-4 mr-2" />Tambah Produk</Button>
         </div>
       </div>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#999999] pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none" />
         <Input
           placeholder="Cari produk..."
           value={searchInput}
           onChange={e => handleSearchChange(e.target.value)}
-          className="pl-9 mb-3 corp-input"
+          className="pl-9 mb-3"
         />
       </div>
 
-      <div className="corp-card rounded-[10px] p-4 overflow-x-auto">
+      <div className="corp-card p-4 overflow-x-auto">
         {loading ? (
           <div className="space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="w-10 text-[#666666]">No</TableHead>
-                <TableHead className="text-[#666666]">Nama</TableHead>
-                <TableHead className="text-[#666666]">Kategori</TableHead>
-                <TableHead className="text-right text-[#666666]">Harga Dasar</TableHead>
-                <TableHead className="text-right text-[#666666]">Min. Qty</TableHead>
-                <TableHead className="text-[#666666]">Status</TableHead>
-                <TableHead className="text-right text-[#666666]">Aksi</TableHead>
+                <TableHead className="w-10 text-ink-soft">No</TableHead>
+                <TableHead className="text-ink-soft">Nama</TableHead>
+                <TableHead className="text-ink-soft">Kategori</TableHead>
+                <TableHead className="text-right text-ink-soft">Harga Dasar</TableHead>
+                <TableHead className="text-right text-ink-soft">Min. Qty</TableHead>
+                <TableHead className="text-ink-soft">Status</TableHead>
+                <TableHead className="text-right text-ink-soft table-sticky-action">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {products.length === 0 ? (
-                <TableRow><TableCell colSpan={7} className="text-center text-[#999999] py-8">Tidak ada produk.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={7} className="text-center text-ink-muted py-8">Tidak ada produk.</TableCell></TableRow>
               ) : products.map((p, i) => (
-                <TableRow key={p.id} className="hover:bg-[#f8f8f8]">
-                  <TableCell className="text-sm text-[#666666]">{i + 1}</TableCell>
-                  <TableCell className="font-medium text-sm text-[#333333]">{p.name}</TableCell>
-                  <TableCell><Badge variant="outline" className="border-[#e0e0e0] text-[#666666]">{CATEGORIES.find(c => c.value === p.category)?.label || p.category}</Badge></TableCell>
-                  <TableCell className="text-right text-sm text-[#333333]">{formatRupiah(p.basePrice)}</TableCell>
-                  <TableCell className="text-right text-sm text-[#666666]">{p.minQty}</TableCell>
+                <TableRow key={p.id} className="hover:bg-muted">
+                  <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                  <TableCell className="font-medium text-sm text-ink">{p.name}</TableCell>
+                  <TableCell><Badge variant="outline" className="border-line-strong text-ink-soft">{CATEGORIES.find(c => c.value === p.category)?.label || p.category}</Badge></TableCell>
+                  <TableCell className="text-right text-sm text-ink">{formatRupiah(p.basePrice)}</TableCell>
+                  <TableCell className="text-right text-sm text-ink-soft">{p.minQty}</TableCell>
                   <TableCell><Badge variant={p.isActive ? 'default' : 'secondary'}>{p.isActive ? 'Aktif' : 'Nonaktif'}</Badge></TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right table-sticky-action">
                     <div className="flex items-center justify-end gap-1">
-                      <Button variant="ghost" size="sm" onClick={() => openEdit(p)}><Pencil className="w-4 h-4" /></Button>
-                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(p.id)}><Trash2 className="w-4 h-4" /></Button>
+                      <Button variant="ghost" size="sm" onClick={() => openEdit(p)} aria-label={`Edit ${p.name}`} title="Edit"><Pencil className="w-4 h-4" /></Button>
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(p.id)} aria-label={`Hapus ${p.name}`} title="Hapus"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -314,7 +313,7 @@ export default function AdminProducts() {
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[#999999]">Halaman {page} dari {totalPages || 1}</p>
+        <p className="text-sm text-ink-muted">Halaman {page} dari {totalPages || 1}</p>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}><ChevronLeft className="w-4 h-4 mr-1" />Sebelumnya</Button>
           <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Selanjutnya<ChevronRight className="w-4 h-4 ml-1" /></Button>
@@ -323,25 +322,25 @@ export default function AdminProducts() {
 
       {/* Product Form Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-white">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-white">
           <DialogHeader>
-            <DialogTitle className="text-[#333333]">{editId ? 'Edit Produk' : 'Tambah Produk'}</DialogTitle>
+            <DialogTitle className="text-ink">{editId ? 'Edit Produk' : 'Tambah Produk'}</DialogTitle>
             <DialogDescription className="sr-only">Form untuk {editId ? 'mengedit' : 'menambahkan'} produk</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-[#333333]">Nama Produk</Label>
+                <Label className="text-ink">Nama Produk</Label>
                 <Input value={form.name} onChange={e => updateField('name', e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Slug</Label>
+                <Label className="text-ink">Slug</Label>
                 <Input value={form.slug} onChange={e => updateField('slug', e.target.value)} />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-[#333333]">Kategori</Label>
+                <Label className="text-ink">Kategori</Label>
                 <Select value={form.category} onValueChange={v => updateField('category', v)}>
                   <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -350,59 +349,59 @@ export default function AdminProducts() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Satuan</Label>
+                <Label className="text-ink">Satuan</Label>
                 <Input value={form.unit} onChange={e => updateField('unit', e.target.value)} />
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">Deskripsi</Label>
+              <Label className="text-ink">Deskripsi</Label>
               <Textarea rows={3} value={form.description} onChange={e => updateField('description', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label className="text-[#333333]">Spesifikasi (JSON)</Label>
+              <Label className="text-ink">Spesifikasi (JSON)</Label>
               <Textarea rows={3} value={form.specs} onChange={e => updateField('specs', e.target.value)} placeholder='{"Ukuran": "20oz", "Bahan": "Stainless Steel"}' />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label className="text-[#333333]">Harga Dasar (Rp)</Label>
+                <Label className="text-ink">Harga Dasar (Rp)</Label>
                 <Input type="number" value={form.basePrice} onChange={e => updateField('basePrice', e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Min. Qty</Label>
+                <Label className="text-ink">Min. Qty</Label>
                 <Input type="number" value={form.minQty} onChange={e => updateField('minQty', e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Sort Order</Label>
+                <Label className="text-ink">Urutan Tampil</Label>
                 <Input type="number" value={form.sortOrder} onChange={e => updateField('sortOrder', e.target.value)} />
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={form.isActive} onCheckedChange={v => updateField('isActive', v)} />
-              <Label className="text-[#333333]">Aktif</Label>
+              <Label className="text-ink">Aktif</Label>
             </div>
 
             {/* Pricing Tiers */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <Label className="text-base font-semibold text-[#333333]">Pricing Tiers</Label>
+                <Label className="text-base font-semibold text-ink">Pricing Tiers</Label>
                 <Button variant="outline" size="sm" onClick={addTier}><Plus className="w-3 h-3 mr-1" />Tambah</Button>
               </div>
               {form.pricingTiers.map((tier, i) => (
                 <div key={i} className="flex items-end gap-2">
                   <div className="flex-1 space-y-1">
-                    <Label className="text-xs text-[#666666]">Min. Qty</Label>
+                    <Label className="text-xs text-ink-soft">Min. Qty</Label>
                     <Input type="number" placeholder="50" value={tier.minQty} onChange={e => updateTier(i, 'minQty', e.target.value)} />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <Label className="text-xs text-[#666666]">Max. Qty</Label>
+                    <Label className="text-xs text-ink-soft">Max. Qty</Label>
                     <Input type="number" placeholder="opsional" value={tier.maxQty} onChange={e => updateTier(i, 'maxQty', e.target.value)} />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <Label className="text-xs text-[#666666]">Harga/Unit</Label>
+                    <Label className="text-xs text-ink-soft">Harga/Unit</Label>
                     <Input type="number" placeholder="0" value={tier.pricePerUnit} onChange={e => updateTier(i, 'pricePerUnit', e.target.value)} />
                   </div>
                   {form.pricingTiers.length > 1 && (
-                    <Button variant="ghost" size="sm" className="text-destructive mb-0.5" onClick={() => removeTier(i)}><Trash2 className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive mb-0.5" onClick={() => removeTier(i)} aria-label="Hapus tier harga" title="Hapus tier harga"><Trash2 className="w-4 h-4" /></Button>
                   )}
                 </div>
               ))}
@@ -411,29 +410,29 @@ export default function AdminProducts() {
             {/* Images */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <Label className="text-base font-semibold text-[#333333]">Gambar</Label>
+                <Label className="text-base font-semibold text-ink">Gambar</Label>
                 <Button variant="outline" size="sm" onClick={addImage}><Plus className="w-3 h-3 mr-1" />Tambah</Button>
               </div>
               {form.images.map((img, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-[#eeeeee] bg-[#fafafa]">
+                <div key={i} className="flex items-start gap-3 p-3 rounded-lg border border-line bg-surface">
                   {img.path ? (
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-[#1a1a1a] shrink-0">
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-media shrink-0">
                       <img src={img.path} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
                     </div>
                   ) : (
-                    <label className="w-20 h-20 rounded-lg border-2 border-dashed border-[#d4d4d4] flex flex-col items-center justify-center cursor-pointer hover:border-[#00a651] hover:bg-[#eef7f1] transition-all shrink-0">
-                      {uploadingIdx === i ? <Loader2 className="w-5 h-5 text-[#00a651] animate-spin" /> : <Upload className="w-5 h-5 text-[#cccccc]" />}
-                      <span className="text-[10px] text-[#999999] mt-1">Upload</span>
+                    <label className="w-20 h-20 rounded-lg border-2 border-dashed border-line-hover flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary-soft transition-all shrink-0">
+                      {uploadingIdx === i ? <Loader2 className="w-5 h-5 text-primary animate-spin" /> : <Upload className="w-5 h-5 text-ink-faint" />}
+                      <span className="text-[10px] text-ink-muted mt-1">Upload</span>
                       <input type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(i, f); e.target.value = '' }} />
                     </label>
                   )}
                   <div className="flex-1 min-w-0 space-y-1.5">
                     {img.path && (
-                      <p className="text-xs text-[#999999] truncate font-mono">{img.path}</p>
+                      <p className="text-xs text-ink-muted truncate font-mono">{img.path}</p>
                     )}
                     <div className="flex items-center gap-2">
                       <label className="cursor-pointer">
-                        <span className="text-xs text-[#00a651] hover:underline">
+                        <span className="text-xs text-primary hover:underline">
                           {uploadingIdx === i ? 'Mengupload...' : img.path ? 'Ganti' : 'Pilih file'}
                         </span>
                         <input type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(i, f); e.target.value = '' }} />
@@ -446,7 +445,7 @@ export default function AdminProducts() {
                       >
                         <Star className="w-3 h-3 mr-1" />Primary
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-destructive h-7" onClick={() => removeImage(i)}><Trash2 className="w-3 h-3" /></Button>
+                      <Button variant="ghost" size="sm" className="text-destructive h-7" onClick={() => removeImage(i)} aria-label="Hapus gambar" title="Hapus gambar"><Trash2 className="w-3 h-3" /></Button>
                     </div>
                   </div>
                 </div>
@@ -455,7 +454,7 @@ export default function AdminProducts() {
 
             <div className="flex justify-end gap-3 pt-4">
               <Button variant="outline" onClick={() => setDialogOpen(false)}>Batal</Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-[#00a651] hover:bg-[#008a40] text-white">
+              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary-hover text-white">
                 {saving ? 'Menyimpan...' : 'Simpan'}
               </Button>
             </div>
@@ -467,8 +466,8 @@ export default function AdminProducts() {
       <AlertDialog open={!!deleteId} onOpenChange={(open) => { if (!open) setDeleteId(null) }}>
         <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-[#333333]">Hapus Produk?</AlertDialogTitle>
-            <AlertDialogDescription className="text-[#666666]">Tindakan ini tidak dapat dibatalkan. Produk akan dihapus secara permanen.</AlertDialogDescription>
+            <AlertDialogTitle className="text-ink">Hapus Produk?</AlertDialogTitle>
+            <AlertDialogDescription className="text-ink-soft">Tindakan ini tidak dapat dibatalkan. Produk akan dihapus secara permanen.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>

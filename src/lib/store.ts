@@ -76,7 +76,45 @@ interface AppStore {
 
 // Flag to prevent popstate handler from running during programmatic navigation
 let _isProgrammaticNav = false
-let _routerInitialized = false
+let _routerInit: Promise<void> | null = null
+
+// Scroll target for the next page. page.tsx applies it once the old page has
+// faded out, so the outgoing page never visibly scrolls.
+let _pendingScroll: number | null = null
+
+/** Queue a jump to the top for a page change, or scroll now if the page stays the same. */
+function scheduleScrollTop(fromPage: Page, toPage: Page) {
+  if (fromPage === toPage) window.scrollTo({ top: 0, behavior: 'smooth' })
+  else _pendingScroll = 0
+}
+
+export function takePendingScroll(): number | null {
+  const y = _pendingScroll
+  _pendingScroll = null
+  return y
+}
+
+/**
+ * Jump to y without animation. Pages that load data (e.g. the catalog) may not
+ * be tall enough yet, so this retries briefly and stops once the user scrolls.
+ */
+export function restoreScroll(y: number) {
+  let cancelled = false
+  const cancel = () => { cancelled = true }
+  const events = ['wheel', 'touchstart', 'keydown'] as const
+  events.forEach((e) => window.addEventListener(e, cancel, { once: true, passive: true }))
+  const started = performance.now()
+  const step = () => {
+    if (cancelled) return
+    window.scrollTo({ top: y, behavior: 'instant' as ScrollBehavior })
+    if (Math.abs(window.scrollY - y) > 2 && performance.now() - started < 1500) {
+      requestAnimationFrame(step)
+    } else {
+      events.forEach((e) => window.removeEventListener(e, cancel))
+    }
+  }
+  step()
+}
 
 export const useAppStore = create<AppStore>((set, get) => {
   // Helper: push URL after store state change
@@ -110,7 +148,7 @@ export const useAppStore = create<AppStore>((set, get) => {
       pageParams: {},
       scrollPositions: positions,
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scheduleScrollTop(state.currentPage, page)
     syncToUrl()
   },
   navigateBack: () => {
@@ -134,6 +172,7 @@ export const useAppStore = create<AppStore>((set, get) => {
     // Invalidate token on server (cookie is sent automatically)
     fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
     try { sessionStorage.removeItem('omamori_auth') } catch { /* ignore */ }
+    _pendingScroll = 0
     set({ adminUser: null, isAuthenticated: false, currentPage: 'landing' })
     pushUrl('/')
   },
@@ -153,7 +192,7 @@ export const useAppStore = create<AppStore>((set, get) => {
       scrollPositions: positions,
       pageParams: {},
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scheduleScrollTop(state.currentPage, 'product-detail')
     syncToUrl()
   },
 
@@ -170,7 +209,7 @@ export const useAppStore = create<AppStore>((set, get) => {
       scrollPositions: positions,
       pageParams: {},
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scheduleScrollTop(state.currentPage, 'admin-quote-detail')
     syncToUrl()
   },
 
@@ -187,7 +226,7 @@ export const useAppStore = create<AppStore>((set, get) => {
       scrollPositions: positions,
       pageParams: {},
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scheduleScrollTop(state.currentPage, 'admin-order-detail')
     syncToUrl()
   },
 
@@ -197,13 +236,14 @@ export const useAppStore = create<AppStore>((set, get) => {
     const state = get()
     const positions = { ...state.scrollPositions }
     positions[state.currentPage] = window.scrollY
+    const next: Page = id ? 'admin-clients-form' : 'admin-clients'
     set({
       previousPage: state.currentPage,
       selectedClientId: id,
-      currentPage: id ? 'admin-clients-form' : 'admin-clients',
+      currentPage: next,
       scrollPositions: positions,
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scheduleScrollTop(state.currentPage, next)
     syncToUrl()
   },
 
@@ -213,13 +253,14 @@ export const useAppStore = create<AppStore>((set, get) => {
     const state = get()
     const positions = { ...state.scrollPositions }
     positions[state.currentPage] = window.scrollY
+    const next: Page = id ? 'admin-inventory-form' : 'admin-inventory'
     set({
       previousPage: state.currentPage,
       selectedInventoryId: id,
-      currentPage: id ? 'admin-inventory-form' : 'admin-inventory',
+      currentPage: next,
       scrollPositions: positions,
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scheduleScrollTop(state.currentPage, next)
     syncToUrl()
   },
 
@@ -245,12 +286,28 @@ export const useAppStore = create<AppStore>((set, get) => {
 
 /**
  * Initialize URL routing: parse initial URL and set up popstate listener.
- * Call once on the client, e.g. in page.tsx useEffect.
+ * Safe to call more than once: every caller gets the same promise, which
+ * resolves after the session check, so the first render shows the right page.
  */
-export async function initUrlRouter() {
-  if (typeof window === 'undefined') return
-  if (_routerInitialized) return
-  _routerInitialized = true
+/**
+ * This runs from a child effect, before Next.js patches history.replaceState in
+ * its app-router effect. The unpatched call would drop Next's router state from
+ * the history entry, and pressing Back to that entry would reload the whole page.
+ * Waiting one tick lets the patched version keep that state.
+ */
+function replaceUrlAfterNextPatch(url: string) {
+  setTimeout(() => replaceUrl(url), 0)
+}
+
+export function initUrlRouter(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve()
+  if (!_routerInit) _routerInit = setupUrlRouter()
+  return _routerInit
+}
+
+async function setupUrlRouter() {
+  // Scroll positions are restored by the app (see restoreScroll), not the browser
+  if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
 
   // Verify auth session via server (httpOnly cookie)
   try {
@@ -291,10 +348,12 @@ export async function initUrlRouter() {
       selectedInventoryId: parsed.selectedInventoryId,
       catalogCategory: parsed.catalogCategory,
     })
-    replaceUrl(canonicalUrl)
+    if (window.location.pathname + window.location.search !== canonicalUrl) {
+      replaceUrlAfterNextPatch(canonicalUrl)
+    }
   } else if (window.location.pathname !== '/') {
     // Unknown URL → redirect to landing
-    replaceUrl('/')
+    replaceUrlAfterNextPatch('/')
   }
 
   // Listen for browser back/forward
@@ -303,7 +362,7 @@ export async function initUrlRouter() {
 
     const parsed = urlToPage(window.location.pathname, window.location.search)
     const state = useAppStore.getState()
-    const savedScroll = state.scrollPositions[parsed.page]
+    const target = state.scrollPositions[parsed.page] ?? 0
 
     useAppStore.setState({
       previousPage: state.currentPage,
@@ -314,15 +373,12 @@ export async function initUrlRouter() {
       selectedClientId: parsed.selectedClientId,
       selectedInventoryId: parsed.selectedInventoryId,
       catalogCategory: parsed.catalogCategory,
+      // remember where we left, so Forward can come back to it
+      scrollPositions: { ...state.scrollPositions, [state.currentPage]: window.scrollY },
     })
 
-    // Restore scroll position after a short delay for the page to render
-    if (savedScroll !== undefined) {
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: savedScroll, behavior: 'instant' as ScrollBehavior })
-      })
-    } else {
-      window.scrollTo({ top: 0 })
-    }
+    // Same page: restore now. New page: page.tsx restores it after the transition.
+    if (parsed.page === state.currentPage) restoreScroll(target)
+    else _pendingScroll = target
   })
 }

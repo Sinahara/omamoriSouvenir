@@ -353,24 +353,22 @@ export default function AdminSettings() {
   }
 
   if (adminUser?.role !== 'super_admin') {
-    return <p className="text-[#999999] py-8 text-center">Anda tidak memiliki akses ke halaman ini.</p>
+    return <p className="text-ink-muted py-8 text-center">Anda tidak memiliki akses ke halaman ini.</p>
   }
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold text-[#333333]">Pengaturan</h2>
-
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="mb-6 bg-[#f0f0f0]">
-          <TabsTrigger value="hero" className="data-[state=active]:bg-white data-[state=active]:text-[#00a651] data-[state=active]:shadow-sm">
+        <TabsList className="mb-6 bg-secondary">
+          <TabsTrigger value="hero" className="data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm">
             <ImageIcon className="w-4 h-4 mr-1.5" />
             Tampilan Beranda
           </TabsTrigger>
-          <TabsTrigger value="about" className="data-[state=active]:bg-white data-[state=active]:text-[#00a651] data-[state=active]:shadow-sm">
+          <TabsTrigger value="about" className="data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm">
             <Info className="w-4 h-4 mr-1.5" />
             Tentang Kami
           </TabsTrigger>
-          <TabsTrigger value="company" className="data-[state=active]:bg-white data-[state=active]:text-[#00a651] data-[state=active]:shadow-sm">
+          <TabsTrigger value="company" className="data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm">
             <Save className="w-4 h-4 mr-1.5" />
             Profil Perusahaan
           </TabsTrigger>
@@ -379,14 +377,14 @@ export default function AdminSettings() {
         {/* ═══════ HERO / BERANDA ═══════ */}
         <TabsContent value="hero">
           <div className="space-y-6 max-w-2xl">
-            <div className="corp-card rounded-[10px] p-4">
+            <div className="corp-card p-4">
               <div className="flex items-center justify-between mb-3">
-                <Label className="text-base font-semibold text-[#333333]">Preview Hero</Label>
+                <Label className="text-base font-semibold text-ink">Preview Hero</Label>
                 <Button variant="outline" size="sm" onClick={loadHeroSettings} disabled={loadingHero}>
                   <RefreshCw className={`w-3 h-3 mr-1 ${loadingHero ? 'animate-spin' : ''}`} /> Refresh
                 </Button>
               </div>
-              <div className="bg-linear-to-br from-[#fafafa] to-[#f0f0f0] rounded-lg p-6 space-y-3">
+              <div className="bg-linear-to-br from-surface to-secondary rounded-lg p-6 space-y-3">
                 {loadingHero ? (
                   <div className="space-y-3">
                     <Skeleton className="h-6 w-32 rounded-full" />
@@ -403,13 +401,13 @@ export default function AdminSettings() {
                 ) : (
                   <>
                     {hero.hero_badge && (
-                      <span className="inline-block text-xs px-3 py-1 text-[#00a651] border border-[#00a651]/30 rounded-full">{hero.hero_badge}</span>
+                      <span className="inline-block text-xs px-3 py-1 text-primary border border-primary/30 rounded-full">{hero.hero_badge}</span>
                     )}
-                    <h3 className="text-xl font-bold text-[#333333] leading-tight">{hero.hero_title || 'Judul Hero'}</h3>
-                    <p className="text-sm text-[#888888] leading-relaxed">{hero.hero_subtitle || 'Subjudul hero akan muncul di sini.'}</p>
+                    <h3 className="text-xl font-bold text-ink leading-tight">{hero.hero_title || 'Judul Hero'}</h3>
+                    <p className="text-sm text-ink-muted leading-relaxed">{hero.hero_subtitle || 'Subjudul hero akan muncul di sini.'}</p>
                     <div className="flex gap-2 pt-1">
-                      <span className="inline-block text-xs px-4 py-1.5 bg-[#00a651] text-white rounded-full">{hero.hero_btn_primary_text || 'Minta Penawaran'}</span>
-                      <span className="inline-block text-xs px-4 py-1.5 border border-[#eeeeee] text-[#888888] rounded-full">{hero.hero_btn_secondary_text || 'Lihat Katalog'}</span>
+                      <span className="inline-block text-xs px-4 py-1.5 bg-primary text-white rounded-full">{hero.hero_btn_primary_text || 'Minta Penawaran'}</span>
+                      <span className="inline-block text-xs px-4 py-1.5 border border-line text-ink-muted rounded-full">{hero.hero_btn_secondary_text || 'Lihat Katalog'}</span>
                     </div>
                     {hero.hero_image && (
                       <div className="pt-3 flex justify-center">
@@ -419,13 +417,13 @@ export default function AdminSettings() {
                   </>
                 )}
                 {/* {hero.hero_badge && (
-                  <span className="inline-block text-xs px-3 py-1 text-[#00a651] border border-[#00a651]/30 rounded-full">{hero.hero_badge}</span>
+                  <span className="inline-block text-xs px-3 py-1 text-primary border border-primary/30 rounded-full">{hero.hero_badge}</span>
                 )}
-                <h3 className="text-xl font-bold text-[#333333] leading-tight">{hero.hero_title || 'Judul Hero'}</h3>
-                <p className="text-sm text-[#888888] leading-relaxed">{hero.hero_subtitle || 'Subjudul hero akan muncul di sini.'}</p>
+                <h3 className="text-xl font-bold text-ink leading-tight">{hero.hero_title || 'Judul Hero'}</h3>
+                <p className="text-sm text-ink-muted leading-relaxed">{hero.hero_subtitle || 'Subjudul hero akan muncul di sini.'}</p>
                 <div className="flex gap-2 pt-1">
-                  <span className="inline-block text-xs px-4 py-1.5 bg-[#00a651] text-white rounded-full">{hero.hero_btn_primary_text || 'Minta Penawaran'}</span>
-                  <span className="inline-block text-xs px-4 py-1.5 border border-[#eeeeee] text-[#888888] rounded-full">{hero.hero_btn_secondary_text || 'Lihat Katalog'}</span>
+                  <span className="inline-block text-xs px-4 py-1.5 bg-primary text-white rounded-full">{hero.hero_btn_primary_text || 'Minta Penawaran'}</span>
+                  <span className="inline-block text-xs px-4 py-1.5 border border-line text-ink-muted rounded-full">{hero.hero_btn_secondary_text || 'Lihat Katalog'}</span>
                 </div>
                 {hero.hero_image && (
                   <div className="pt-3 flex justify-center">
@@ -435,52 +433,52 @@ export default function AdminSettings() {
               </div>
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
-              <h3 className="font-semibold text-[#333333] mb-4">Gambar Hero</h3>
+            <div className="corp-card p-6">
+              <h3 className="font-semibold text-ink mb-4">Gambar Hero</h3>
               <div className="space-y-3">
                 <input ref={heroFileRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleHeroUpload(f); e.target.value = '' }} />
                 <div className="flex items-center gap-3">
                   <Button variant="outline" onClick={() => heroFileRef.current?.click()} disabled={uploadingHero}>
                     {uploadingHero ? 'Uploading...' : <><Upload className="w-4 h-4 mr-2" />Upload Gambar Baru</>}
                   </Button>
-                  {hero.hero_image && <span className="text-sm text-[#666666] truncate max-w-[260px]" title={hero.hero_image}>{hero.hero_image}</span>}
+                  {hero.hero_image && <span className="text-sm text-ink-soft truncate max-w-[260px]" title={hero.hero_image}>{hero.hero_image}</span>}
                 </div>
                 <div>
-                  <Label className="text-xs text-[#666666]">Atau masukkan path manual</Label>
+                  <Label className="text-xs text-ink-soft">Atau masukkan path manual</Label>
                   <Input value={hero.hero_image} onChange={e => updateHeroField('hero_image', e.target.value)} placeholder="/hero-product.png" className="mt-1" />
                 </div>
               </div>
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
-              <h3 className="font-semibold text-[#333333] mb-4">Teks Hero</h3>
+            <div className="corp-card p-6">
+              <h3 className="font-semibold text-ink mb-4">Teks Hero</h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Badge Text</Label>
+                  <Label className="text-ink">Badge Text</Label>
                   <Input value={hero.hero_badge} onChange={e => updateHeroField('hero_badge', e.target.value)} placeholder="Contoh: Corporate Gift Terpercaya" />
-                  <p className="text-xs text-[#999999]">Teks kecil di atas judul (opsional)</p>
+                  <p className="text-xs text-ink-muted">Teks kecil di atas judul (opsional)</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Judul Utama</Label>
+                  <Label className="text-ink">Judul Utama</Label>
                   <Textarea rows={2} value={hero.hero_title} onChange={e => updateHeroField('hero_title', e.target.value)} placeholder="Contoh: Solusi Corporate Gift Premium untuk Bisnis Anda" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Sub Judul</Label>
+                  <Label className="text-ink">Sub Judul</Label>
                   <Textarea rows={3} value={hero.hero_subtitle} onChange={e => updateHeroField('hero_subtitle', e.target.value)} placeholder="Contoh: Dari tumbler custom hingga employee onboarding kit lengkap." />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[#333333]">Tombol Utama</Label>
+                    <Label className="text-ink">Tombol Utama</Label>
                     <Input value={hero.hero_btn_primary_text} onChange={e => updateHeroField('hero_btn_primary_text', e.target.value)} placeholder="Minta Penawaran" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[#333333]">Tombol Sekunder</Label>
+                    <Label className="text-ink">Tombol Sekunder</Label>
                     <Input value={hero.hero_btn_secondary_text} onChange={e => updateHeroField('hero_btn_secondary_text', e.target.value)} placeholder="Lihat Katalog" />
                   </div>
                 </div>
               </div>
               <div className="pt-5">
-                <Button onClick={handleSaveHero} disabled={savingHero} className="bg-[#00a651] hover:bg-[#008a40] text-white">
+                <Button onClick={handleSaveHero} disabled={savingHero} className="bg-primary hover:bg-primary-hover text-white">
                   <Save className="w-4 h-4 mr-2" />{savingHero ? 'Menyimpan...' : 'Simpan Tampilan Beranda'}
                 </Button>
               </div>
@@ -492,56 +490,56 @@ export default function AdminSettings() {
         <TabsContent value="about">
           <div className="space-y-6 max-w-3xl">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#999999]">Kelola konten halaman &quot;Tentang Kami&quot; yang tampil di website.</p>
+              <p className="text-sm text-ink-muted">Kelola konten halaman &quot;Tentang Kami&quot; yang tampil di website.</p>
               <Button variant="outline" size="sm" onClick={loadAboutSettings} disabled={loadingAbout}>
                 <RefreshCw className={`w-3 h-3 mr-1 ${loadingAbout ? 'animate-spin' : ''}`} /> Refresh
               </Button>
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
-              <h3 className="font-semibold text-[#333333] mb-4">Teks Tentang Kami</h3>
+            <div className="corp-card p-6">
+              <h3 className="font-semibold text-ink mb-4">Teks Tentang Kami</h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Judul Halaman</Label>
+                  <Label className="text-ink">Judul Halaman</Label>
                   <Input value={about.about_title} onChange={e => updateAboutField('about_title', e.target.value)} placeholder="Tentang Omamori Souvenir" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Sub Judul</Label>
+                  <Label className="text-ink">Sub Judul</Label>
                   <Input value={about.about_subtitle} onChange={e => updateAboutField('about_subtitle', e.target.value)} placeholder="Mitra Terpercaya untuk Solusi Corporate Gift Premium" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Deskripsi Bisnis</Label>
+                  <Label className="text-ink">Deskripsi Bisnis</Label>
                   <Textarea rows={6} value={about.about_description} onChange={e => updateAboutField('about_description', e.target.value)} placeholder="Ceritakan tentang bisnis Anda..." />
-                  <p className="text-xs text-[#999999]">Gunakan baris baru (Enter) untuk membuat paragraf terpisah.</p>
+                  <p className="text-xs text-ink-muted">Gunakan baris baru (Enter) untuk membuat paragraf terpisah.</p>
                 </div>
               </div>
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
-              <h3 className="font-semibold text-[#333333] mb-4">Gambar Tentang Kami</h3>
+            <div className="corp-card p-6">
+              <h3 className="font-semibold text-ink mb-4">Gambar Tentang Kami</h3>
               <div className="space-y-3">
                 <input ref={aboutFileRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleAboutUpload(f); e.target.value = '' }} />
                 <div className="flex items-center gap-3">
                   <Button variant="outline" onClick={() => aboutFileRef.current?.click()} disabled={uploadingAbout}>
                     {uploadingAbout ? 'Uploading...' : <><Upload className="w-4 h-4 mr-2" />Upload Gambar</>}
                   </Button>
-                  {about.about_image && <span className="text-sm text-[#666666] truncate max-w-[260px]" title={about.about_image}>{about.about_image}</span>}
+                  {about.about_image && <span className="text-sm text-ink-soft truncate max-w-[260px]" title={about.about_image}>{about.about_image}</span>}
                 </div>
                 {about.about_image && (
                   <div className="pt-2">
-                    <img src={about.about_image} alt="About Preview" className="max-h-40 object-contain rounded-lg border border-[#eeeeee] p-2" />
+                    <img src={about.about_image} alt="About Preview" className="max-h-40 object-contain rounded-lg border border-line p-2" />
                   </div>
                 )}
                 <div>
-                  <Label className="text-xs text-[#666666]">Atau masukkan path manual</Label>
+                  <Label className="text-xs text-ink-soft">Atau masukkan path manual</Label>
                   <Input value={about.about_image} onChange={e => updateAboutField('about_image', e.target.value)} placeholder="/about-team.png" className="mt-1" />
                 </div>
               </div>
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
+            <div className="corp-card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-[#333333]">Keunggulan Kami</h3>
+                <h3 className="font-semibold text-ink">Keunggulan Kami</h3>
                 <Button variant="outline" size="sm" onClick={() => addListItem('about_advantages')}>
                   <Plus className="w-3.5 h-3.5 mr-1" /> Tambah
                 </Button>
@@ -549,9 +547,9 @@ export default function AdminSettings() {
               <AdvantageEditor items={parseJsonItems(about.about_advantages, [])} jsonKey="about_advantages" onUpdate={updateListItem} onRemove={removeListItem} />
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
+            <div className="corp-card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-[#333333]">Keuntungan Produk</h3>
+                <h3 className="font-semibold text-ink">Keuntungan Produk</h3>
                 <Button variant="outline" size="sm" onClick={() => addListItem('about_benefits')}>
                   <Plus className="w-3.5 h-3.5 mr-1" /> Tambah
                 </Button>
@@ -559,32 +557,32 @@ export default function AdminSettings() {
               <AdvantageEditor items={parseJsonItems(about.about_benefits, [])} jsonKey="about_benefits" onUpdate={updateListItem} onRemove={removeListItem} />
             </div>
 
-            <div className="corp-card rounded-[10px] p-6">
-              <h3 className="font-semibold text-[#333333] mb-4">Informasi Kontak</h3>
+            <div className="corp-card p-6">
+              <h3 className="font-semibold text-ink mb-4">Informasi Kontak</h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[#333333]">WhatsApp (tanpa +)</Label>
+                    <Label className="text-ink">WhatsApp (tanpa +)</Label>
                     <Input value={about.about_whatsapp} onChange={e => updateAboutField('about_whatsapp', e.target.value)} placeholder="6281234567890" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[#333333]">Email</Label>
+                    <Label className="text-ink">Email</Label>
                     <Input type="email" value={about.about_email} onChange={e => updateAboutField('about_email', e.target.value)} placeholder="info@omamorisouvenir.id" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Telepon</Label>
+                  <Label className="text-ink">Telepon</Label>
                   <Input value={about.about_phone} onChange={e => updateAboutField('about_phone', e.target.value)} placeholder="031-1234-5678" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Alamat</Label>
+                  <Label className="text-ink">Alamat</Label>
                   <Textarea rows={2} value={about.about_address} onChange={e => updateAboutField('about_address', e.target.value)} placeholder="Surabaya — Sidoarjo, Jawa Timur, Indonesia" />
                 </div>
               </div>
             </div>
 
             <div className="pt-2">
-              <Button onClick={handleSaveAbout} disabled={savingAbout} className="bg-[#00a651] hover:bg-[#008a40] text-white">
+              <Button onClick={handleSaveAbout} disabled={savingAbout} className="bg-primary hover:bg-primary-hover text-white">
                 <Save className="w-4 h-4 mr-2" />{savingAbout ? 'Menyimpan...' : 'Simpan Pengaturan Tentang Kami'}
               </Button>
             </div>
@@ -593,43 +591,43 @@ export default function AdminSettings() {
 
         {/* ═══════ COMPANY ═══════ */}
         <TabsContent value="company">
-          <div className="corp-card rounded-[10px] p-6 max-w-2xl">
-            <h3 className="font-semibold text-[#333333] mb-4">Profil Perusahaan</h3>
+          <div className="corp-card p-6 max-w-2xl">
+            <h3 className="font-semibold text-ink mb-4">Profil Perusahaan</h3>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-[#333333]">Nama Perusahaan</Label>
+                <Label className="text-ink">Nama Perusahaan</Label>
                 <Input value={company.companyName} onChange={e => updateCompanyField('companyName', e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Alamat</Label>
+                <Label className="text-ink">Alamat</Label>
                 <Textarea rows={2} value={company.alamat} onChange={e => updateCompanyField('alamat', e.target.value)} />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Kota</Label>
+                  <Label className="text-ink">Kota</Label>
                   <Input value={company.kota} onChange={e => updateCompanyField('kota', e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">NPWP</Label>
+                  <Label className="text-ink">NPWP</Label>
                   <Input value={company.npwp} onChange={e => updateCompanyField('npwp', e.target.value)} />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Telepon</Label>
+                  <Label className="text-ink">Telepon</Label>
                   <Input value={company.telepon} onChange={e => updateCompanyField('telepon', e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#333333]">Email</Label>
+                  <Label className="text-ink">Email</Label>
                   <Input type="email" value={company.email} onChange={e => updateCompanyField('email', e.target.value)} />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-[#333333]">Website</Label>
+                <Label className="text-ink">Website</Label>
                 <Input value={company.website} onChange={e => updateCompanyField('website', e.target.value)} />
               </div>
               <div className="pt-4">
-                <Button onClick={handleSaveCompany} disabled={savingCompany} className="bg-[#00a651] hover:bg-[#008a40] text-white">
+                <Button onClick={handleSaveCompany} disabled={savingCompany} className="bg-primary hover:bg-primary-hover text-white">
                   <Save className="w-4 h-4 mr-2" />{savingCompany ? 'Menyimpan...' : 'Simpan Pengaturan'}
                 </Button>
               </div>
@@ -652,7 +650,7 @@ function AdvantageEditor({
 }) {
   if (items.length === 0) {
     return (
-      <p className="text-sm text-[#999999] py-4 text-center border border-dashed border-[#eeeeee] rounded-lg">
+      <p className="text-sm text-ink-muted py-4 text-center border border-dashed border-line rounded-lg">
         Belum ada item. Klik &quot;Tambah&quot; untuk menambahkan.
       </p>
     )
@@ -661,23 +659,23 @@ function AdvantageEditor({
   return (
     <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
       {items.map((item, idx) => (
-        <div key={idx} className="border border-[#eeeeee] rounded-lg p-4 space-y-3 relative group">
+        <div key={idx} className="border border-line rounded-lg p-4 space-y-3 relative group">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <GripVertical className="w-4 h-4 text-[#cccccc]" />
-              <span className="text-xs font-medium text-[#999999] bg-[#f5f5f5] px-2 py-0.5 rounded">#{idx + 1}</span>
+              <GripVertical className="w-4 h-4 text-ink-faint" />
+              <span className="text-xs font-medium text-ink-muted bg-accent px-2 py-0.5 rounded">#{idx + 1}</span>
             </div>
-            <Button variant="ghost" size="icon" className="w-7 h-7 text-[#cccccc] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => onRemove(jsonKey, idx)}>
+            <Button variant="ghost" size="icon" className="w-7 h-7 text-ink-faint hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => onRemove(jsonKey, idx)}>
               <Trash2 className="w-3.5 h-3.5" />
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs text-[#666666]">Ikon</Label>
+              <Label className="text-xs text-ink-soft">Ikon</Label>
               <select
                 value={item.icon}
                 onChange={e => onUpdate(jsonKey, idx, 'icon', e.target.value)}
-                className="w-full h-9 px-3 rounded-md border border-[#eeeeee] bg-white text-sm text-[#333333] focus:border-[#00a651] focus:outline-none focus:ring-2 focus:ring-[#00a651]/10 transition-colors"
+                className="w-full h-9 px-3 rounded-md border border-line bg-white text-sm text-ink focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 transition-colors"
               >
                 {iconOptions.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -685,12 +683,12 @@ function AdvantageEditor({
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs text-[#666666]">Judul</Label>
+              <Label className="text-xs text-ink-soft">Judul</Label>
               <Input value={item.title} onChange={e => onUpdate(jsonKey, idx, 'title', e.target.value)} placeholder="Judul..." className="h-9" />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-[#666666]">Deskripsi</Label>
+            <Label className="text-xs text-ink-soft">Deskripsi</Label>
             <Textarea rows={2} value={item.desc} onChange={e => onUpdate(jsonKey, idx, 'desc', e.target.value)} placeholder="Deskripsi singkat..." className="text-sm" />
           </div>
         </div>

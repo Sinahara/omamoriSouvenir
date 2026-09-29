@@ -60,33 +60,35 @@ const defaultCompany: CompanySettings = {
   website: 'https://omamorisouvenir.id',
 }
 
+// Text defaults match the public fallbacks in landing.tsx / about.tsx, so the form
+// shows what the site displays while nothing has been saved yet.
 const defaultHero: HeroSettings = {
-  hero_badge: 'Corporate Gift Terpercaya',
-  hero_title: 'Solusi Corporate Gift Premium untuk Bisnis Anda',
-  hero_subtitle: 'Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap.',
-  hero_image: '/hero-product.png',
+  hero_badge: 'Corporate Gift Custom',
+  hero_title: 'Corporate Gift Custom untuk Perusahaan di Surabaya & Sidoarjo',
+  hero_subtitle: 'Tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda. Diproduksi setelah DP, dengan mockup sebelum produksi.',
+  hero_image: '/hero-3d-product.png',
   hero_btn_primary_text: 'Minta Penawaran',
   hero_btn_secondary_text: 'Lihat Katalog',
 }
 
 const defaultAbout: AboutSettings = {
-  about_title: 'Tentang Omamori Souvenir',
-  about_subtitle: 'Mitra Terpercaya untuk Solusi Corporate Gift Premium',
-  about_description: 'Omamori Souvenir adalah penyedia solusi corporate gift premium yang berlokasi di Surabaya, Jawa Timur. Kami berdedikasi untuk membantu perusahaan dalam memenuhi kebutuhan souvenir, merchandise, dan gift set berkualitas tinggi.\n\nDengan pengalaman bertahun-tahun di industri corporate gifting, kami memahami bahwa setiap produk yang kami hasilkan mencerminkan citra dan nilai perusahaan Anda. Oleh karena itu, kami selalu mengutamakan kualitas material, ketepatan waktu, dan kepuasan klien dalam setiap pesanan.',
+  about_title: 'Souvenir & Corporate Gift Custom untuk Perusahaan',
+  about_subtitle: 'Melayani perusahaan di Surabaya dan Sidoarjo, dari satu jenis produk sampai paket onboarding karyawan.',
+  about_description: 'Omamori Souvenir membuat corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo: tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda.\n\nSetiap pesanan dimulai dari penawaran resmi. Mockup dikirim untuk disetujui sebelum produksi, dan produksi dimulai setelah DP diterima. Status setiap tahap, dari produksi sampai pengiriman, bisa Anda pantau di halaman Lacak Pesanan.',
   about_image: '/about-team.png',
   about_advantages: JSON.stringify([
-    { icon: 'Package', title: 'Zero Inventory', desc: 'Tidak perlu stok, produksi setelah DP. Minim risiko, maksimal fleksibilitas untuk bisnis Anda.' },
-    { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, kuitansi bermeterai. Semua administrasi terurus rapi dan profesional.' },
-    { icon: 'Sparkles', title: 'Mockup Premium', desc: 'Visualisasi produk dengan mockup AI berkualitas tinggi sebelum produksi dimulai.' },
-    { icon: 'Shield', title: 'Quality Control', desc: 'Pengecekan kualitas ketat di setiap tahap produksi untuk memastikan hasil terbaik.' },
-    { icon: 'Truck', title: 'Pengiriman Tepat Waktu', desc: 'Logistik terpercaya dengan tracking real-time, pengiriman aman ke seluruh Indonesia.' },
-    { icon: 'Users', title: 'Tim Profesional', desc: 'Dedicated account manager siap membantu konsultasi dan pendampingan dari awal hingga selesai.' },
+    { icon: 'Package', title: 'Zero Inventory', desc: 'Barang diproduksi setelah DP masuk, jadi Anda tidak perlu menyimpan stok.' },
+    { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, dan kuitansi bermeterai kami siapkan untuk administrasi kantor Anda.' },
+    { icon: 'Sparkles', title: 'Mockup Premium', desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai.' },
+    { icon: 'Shield', title: 'Quality Control', desc: 'Setiap pesanan melewati tahap QC sebelum dikirim.' },
+    { icon: 'Truck', title: 'Pengiriman Terpantau', desc: 'Status pesanan, dari DP sampai barang diterima, bisa dicek di halaman Lacak Pesanan. Nomor resi tampil begitu barang dikirim.' },
+    { icon: 'Users', title: 'Konsultasi Langsung', desc: 'Pilih produk, kirim logo, dan tanyakan jadwal produksi langsung lewat WhatsApp.' },
   ], null, 2),
   about_benefits: JSON.stringify([
-    { icon: 'Target', title: 'Hemat Biaya', desc: 'Harga kompetitif langsung dari produsen tanpa perantara. Diskon khusus untuk jumlah besar.' },
-    { icon: 'TrendingUp', title: 'Brand Visibility', desc: 'Produk custom dengan logo perusahaan meningkatkan brand awareness di setiap kesempatan.' },
-    { icon: 'Award', title: 'Kualitas Premium', desc: 'Material pilihan dan proses produksi berstandar tinggi, menghasilkan produk yang tahan lama.' },
-    { icon: 'CheckCircle2', title: 'Customisasi Penuh', desc: 'Desain, warna, ukuran, dan packaging bisa disesuaikan dengan kebutuhan dan identitas brand Anda.' },
+    { icon: 'Target', title: 'Hemat Biaya', desc: 'Harga per unit turun sesuai jumlah pesanan. Daftar harga bertingkatnya tercantum di halaman setiap produk.' },
+    { icon: 'TrendingUp', title: 'Brand Visibility', desc: 'Logo Anda tercetak di barang yang dipakai sehari-hari, seperti tumbler, lanyard, dan tas, sehingga tetap terlihat setelah acara selesai.' },
+    { icon: 'Award', title: 'Spesifikasi Jelas', desc: 'Material dan spesifikasi setiap produk tercantum di katalog, jadi Anda tahu barang yang dipesan sebelum membayar DP.' },
+    { icon: 'CheckCircle2', title: 'Desain Custom', desc: 'Desain dan warna disesuaikan dengan identitas visual brand Anda.' },
   ], null, 2),
   about_whatsapp: '6281234567890',
   about_email: 'info@omamorisouvenir.id',
@@ -445,7 +447,7 @@ export default function AdminSettings() {
                 </div>
                 <div>
                   <Label className="text-xs text-ink-soft">Atau masukkan path manual</Label>
-                  <Input value={hero.hero_image} onChange={e => updateHeroField('hero_image', e.target.value)} placeholder="/hero-product.png" className="mt-1" />
+                  <Input value={hero.hero_image} onChange={e => updateHeroField('hero_image', e.target.value)} placeholder="/hero-3d-product.png" className="mt-1" />
                 </div>
               </div>
             </div>
@@ -455,16 +457,16 @@ export default function AdminSettings() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-ink">Badge Text</Label>
-                  <Input value={hero.hero_badge} onChange={e => updateHeroField('hero_badge', e.target.value)} placeholder="Contoh: Corporate Gift Terpercaya" />
+                  <Input value={hero.hero_badge} onChange={e => updateHeroField('hero_badge', e.target.value)} placeholder="Contoh: Corporate Gift Custom" />
                   <p className="text-xs text-ink-muted">Teks kecil di atas judul (opsional)</p>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-ink">Judul Utama</Label>
-                  <Textarea rows={2} value={hero.hero_title} onChange={e => updateHeroField('hero_title', e.target.value)} placeholder="Contoh: Solusi Corporate Gift Premium untuk Bisnis Anda" />
+                  <Textarea rows={2} value={hero.hero_title} onChange={e => updateHeroField('hero_title', e.target.value)} placeholder="Contoh: Corporate Gift Custom untuk Perusahaan di Surabaya & Sidoarjo" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-ink">Sub Judul</Label>
-                  <Textarea rows={3} value={hero.hero_subtitle} onChange={e => updateHeroField('hero_subtitle', e.target.value)} placeholder="Contoh: Dari tumbler custom hingga employee onboarding kit lengkap." />
+                  <Textarea rows={3} value={hero.hero_subtitle} onChange={e => updateHeroField('hero_subtitle', e.target.value)} placeholder="Contoh: Tumbler, plakat, lanyard, dan starter kit dengan logo perusahaan Anda." />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -505,7 +507,7 @@ export default function AdminSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-ink">Sub Judul</Label>
-                  <Input value={about.about_subtitle} onChange={e => updateAboutField('about_subtitle', e.target.value)} placeholder="Mitra Terpercaya untuk Solusi Corporate Gift Premium" />
+                  <Input value={about.about_subtitle} onChange={e => updateAboutField('about_subtitle', e.target.value)} placeholder="Contoh: Melayani perusahaan di Surabaya dan Sidoarjo" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-ink">Deskripsi Bisnis</Label>

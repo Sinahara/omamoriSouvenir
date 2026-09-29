@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { MessageCircle, Mail, MapPin, CupSoda, Award, IdCard, Box, ShoppingBag, Briefcase, Instagram, Linkedin } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
+import { BrandLogo } from '@/components/brand-logo'
 
 const defaultContact = { whatsapp: '6281234567890', email: 'info@omamorisouvenir.id', address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia' }
 
@@ -51,12 +52,12 @@ export default function Footer() {
             {/* Company Info */}
             <div className="space-y-5">
               <div className="flex items-center gap-2.5">
-              <img src="/logo.png" alt="Omamori Souvenir" className="h-7 w-auto object-contain" />
+              <BrandLogo />
                 <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
               </div>
-              <p className="text-[13px] text-ink-muted leading-relaxed">
-                Solusi corporate gift premium untuk kebutuhan bisnis Anda. Dari tumbler custom
-                hingga employee onboarding kit lengkap, kami siap membantu.
+              <p className="text-sm md:text-[13px] text-ink-muted leading-relaxed">
+                Corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo, dari tumbler
+                sampai paket onboarding karyawan.
               </p>
               <div className="flex gap-3 pt-1">
                 <a
@@ -78,7 +79,7 @@ export default function Footer() {
                   <Linkedin className="w-4 h-4" />
                 </a>
               </div>
-              <div className="flex items-start gap-2 text-[13px] text-ink-muted">
+              <div className="flex items-start gap-2 text-sm md:text-[13px] text-ink-muted">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-ink-faint" />
                 <span>{contact.address}</span>
               </div>
@@ -87,12 +88,12 @@ export default function Footer() {
             {/* Quick Links */}
             <div className="space-y-5">
               <h3 className="eyebrow text-ink">Quick Links</h3>
-              <nav className="flex flex-col gap-2.5 pointer-coarse:gap-0" role="navigation">
+              <nav className="flex flex-col gap-2.5 pointer-coarse:gap-2" role="navigation">
                 {quickLinks.map((link) => (
                   <button
                     key={link.page}
                     onClick={() => navigate(link.page)}
-                    className="pointer-coarse:min-h-11 text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
+                    className="pointer-coarse:min-h-11 text-sm md:text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
                   >
                     {link.label}
                   </button>
@@ -103,14 +104,14 @@ export default function Footer() {
             {/* Kategori */}
             <div className="space-y-5">
               <h3 className="eyebrow text-ink">Kategori</h3>
-              <div className="flex flex-col gap-2.5 pointer-coarse:gap-0">
+              <div className="flex flex-col gap-2.5 pointer-coarse:gap-2">
                 {categories.map((cat) => {
                   const Icon = cat.icon
                   return (
                     <button
                       key={cat.label}
                       onClick={() => { setCatalogCategory(cat.value); navigate('catalog') }}
-                      className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
+                      className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-sm md:text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
                     >
                       <Icon className="w-4 h-4 text-ink-faint" />
                       {cat.label}
@@ -123,19 +124,19 @@ export default function Footer() {
             {/* Kontak */}
             <div className="space-y-5">
               <h3 className="eyebrow text-ink">Kontak</h3>
-              <div className="flex flex-col gap-3 pointer-coarse:gap-0">
+              <div className="flex flex-col gap-3 pointer-coarse:gap-2">
                 <a
                   href={`https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
+                  className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-sm md:text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0 text-ink-faint" />
                   +{contact.whatsapp}
                 </a>
                 <a
                   href={`mailto:${(contact.email || '').replace(/[^\w@.\-+]/g, '')}`}
-                  className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
+                  className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-sm md:text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
                 >
                   <Mail className="w-4 h-4 shrink-0 text-ink-faint" />
                   {contact.email}
@@ -146,8 +147,8 @@ export default function Footer() {
 
           <div className="corp-divider my-10" />
 
-          <p className="text-center text-[12px] text-ink-faint tracking-wide">
-            &copy; {year} Omamori Souvenir. All rights reserved.
+          <p className="text-center text-[12px] text-ink-muted tracking-wide">
+            &copy; {year} Omamori Souvenir. Hak cipta dilindungi.
           </p>
         </div>
       </div>

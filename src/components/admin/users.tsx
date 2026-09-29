@@ -200,13 +200,13 @@ export default function AdminUsers() {
               ) : users.map((u, i) => (
                 <TableRow key={u.id} className="hover:bg-muted">
                   <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
-                  <TableCell className="font-medium text-sm text-ink">{u.name}</TableCell>
+                  <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{u.name}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{u.email}</TableCell>
                   <TableCell>
                     <Badge variant={u.role === 'super_admin' ? 'default' : 'secondary'}>{u.role}</Badge>
                   </TableCell>
                   <TableCell className="text-right table-sticky-action">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-2">
                       <Button variant="ghost" size="sm" onClick={() => openEdit(u)} aria-label={`Edit ${u.name}`} title="Edit"><Pencil className="w-4 h-4" /></Button>
                       <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(u.id)} aria-label={`Hapus ${u.name}`} title="Hapus"><Trash2 className="w-4 h-4" /></Button>
                     </div>

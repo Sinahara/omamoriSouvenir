@@ -294,13 +294,13 @@ export default function AdminProducts() {
               ) : products.map((p, i) => (
                 <TableRow key={p.id} className="hover:bg-muted">
                   <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
-                  <TableCell className="font-medium text-sm text-ink">{p.name}</TableCell>
+                  <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{p.name}</TableCell>
                   <TableCell><Badge variant="outline" className="border-line-strong text-ink-soft">{CATEGORIES.find(c => c.value === p.category)?.label || p.category}</Badge></TableCell>
                   <TableCell className="text-right text-sm text-ink">{formatRupiah(p.basePrice)}</TableCell>
                   <TableCell className="text-right text-sm text-ink-soft">{p.minQty}</TableCell>
                   <TableCell><Badge variant={p.isActive ? 'default' : 'secondary'}>{p.isActive ? 'Aktif' : 'Nonaktif'}</Badge></TableCell>
                   <TableCell className="text-right table-sticky-action">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-2">
                       <Button variant="ghost" size="sm" onClick={() => openEdit(p)} aria-label={`Edit ${p.name}`} title="Edit"><Pencil className="w-4 h-4" /></Button>
                       <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(p.id)} aria-label={`Hapus ${p.name}`} title="Hapus"><Trash2 className="w-4 h-4" /></Button>
                     </div>

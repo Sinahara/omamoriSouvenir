@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import { useAppStore } from '@/lib/store'
+import { BrandLogo } from '@/components/brand-logo'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -48,7 +49,7 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-muted flex items-center justify-center p-4">
       <div className="corp-card p-8 w-full max-w-md">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <img src="/logo.png" alt="Omamori Souvenir" className="h-11 w-auto object-contain" />
+          <BrandLogo className="h-11" priority />
           <div>
             <h1 className="text-xl font-bold text-ink">Omamori Souvenir Admin</h1>
             <p className="text-xs text-ink-muted">Panel Manajemen</p>

@@ -23,6 +23,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { useAppStore, type Page } from '@/lib/store'
+import { BrandLogo } from '@/components/brand-logo'
 import AdminLogin from '@/components/admin/login'
 
 interface NavItem {
@@ -80,7 +81,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex flex-col h-full bg-white">
       <div className="flex items-center gap-3 px-6 py-5">
-        <img src="/logo.png" alt="Omamori Souvenir" className="h-8 w-auto object-contain" />
+        <BrandLogo className="h-8" />
         <span className="text-lg font-bold text-ink">Omamori Souvenir</span>
       </div>
 

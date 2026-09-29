@@ -73,7 +73,7 @@ export default function AdminOrders() {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="flex-wrap h-auto gap-1 bg-transparent p-0 border-b border-line-strong">
+        <TabsList className="flex-wrap h-auto gap-2 bg-transparent p-0 border-b border-line-strong">
           {statusTabs.map(tab => (
             <TabsTrigger
               key={tab.value}

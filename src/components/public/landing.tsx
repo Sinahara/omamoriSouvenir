@@ -65,16 +65,21 @@ const usps = [
   },
 ]
 
+// Real client testimonials only, shared with the client's permission. The section
+// stays hidden while this list is empty; the earlier entries were placeholders.
+const testimonials: { quote: string; name: string; title: string }[] = []
+
 export default function Landing() {
   const { navigate, selectProduct, setCatalogCategory } = useAppStore()
   const [featured, setFeatured] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [imgErrors, setImgErrors] = useState<Set<string>>(new Set())
 
+  // Fallbacks only: the live hero text comes from Pengaturan → Tampilan Beranda
   const [settings, setSettings] = useState({
-    hero_badge: 'Corporate Gift Terpercaya',
-    hero_title: 'Solusi Corporate Gift Premium untuk Bisnis Anda',
-    hero_subtitle: 'Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap.',
+    hero_badge: 'Corporate Gift Custom',
+    hero_title: 'Corporate Gift Custom untuk Perusahaan di Surabaya & Sidoarjo',
+    hero_subtitle: 'Tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda. Diproduksi setelah DP, dengan mockup sebelum produksi.',
     hero_btn_primary_text: 'Minta Penawaran',
     hero_btn_secondary_text: 'Lihat Katalog',
     hero_image: '/hero-3d-product.png',
@@ -123,33 +128,6 @@ export default function Landing() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
             >
-              {/* <span className="inline-block eyebrow text-primary border border-primary/20 px-4 py-1 rounded-sm">
-                {settings.hero_badge}
-              </span>
-              <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-ink leading-[1.2] tracking-tight">
-                {settings.hero_title}
-              </h1>
-              <p className="text-base text-ink-muted max-w-md mx-auto lg:mx-0 leading-relaxed">
-                {settings.hero_subtitle}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
-                <Button
-                  size="lg"
-                  className="text-sm px-8 h-11 bg-primary hover:bg-primary-hover text-white rounded-sm tracking-wide"
-                  onClick={() => navigate('request-quote')}
-                >
-                  {settings.hero_btn_primary_text}
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="text-sm px-8 h-11 border-line-strong text-ink-soft hover:text-ink hover:bg-surface hover:border-line-hover rounded-sm tracking-wide"
-                  onClick={() => navigate('catalog')}
-                >
-                  {settings.hero_btn_secondary_text}
-                </Button>
-              </div> */}
               {!settingsLoaded ? (
                 <div className="space-y-4 pt-4">
                   <Skeleton className="h-6 w-48 mx-auto lg:mx-0 rounded-full" />
@@ -203,22 +181,15 @@ export default function Landing() {
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
             >
               <div className="absolute w-[70%] h-[70%] bg-linear-to-br from-emerald-50/80 to-emerald-100/40 rounded-full blur-3xl" />
-              <motion.img
+              {/* Gentle float as a CSS transform animation: it runs on the compositor
+                  instead of a JS loop, and stops under prefers-reduced-motion */}
+              <img
                 src={settings.hero_image || '/hero-3d-product.png'}
                 alt="Premium Corporate Gift Set"
                 width={640}
                 height={480}
-                className="relative w-full max-w-lg xl:max-w-xl drop-shadow-xl"
+                className="relative w-full max-w-lg xl:max-w-xl drop-shadow-xl animate-float"
                 fetchPriority="high"
-                animate={{
-                  y: [0, -10, 0],
-                  rotateZ: [0, 0.8, 0, -0.8, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
               />
             </motion.div>
           </div>
@@ -422,59 +393,45 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══ Testimonial Section ═══ */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-6xl mx-auto px-4">
-          <SectionHeader
-            badge="Testimoni"
-            title="Dipercaya oleh Ratusan Perusahaan"
-            subtitle="Apa kata klien kami tentang layanan Omamori Souvenir"
-          />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "Kualitas tumbler custom sangat baik dan pengiriman tepat waktu. Tim Omamori Souvenir sangat responsif dan profesional dari awal konsultasi hingga barang diterima.",
-                name: "Rina Wijaya",
-                title: "HR Manager, PT Mitra Sejahtera",
-              },
-              {
-                quote: "Kami sudah bekerja sama untuk 3 event besar dan hasilnya selalu memuaskan. Plakat dan goodie bag yang dipesan selalu mendapat pujian dari peserta.",
-                name: "Ahmad Fauzan",
-                title: "Event Coordinator, Bank Nasional",
-              },
-              {
-                quote: "Starter kit onboarding karyawan baru dari Omamori Souvenir benar-benar meningkatkan first impression. Desain eksklusif dan material premium sesuai identitas brand kami.",
-                name: "Diana Kusuma",
-                title: "Head of People, Tech Startup ID",
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1, ease: 'easeOut' }}
-                className="corp-card jp-corner-accents p-6 flex flex-col"
-              >
-                <Quote className="w-6 h-6 text-primary/15 mb-4 shrink-0" />
-                <p className="text-[15px] text-ink-soft leading-relaxed flex-1">
-                  &ldquo;{item.quote}&rdquo;
-                </p>
-                <div className="corp-divider my-4" />
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-primary-soft flex items-center justify-center text-sm font-semibold text-primary shrink-0">
-                    {item.name.charAt(0)}
+      {/* ═══ Testimonial Section — shown only once real testimonials are added ═══ */}
+      {testimonials.length > 0 && (
+        <section className="py-16 md:py-24">
+          <div className="max-w-6xl mx-auto px-4">
+            <SectionHeader
+              badge="Testimoni"
+              title="Kata Klien Kami"
+              subtitle="Pengalaman klien yang pernah memesan di Omamori Souvenir"
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {testimonials.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: 'easeOut' }}
+                  className="corp-card jp-corner-accents p-6 flex flex-col"
+                >
+                  <Quote className="w-6 h-6 text-primary/15 mb-4 shrink-0" />
+                  <p className="text-[15px] text-ink-soft leading-relaxed flex-1">
+                    &ldquo;{item.quote}&rdquo;
+                  </p>
+                  <div className="corp-divider my-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-primary-soft flex items-center justify-center text-sm font-semibold text-primary shrink-0">
+                      {item.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-ink">{item.name}</p>
+                      <p className="text-xs text-ink-muted mt-0.5">{item.title}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-ink">{item.name}</p>
-                    <p className="text-xs text-ink-muted mt-0.5">{item.title}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ═══ Final CTA ═══ */}
       <section className="py-16 md:py-24 jp-seigaiha-bg">

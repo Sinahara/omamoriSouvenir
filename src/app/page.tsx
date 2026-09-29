@@ -5,6 +5,7 @@ import { useEffect,useState } from 'react'
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion'
 import { useAppStore, initUrlRouter, takePendingScroll, restoreScroll } from '@/lib/store'
 import { Skeleton } from '@/components/ui/skeleton'
+import { PageSkeleton, HeaderSkeleton, HeroSkeleton } from '@/components/page-skeleton'
 import { ErrorBoundary } from '@/components/error-boundary'
 
 const PAGE_TITLES: Record<string, string> = {
@@ -27,28 +28,28 @@ const PAGE_TITLES: Record<string, string> = {
 
 const PAGE_DESCRIPTIONS: Record<string, string> = {
   landing: 'Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap. Melayani area Surabaya & Sidoarjo.',
-  about: 'Kenali Omamori Souvenir lebih dekat — penyedia corporate gift premium dengan pengalaman 5+ tahun melayani ratusan perusahaan di Indonesia.',
+  about: 'Kenali Omamori Souvenir: corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo, dari tumbler sampai paket onboarding karyawan.',
   catalog: 'Temukan corporate gift yang tepat untuk bisnis Anda. Tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit.',
   'product-detail': 'Lihat detail produk, spesifikasi, dan harga corporate gift premium dari Omamori Souvenir.',
   'request-quote': 'Minta penawaran corporate gift custom. Isi form, dapatkan quotation resmi dalam 1x24 jam.',
   track: 'Lacak status pesanan corporate gift Anda secara real-time dengan nomor pesanan.',
 }
 
+// Shown while a page's code chunk downloads (slow networks, low-end phones)
+const pageLoader = () => <div className="max-w-6xl mx-auto px-4 py-12 md:py-20 space-y-6"><Skeleton className="h-8 w-48 mx-auto" /><Skeleton className="h-5 w-full max-w-sm mx-auto" /><Skeleton className="h-64 w-full" /></div>
+
 // Code-split: each page loads only when needed
-const Navbar = dynamic(() => import('@/components/public/navbar'), { ssr: false })
+const Navbar = dynamic(() => import('@/components/public/navbar'), { ssr: false, loading: () => <HeaderSkeleton /> })
 const Footer = dynamic(() => import('@/components/public/footer'), { ssr: false })
-const Landing = dynamic(() => import('@/components/public/landing'), { ssr: false })
-const About = dynamic(() => import('@/components/public/about'), {
-  ssr: false,
-  loading: () => <div className="max-w-6xl mx-auto px-4 py-20 space-y-8"><Skeleton className="h-10 w-48 mx-auto" /><Skeleton className="h-6 w-96 mx-auto" /><Skeleton className="h-64 w-full" /></div>,
-})
+const Landing = dynamic(() => import('@/components/public/landing'), { ssr: false, loading: () => <HeroSkeleton /> })
+const About = dynamic(() => import('@/components/public/about'), { ssr: false, loading: pageLoader })
 const Catalog = dynamic(() => import('@/components/public/catalog'), {
   ssr: false,
-  loading: () => <div className="max-w-6xl mx-auto px-4 py-20 space-y-8"><Skeleton className="h-10 w-48 mx-auto" /><Skeleton className="h-6 w-96 mx-auto" /><div className="grid grid-cols-3 gap-6"><Skeleton className="h-72 w-full" /><Skeleton className="h-72 w-full" /><Skeleton className="h-72 w-full" /></div></div>,
+  loading: () => <div className="max-w-6xl mx-auto px-4 py-12 md:py-20 space-y-6"><Skeleton className="h-8 w-48 mx-auto" /><Skeleton className="h-5 w-full max-w-sm mx-auto" /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><Skeleton className="h-72 w-full" /><Skeleton className="h-72 w-full" /><Skeleton className="h-72 w-full" /></div></div>,
 })
-const ProductDetail = dynamic(() => import('@/components/public/product-detail'), { ssr: false })
-const RequestQuote = dynamic(() => import('@/components/public/request-quote'), { ssr: false })
-const TrackOrder = dynamic(() => import('@/components/public/track-order'), { ssr: false })
+const ProductDetail = dynamic(() => import('@/components/public/product-detail'), { ssr: false, loading: pageLoader })
+const RequestQuote = dynamic(() => import('@/components/public/request-quote'), { ssr: false, loading: pageLoader })
+const TrackOrder = dynamic(() => import('@/components/public/track-order'), { ssr: false, loading: pageLoader })
 
 const adminSkeleton = <div className="p-6 space-y-6"><Skeleton className="h-8 w-48" /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"><Skeleton className="h-28 w-full" /><Skeleton className="h-28 w-full" /><Skeleton className="h-28 w-full" /><Skeleton className="h-28 w-full" /></div><Skeleton className="h-64 w-full" /></div>
 
@@ -141,7 +142,7 @@ export default function Home() {
     }
   }, [currentPage])
   if (!isRouterReady) {
-    return <div className="min-h-screen bg-white flex items-center justify-center"></div>
+    return <PageSkeleton />
   }
 
   const renderPublicPage = () => {

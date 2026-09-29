@@ -194,13 +194,13 @@ export default function AdminClients() {
               ) : clients.map((c, i) => (
                 <TableRow key={c.id} className="hover:bg-muted">
                   <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
-                  <TableCell className="font-medium text-sm text-ink">{c.companyName}</TableCell>
+                  <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{c.companyName}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{c.picName}{c.picTitle ? ` (${c.picTitle})` : ''}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{c.whatsapp}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{c.kota || '-'}</TableCell>
                   <TableCell className="text-right text-sm text-ink">{c._count ? (c._count.quotes + c._count.orders) : 0}</TableCell>
                   <TableCell className="text-right table-sticky-action">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-2">
                       <Button variant="ghost" size="sm" onClick={() => openEdit(c)} aria-label={`Edit ${c.companyName}`} title="Edit"><Pencil className="w-4 h-4" /></Button>
                       <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleteId(c.id)} aria-label={`Hapus ${c.companyName}`} title="Hapus"><Trash2 className="w-4 h-4" /></Button>
                     </div>

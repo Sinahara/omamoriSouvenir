@@ -15,17 +15,6 @@ import {
 import { useAppStore } from '@/lib/store'
 import { CATEGORIES, formatRupiah, type Product, type PricingTier } from '@/lib/types'
 
-function getCategoryTint(category: string) {
-  const map: Record<string, string> = {
-    tumbler: 'cat-tint-tumbler',
-    plakat: 'cat-tint-plakat',
-    lanyard: 'cat-tint-lanyard',
-    hardbox: 'cat-tint-hardbox',
-    goodie_bag: 'cat-tint-goodie_bag',
-  }
-  return map[category] || 'cat-tint-tumbler'
-}
-
 function parseSpecs(specs: string | null): { name: string; value: string }[] {
   if (!specs) return []
   try {
@@ -146,7 +135,6 @@ export default function ProductDetail() {
 
   const specs = parseSpecs(product.specs)
   const images = product.images?.length ? product.images : []
-  const tint = getCategoryTint(product.category)
   const showPrevImage = () => setActiveThumb(prev => (prev - 1 + images.length) % images.length)
   const showNextImage = () => setActiveThumb(prev => (prev + 1) % images.length)
 
@@ -368,7 +356,7 @@ export default function ProductDetail() {
             </button>
           )}
           {images.length > 1 && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex z-10">
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex pointer-coarse:gap-2 z-10">
               {images.map((_, idx) => (
                 <button
                   key={idx}

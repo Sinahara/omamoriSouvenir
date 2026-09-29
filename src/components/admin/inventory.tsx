@@ -87,6 +87,7 @@ export default function AdminInventory() {
   // History dialog
   const [historyOpen, setHistoryOpen] = useState(false)
   const [historyItem, setHistoryItem] = useState<InventoryItem | null>(null)
+  const [historyLoading, setHistoryLoading] = useState(false)
 
   const { toast } = useToast()
 
@@ -199,15 +200,20 @@ export default function AdminInventory() {
     }
   }
 
+  // Open right away (with the item's name) and show a skeleton while the history loads
   const openHistory = async (item: InventoryItem) => {
+    setHistoryItem(item)
+    setHistoryLoading(true)
+    setHistoryOpen(true)
     try {
       const res = await adminFetch(`/api/admin/inventory/${item.id}`)
       if (res.ok) {
         const data = await res.json()
         setHistoryItem(data)
       }
-    } catch { /* ignore */ }
-    setHistoryOpen(true)
+    } catch { /* ignore */ } finally {
+      setHistoryLoading(false)
+    }
   }
 
   const getStockStatus = (item: InventoryItem) => {
@@ -258,14 +264,14 @@ export default function AdminInventory() {
                 return (
                   <TableRow key={item.id} className={`${isLow ? 'bg-amber-50' : 'hover:bg-muted'}`}>
                     <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
-                    <TableCell className="font-medium text-sm text-ink">{item.name}</TableCell>
+                    <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{item.name}</TableCell>
                     <TableCell className="text-sm text-ink-soft">{item.category || '-'}</TableCell>
                     <TableCell className={`text-right text-sm font-medium ${isLow ? 'text-amber-700' : 'text-ink'}`}>{item.currentStock}</TableCell>
                     <TableCell className="text-right text-sm text-ink-soft">{item.minimumStock}</TableCell>
                     <TableCell className="text-sm text-ink-soft">{item.unit}</TableCell>
                     <TableCell><Badge variant={status.variant}>{status.label}</Badge></TableCell>
                     <TableCell className="text-right table-sticky-action">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="grid grid-cols-[auto_auto] justify-end gap-2 sm:flex sm:items-center">
                         <Button variant="ghost" size="sm" onClick={() => openTxDialog(item.id)} aria-label={`Catat stok ${item.name}`} title="Catat Stok">
                           {item.currentStock <= item.minimumStock ? <ArrowDownCircle className="w-4 h-4 text-green-600" /> : <ArrowUpCircle className="w-4 h-4 text-amber-600" />}
                         </Button>
@@ -374,7 +380,11 @@ export default function AdminInventory() {
             <DialogDescription className="sr-only">Riwayat transaksi stok untuk {historyItem?.name}</DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-96">
-            {historyItem?.transactions?.length ? (
+            {historyLoading ? (
+              <div className="space-y-2 py-2">
+                {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-9 w-full" />)}
+              </div>
+            ) : historyItem?.transactions?.length ? (
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">

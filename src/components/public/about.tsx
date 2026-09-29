@@ -52,20 +52,22 @@ const colorMap: Record<string, string> = {
 };
 
 /* ── Default Data ──────────────────────────────────────── */
+// Fallbacks only: the live text comes from Pengaturan → Tentang Kami. Keep them to
+// facts the site itself shows (order stages, tier pricing, catalog specs).
 const defaultAdvantages = [
-  { icon: 'Package', title: 'Zero Inventory', desc: 'Anda tidak perlu menyetok barang. Kami mengelola stok dan produksi sesuai kebutuhan pesanan, menghilangkan risiko overstock sepenuhnya.' },
-  { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Setiap pengiriman dilengkapi invoice, surat jalan, dan dokumen administrasi rapi untuk kebutuhan pelaporan perusahaan Anda.' },
-  { icon: 'Sparkles', title: 'Mockup Premium', desc: 'Dapatkan preview mockup digital gratis sebelum produksi dimulai, memastikan hasil sesuai ekspektasi dan identitas brand Anda.' },
-  { icon: 'Shield', title: 'Quality Control', desc: 'Tim QC memeriksa setiap produk secara ketat sebelum dikirim. Garansi penggantian jika produk tidak memenuhi standar.' },
-  { icon: 'Truck', title: 'Pengiriman Tepat Waktu', desc: 'Didukung jaringan logistik luas di seluruh Indonesia, pesanan dijamin sampai di alamat tujuan tepat waktu dan aman.' },
-  { icon: 'Users', title: 'Tim Profesional', desc: 'Dedicated account manager dan tim desainer berpengalaman siap membantu dari konsultasi awal hingga pengiriman.' },
+  { icon: 'Package', title: 'Zero Inventory', desc: 'Barang diproduksi setelah DP masuk, jadi Anda tidak perlu menyimpan stok.' },
+  { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, dan kuitansi bermeterai kami siapkan untuk administrasi kantor Anda.' },
+  { icon: 'Sparkles', title: 'Mockup Premium', desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai.' },
+  { icon: 'Shield', title: 'Quality Control', desc: 'Setiap pesanan melewati tahap QC sebelum dikirim.' },
+  { icon: 'Truck', title: 'Pengiriman Terpantau', desc: 'Status pesanan, dari DP sampai barang diterima, bisa dicek di halaman Lacak Pesanan. Nomor resi tampil begitu barang dikirim.' },
+  { icon: 'Users', title: 'Konsultasi Langsung', desc: 'Pilih produk, kirim logo, dan tanyakan jadwal produksi langsung lewat WhatsApp.' },
 ];
 
 const defaultBenefits = [
-  { icon: 'Target', title: 'Hemat Biaya', desc: 'Harga kompetitif langsung dari produsen tanpa perantara. Hemat hingga 30% dibandingkan pembelian retail untuk jumlah besar.' },
-  { icon: 'TrendingUp', title: 'Brand Visibility', desc: 'Produk berkualitas meningkatkan citra merek Anda. Souvenir premium menjadi media promosi jangka panjang.' },
-  { icon: 'Award', title: 'Kualitas Premium', desc: 'Material terpilih dengan proses produksi berstandar tinggi. Setiap produk melewati quality check berlapis untuk hasil terbaik.' },
-  { icon: 'CheckCircle2', title: 'Customisasi Penuh', desc: 'Desain, warna, ukuran, dan bentuk disesuaikan sepenuhnya dengan kebutuhan dan identitas visual brand Anda.' },
+  { icon: 'Target', title: 'Hemat Biaya', desc: 'Harga per unit turun sesuai jumlah pesanan. Daftar harga bertingkatnya tercantum di halaman setiap produk.' },
+  { icon: 'TrendingUp', title: 'Brand Visibility', desc: 'Logo Anda tercetak di barang yang dipakai sehari-hari, seperti tumbler, lanyard, dan tas, sehingga tetap terlihat setelah acara selesai.' },
+  { icon: 'Award', title: 'Spesifikasi Jelas', desc: 'Material dan spesifikasi setiap produk tercantum di katalog, jadi Anda tahu barang yang dipesan sebelum membayar DP.' },
+  { icon: 'CheckCircle2', title: 'Desain Custom', desc: 'Desain dan warna disesuaikan dengan identitas visual brand Anda.' },
 ];
 
 const defaultContact = { whatsapp: '6281234567890', email: 'info@omamorisouvenir.id', phone: '031-1234-5678', address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia' };
@@ -93,10 +95,10 @@ export default function About() {
   }, []);
 
   /* ── Parsed settings with fallbacks ─── */
-  const title = settings.about_title || 'Mitra Terpercaya untuk Souvenir & Corporate Gift Premium';
-  const subtitle = settings.about_subtitle || 'Lebih dari 5 tahun pengalaman melayani kebutuhan corporate gift untuk ratusan perusahaan di seluruh Indonesia.';
+  const title = settings.about_title || 'Souvenir & Corporate Gift Custom untuk Perusahaan';
+  const subtitle = settings.about_subtitle || 'Melayani perusahaan di Surabaya dan Sidoarjo, dari satu jenis produk sampai paket onboarding karyawan.';
   const description = settings.about_description
-    || 'Omamori Souvenir adalah penyedia solusi corporate gift dan souvenir premium berbasis di Jawa Timur. Kami hadir untuk membantu perusahaan dalam memilih, mendesain, dan mendistribusikan produk berkualitas tinggi yang merepresentasikan nilai merek Anda.\n\nDengan tim profesional dan jaringan produksi luas, setiap pesanan dieksekusi dengan standar kualitas terbaik — mulai dari pen produk, mug premium, tote bag, hingga paket hamper eksklusif.';
+    || 'Omamori Souvenir membuat corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo: tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda.\n\nSetiap pesanan dimulai dari penawaran resmi. Mockup dikirim untuk disetujui sebelum produksi, dan produksi dimulai setelah DP diterima. Status setiap tahap, dari produksi sampai pengiriman, bisa Anda pantau di halaman Lacak Pesanan.';
 
   const advantages = (() => { try { const p = JSON.parse(settings.about_advantages || 'null'); return Array.isArray(p) && p.length > 0 ? p : defaultAdvantages; } catch { return defaultAdvantages; } })();
   const benefits = (() => { try { const p = JSON.parse(settings.about_benefits || 'null'); return Array.isArray(p) && p.length > 0 ? p : defaultBenefits; } catch { return defaultBenefits; } })();
@@ -176,6 +178,7 @@ export default function About() {
                       src={settings.about_image || '/about-team.png'}
                       alt="Tentang Omamori Souvenir"
                       className="w-full h-full object-cover"
+                      loading="lazy"
                       decoding="async"
                       onError={() => setImgError(true)}
                     />
@@ -335,7 +338,7 @@ export default function About() {
                   <c.icon className="w-5 h-5" />
                 </div>
                 <div className="font-semibold text-ink text-sm mb-1">{c.label}</div>
-                <div className="text-ink-muted text-xs leading-snug wrap-break-word">{c.value}</div>
+                <div className="text-ink-muted text-sm leading-snug wrap-break-word">{c.value}</div>
               </motion.a>
             ))}
           </motion.div>

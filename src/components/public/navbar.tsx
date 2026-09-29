@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { useAppStore } from '@/lib/store'
+import { BrandLogo } from '@/components/brand-logo'
 import { useState } from 'react'
 
 const navLinks = [
@@ -32,7 +33,7 @@ export default function Navbar() {
           onClick={() => handleNav('landing')}
           className="flex items-center gap-2.5 hover:opacity-80 transition-opacity duration-200"
         >
-          <img src="/logo.png" alt="Omamori Souvenir" className="h-7 w-auto object-contain" />
+          <BrandLogo priority />
           <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
         </button>
 
@@ -78,16 +79,16 @@ export default function Navbar() {
             <SheetTitle className="sr-only">Menu Navigasi</SheetTitle>
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2.5 px-6 pt-6 pb-5 border-b border-line">
-                <img src="/logo.png" alt="Omamori Souvenir" className="h-7 w-auto object-contain" />
+                <BrandLogo />
                 <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
               </div>
-              <nav className="flex-1 px-4 py-4 flex flex-col gap-0.5" role="navigation">
+              <nav className="flex-1 px-4 py-4 flex flex-col gap-2" role="navigation">
                 {navLinks.map((link) => (
                   <button
                     key={link.page}
                     onClick={() => handleNav(link.page)}
                     aria-current={activePage === link.page ? 'page' : undefined}
-                    className={`min-h-11 px-4 py-2.5 rounded-sm text-[13px] font-medium tracking-wide text-left transition-all duration-200 ${
+                    className={`min-h-11 px-4 py-2.5 rounded-sm text-sm font-medium tracking-wide text-left transition-all duration-200 ${
                       activePage === link.page
                         ? 'text-primary bg-primary-soft'
                         : 'text-ink-muted hover:text-ink hover:bg-surface'
@@ -99,7 +100,7 @@ export default function Navbar() {
               </nav>
               <div className="px-4 pb-6 flex flex-col gap-2 border-t border-line pt-4">
                 <Button
-                  className="w-full bg-primary hover:bg-primary-hover text-white rounded-sm text-[13px] tracking-wide"
+                  className="w-full bg-primary hover:bg-primary-hover text-white rounded-sm text-sm tracking-wide"
                   onClick={() => {
                     navigate('request-quote')
                     setOpen(false)

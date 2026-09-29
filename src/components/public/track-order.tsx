@@ -150,7 +150,7 @@ export default function TrackOrder() {
             <p className="text-[13px] text-ink-muted">
               Perusahaan: <span className="text-ink font-medium">{result.companyName || '-'}</span>
             </p>
-            <p className="text-[12px] text-ink-faint">
+            <p className="text-[12px] text-ink-muted">
               Terakhir diperbarui: {formatDate(result.updatedAt)}
             </p>
           </div>
@@ -186,14 +186,14 @@ export default function TrackOrder() {
                       )}
                     </div>
                     <div className={`pb-6 ${isLast ? 'pb-0' : ''}`}>
-                      <p className={`text-[13px] font-medium ${isCompleted ? 'text-ink' : 'text-ink-faint'}`}>
+                      <p className={`text-[13px] font-medium ${isCompleted ? 'text-ink' : 'text-ink-muted'}`}>
                         {stage.label}
                       </p>
                       {isCurrent && (
                         <p className="text-[11px] text-primary font-medium mt-0.5 tracking-wide">Status saat ini</p>
                       )}
                       {isUpcoming && (
-                        <p className="text-[11px] text-ink-faint mt-0.5">Menunggu</p>
+                        <p className="text-[11px] text-ink-muted mt-0.5">Menunggu</p>
                       )}
                     </div>
                   </div>
@@ -212,7 +212,7 @@ export default function TrackOrder() {
                   <p className="font-mono font-medium text-ink mt-0.5">{result.vendorTracking}</p>
                 </div>
                 {result.shippedAt && (
-                  <p className="text-[12px] text-ink-faint">
+                  <p className="text-[12px] text-ink-muted">
                     Dikirim: {formatDate(result.shippedAt)}
                   </p>
                 )}

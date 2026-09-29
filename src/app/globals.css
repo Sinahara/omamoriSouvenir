@@ -116,8 +116,8 @@
   /* === INK — text scale === */
   --ink: var(--foreground);          /* headings, strong text */
   --ink-soft: var(--muted-foreground); /* body copy */
-  --ink-muted: #999999;              /* secondary text, meta */
-  --ink-faint: #cccccc;              /* decorative icons, disabled */
+  --ink-muted: #707070;              /* secondary text, meta — ≥4.5:1 on white, surface, muted and field */
+  --ink-faint: #cccccc;              /* decorative icons only, too light for text */
 
   /* === LINES — borders & dividers === */
   --line: #eeeeee;                   /* cards, dividers */
@@ -256,30 +256,7 @@
       radial-gradient(circle at 50% 80%, rgba(0, 166, 81, 0.03) 0%, transparent 50%);
   }
 
-  /* Shippou (七宝) — Seven treasures interlocking circles */
-  .jp-shippou-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='0' cy='20' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='40' cy='20' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='20' cy='0' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Ccircle cx='20' cy='40' r='10' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3C/svg%3E");
-    background-size: 40px 40px;
-  }
-
   /* ── Ornamental elements — 装飾 (Sōshoku) ── */
-
-  /* Ornamental line — refined horizontal divider */
-  .jp-ornament-line {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    height: 20px;
-  }
-  .jp-ornament-line::before,
-  .jp-ornament-line::after {
-    content: '';
-    flex: 1;
-    max-width: 80px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--line-hover), transparent);
-  }
 
   /* Ornamental diamond — three dots divider */
   .jp-ornament-diamond {
@@ -340,35 +317,6 @@
     background: var(--primary);
   }
 
-  /* Section separator — elegant Japanese divider */
-  .jp-section-sep {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 24px;
-  }
-  .jp-section-sep::before {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--line-strong));
-  }
-  .jp-section-sep::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to left, transparent, var(--line-strong));
-  }
-  .jp-section-sep-icon {
-    width: 8px;
-    height: 8px;
-    background: var(--primary);
-    transform: rotate(45deg);
-    opacity: 0.35;
-    margin: 0 16px;
-    flex-shrink: 0;
-  }
-
   /* ── Typography ── */
 
   /* Eyebrow label — small uppercase kicker above titles and table headings */
@@ -378,46 +326,6 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
     line-height: 1.5;
-  }
-
-  /* ── Buttons ── */
-
-  /* Primary button */
-  .btn-primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border-radius: calc(var(--radius) - 4px);
-    padding: 10px 24px;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-primary:hover {
-    background: var(--primary-hover);
-    box-shadow: 0 2px 12px rgba(0, 166, 81, 0.2);
-  }
-
-  /* Secondary button */
-  .btn-secondary {
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--border);
-    border-radius: calc(var(--radius) - 4px);
-    padding: 10px 24px;
-    font-weight: 500;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    cursor: pointer;
-  }
-
-  .btn-secondary:hover {
-    background: var(--surface);
-    border-color: var(--line-hover);
   }
 
   /* ── Surfaces ── */
@@ -437,12 +345,18 @@
     border-color: var(--line-hover);
   }
 
-  /* Navigation bar — refined, minimal */
+  /* Navigation bar — refined, minimal. Solid on touch devices: a blurred
+     backdrop is recomputed on every scroll frame, which low-end phones feel. */
   .corp-nav {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--background);
     border-bottom: 1px solid var(--line);
+  }
+  @media (pointer: fine) {
+    .corp-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
   }
 
   /* Sidebar */
@@ -454,21 +368,6 @@
   /* Section background — subtle warmth */
   .section-gray {
     background: var(--surface);
-  }
-
-  /* Section heading — Kanso: clean, bold */
-  .section-heading {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: 0.02em;
-  }
-
-  .section-subheading {
-    font-size: 14px;
-    color: var(--ink-muted);
-    margin-top: 8px;
-    letter-spacing: 0.01em;
   }
 
   /* Table style */
@@ -521,12 +420,6 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
   /* ── Animations — subtle & flowing (no bounce) ── */
-
-  .shimmer {
-    background: linear-gradient(90deg, var(--field) 0%, var(--surface) 50%, var(--field) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
 
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -582,71 +475,26 @@
 
   /* ── Tints ── */
 
-  /* Product card category tints — neutral elegant */
-  .cat-tint-tumbler { background: #f5f7f5; }
-  .cat-tint-plakat { background: #f8f7f3; }
-  .cat-tint-lanyard { background: #f5f6f8; }
-  .cat-tint-hardbox { background: #f7f5f8; }
-  .cat-tint-goodie_bag { background: #f5f8f7; }
-  .cat-tint-starter_kit { background: #f7f5f5; }
-
   /* KPI icon backgrounds — softer */
   .kpi-icon-green { background: var(--primary-soft); color: var(--primary); }
   .kpi-icon-blue { background: #eff3f8; color: var(--chart-2); }
   .kpi-icon-amber { background: #f8f5ee; color: var(--chart-3); }
   .kpi-icon-rose { background: #f8f0f0; color: var(--chart-5); }
-
-  /* Tag badges */
-  .tag-green { background: var(--primary-soft); color: var(--primary-hover); }
-  .tag-blue { background: #eff3f8; color: #2563eb; }
-  .tag-amber { background: #f8f5ee; color: #d97706; }
-  .tag-red { background: #f8f0f0; color: var(--destructive); }
-  .tag-purple { background: #f3f2f7; color: #7c3aed; }
-  .tag-gray { background: var(--accent); color: #6b7280; }
-
-  /* ── Japanese section header ── */
-
-  .jp-section-header {
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .jp-section-header .jp-badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--primary);
-    padding: 4px 14px;
-    border: 1px solid rgba(0, 166, 81, 0.2);
-    border-radius: 2px;
-    margin-bottom: 12px;
-  }
-
-  .jp-section-header h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: 0.02em;
-  }
-
-  .jp-section-header p {
-    font-size: 14px;
-    color: var(--ink-muted);
-    margin-top: 8px;
-    letter-spacing: 0.01em;
-  }
 }
+
+/* Status badges. Class names come from ORDER_STATUSES / QUOTE_STATUSES in
+   lib/types.ts and are passed to <Badge>. Deliberately outside @layer: they have
+   to beat the Badge default variant's bg-primary / text-primary-foreground utilities. */
+.tag-green { background: var(--primary-soft); color: var(--primary-hover); }
+.tag-blue { background: #eff3f8; color: #2563eb; }
+.tag-amber { background: #f8f5ee; color: #b45309; } /* 4.6:1; the lighter #d97706 was 2.9:1 */
+.tag-red { background: #f8f0f0; color: var(--destructive); }
+.tag-purple { background: #f3f2f7; color: #7c3aed; }
+.tag-gray { background: var(--accent); color: var(--ink-muted); }
 
 /* ═══════════════════════════════════════════════════════════
    KEYFRAMES
    ═══════════════════════════════════════════════════════════ */
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }

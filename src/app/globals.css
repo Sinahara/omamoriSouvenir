@@ -291,22 +291,28 @@
   .jp-corner-accents::after {
     content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: var(--corner-size, 20px);
+    height: var(--corner-size, 20px);
     pointer-events: none;
     opacity: 0.25;
   }
   .jp-corner-accents::before {
-    top: 8px;
-    left: 8px;
+    top: var(--corner-inset, 8px);
+    left: var(--corner-inset, 8px);
     border-top: 1.5px solid var(--primary);
     border-left: 1.5px solid var(--primary);
   }
   .jp-corner-accents::after {
-    bottom: 8px;
-    right: 8px;
+    bottom: var(--corner-inset, 8px);
+    right: var(--corner-inset, 8px);
     border-bottom: 1.5px solid var(--primary);
     border-right: 1.5px solid var(--primary);
+  }
+  /* Corners that fit inside a p-5 card's padding (5 + 14 = 19px), so they never
+     sit on top of the card's last line of text or its button */
+  .jp-corner-accents-tight {
+    --corner-size: 14px;
+    --corner-inset: 5px;
   }
 
   /* Simple accent line — thin colored bar */

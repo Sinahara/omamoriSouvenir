@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import SectionHeader from '@/components/public/section-header'
+import Reveal from '@/components/public/reveal'
 import { useAppStore } from '@/lib/store'
 import { CATEGORIES, formatRupiah, type Product } from '@/lib/types'
 
@@ -117,13 +118,14 @@ export default function Landing() {
   return (
     <div>
       {/* ═══ Hero Section ═══ */}
-      <section className="relative">
+      <section className="relative overflow-hidden">
         <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.03]" />
-        <div className="relative max-w-7xl mx-auto px-4 py-10 md:py-16 lg:py-24">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+        {/* Same max-w-6xl as the navbar, so the hero lines up with the logo */}
+        <div className="relative max-w-6xl mx-auto px-4 py-12 md:py-16 lg:py-20">
+          <div className="grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center">
             {/* Left — Text Content */}
             <motion.div
-              className="space-y-8 text-center lg:text-left"
+              className="min-w-0 space-y-6 md:space-y-8 text-center lg:text-left"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
@@ -145,10 +147,10 @@ export default function Landing() {
                   <span className="inline-block eyebrow text-primary border border-primary/20 px-4 py-1 rounded-sm">
                     {settings.hero_badge}
                   </span>
-                  <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-ink leading-[1.2] tracking-tight">
+                  <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-ink leading-[1.2] tracking-tight wrap-break-word">
                     {settings.hero_title}
                   </h1>
-                  <p className="text-base text-ink-muted max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-base text-ink-muted max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap wrap-break-word">
                     {settings.hero_subtitle}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
@@ -175,7 +177,7 @@ export default function Landing() {
 
             {/* Right — Floating Product */}
             <motion.div
-              className="relative flex items-center justify-center lg:justify-end"
+              className="relative min-w-0 flex items-center justify-center lg:justify-end"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
@@ -199,29 +201,32 @@ export default function Landing() {
       {/* ═══ Kategori Section ═══ */}
       <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
-          <SectionHeader
-            badge="Kategori"
-            title="Kategori Produk"
-            subtitle="Enam kategori, semuanya bisa disesuaikan dengan identitas brand Anda"
-          />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-5 stagger-children">
-            {categoryCards.map((cat) => {
+          <Reveal>
+            <SectionHeader
+              badge="Kategori"
+              title="Kategori Produk"
+              subtitle="Enam kategori, semuanya bisa disesuaikan dengan identitas brand Anda"
+            />
+          </Reveal>
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-5">
+            {categoryCards.map((cat, i) => {
               const Icon = cat.icon
               return (
-                <motion.button
-                  key={cat.value}
-                  onClick={() => { setCatalogCategory(cat.value); navigate('catalog') }}
-                  whileHover={{ y: -3 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="corp-card jp-corner-accents p-6 text-left cursor-pointer group flex flex-col"
-                >
-                  <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-semibold text-ink mb-1.5 text-[15px]">{cat.label}</h3>
-                  <p className="text-sm text-ink-muted leading-relaxed">{cat.desc}</p>
-                </motion.button>
+                <Reveal key={cat.value} delay={i * 0.06}>
+                  <motion.button
+                    onClick={() => { setCatalogCategory(cat.value); navigate('catalog') }}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    className="corp-card jp-corner-accents jp-corner-accents-tight p-5 sm:p-6 xl:p-5 h-full w-full text-left cursor-pointer group flex flex-col"
+                  >
+                    <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mb-4 shrink-0">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-semibold text-ink mb-1.5 text-[15px]">{cat.label}</h3>
+                    <p className="text-[13px] sm:text-sm text-ink-muted leading-relaxed">{cat.desc}</p>
+                  </motion.button>
+                </Reveal>
               )
             })}
           </div>
@@ -231,11 +236,13 @@ export default function Landing() {
       {/* ═══ Featured Products Section ═══ */}
       <section className="section-gray py-16 md:py-24 jp-asanoha-bg">
         <div className="max-w-6xl mx-auto px-4">
-          <SectionHeader
-            badge="Unggulan"
-            title="Produk Unggulan"
-            subtitle="Harga per unit turun untuk pesanan dalam jumlah besar"
-          />
+          <Reveal>
+            <SectionHeader
+              badge="Unggulan"
+              title="Produk Unggulan"
+              subtitle="Harga per unit turun untuk pesanan dalam jumlah besar"
+            />
+          </Reveal>
 
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -250,7 +257,7 @@ export default function Landing() {
               ))}
             </div>
           ) : featured.length === 0 ? (
-            <div className="corp-card max-w-md mx-auto px-6 py-10 text-center">
+            <Reveal className="corp-card max-w-md mx-auto px-6 py-10 text-center">
               <Package className="w-10 h-10 text-ink-faint mx-auto mb-3" />
               <p className="font-medium text-ink">Produk belum bisa ditampilkan</p>
               <p className="text-sm text-ink-muted mt-1 mb-5">
@@ -263,52 +270,53 @@ export default function Landing() {
               >
                 Minta Penawaran
               </Button>
-            </div>
+            </Reveal>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featured.map((product) => (
-                  <motion.button
-                    key={product.id}
-                    onClick={() => selectProduct(product.slug)}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="corp-card overflow-hidden text-left cursor-pointer group flex flex-col"
-                  >
-                    <div className="p-3 pb-0">
-                      <div className="h-44 bg-media rounded-2xl flex items-center justify-center relative overflow-hidden">
-                        {product.images?.[0]?.path && !imgErrors.has(product.images[0].path) ? (
-                          <img
-                            src={product.images[0].path}
-                            alt={product.name}
-                            loading="lazy"
-                            decoding="async"
-                            onError={() => handleImgError(product.images[0].path)}
-                            className="w-full h-full object-cover rounded-2xl group-hover:scale-[1.03] transition-transform duration-700"
-                          />
-                        ) : (
-                          <Package className="w-16 h-16 text-ink-faint group-hover:text-ink-muted transition-colors" />
-                        )}
-                        <div className="absolute top-3 left-3">
-                          <Badge variant="secondary" className="text-[10px] tracking-wide bg-white/80 text-ink-soft rounded-sm">
-                            {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
-                          </Badge>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                {featured.map((product, i) => (
+                  <Reveal key={product.id} delay={(i % 3) * 0.08}>
+                    <motion.button
+                      onClick={() => selectProduct(product.slug)}
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className="corp-card overflow-hidden h-full w-full text-left cursor-pointer group flex flex-col"
+                    >
+                      <div className="p-3 pb-0">
+                        <div className="h-44 bg-media rounded-2xl flex items-center justify-center relative overflow-hidden">
+                          {product.images?.[0]?.path && !imgErrors.has(product.images[0].path) ? (
+                            <img
+                              src={product.images[0].path}
+                              alt={product.name}
+                              loading="lazy"
+                              decoding="async"
+                              onError={() => handleImgError(product.images[0].path)}
+                              className="w-full h-full object-cover rounded-2xl group-hover:scale-[1.03] transition-transform duration-700"
+                            />
+                          ) : (
+                            <Package className="w-16 h-16 text-ink-faint group-hover:text-ink-muted transition-colors" />
+                          )}
+                          <div className="absolute top-3 left-3 right-3">
+                            <Badge variant="secondary" className="max-w-full truncate text-[10px] tracking-wide bg-white/80 text-ink-soft rounded-sm">
+                              {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex flex-1 flex-col gap-2 px-5 pb-5 pt-4">
-                      <h3 className="font-semibold text-ink line-clamp-2 group-hover:text-primary transition-colors text-[15px]">
-                        {product.name}
-                      </h3>
-                      <p className="mt-auto text-sm text-primary font-semibold">
-                        Mulai dari {formatRupiah(product.basePrice)}
-                      </p>
-                    </div>
-                  </motion.button>
+                      <div className="flex flex-1 flex-col gap-2 px-5 pb-5 pt-4">
+                        <h3 className="font-semibold text-ink line-clamp-2 wrap-break-word group-hover:text-primary transition-colors text-[15px]">
+                          {product.name}
+                        </h3>
+                        <p className="mt-auto text-sm text-primary font-semibold">
+                          Mulai dari {formatRupiah(product.basePrice)}
+                        </p>
+                      </div>
+                    </motion.button>
+                  </Reveal>
                 ))}
               </div>
-              <div className="text-center mt-10">
+              <Reveal className="text-center mt-10">
                 <Button
                   variant="outline"
                   size="sm"
@@ -318,7 +326,7 @@ export default function Landing() {
                   Lihat Semua Produk
                   <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
-              </div>
+              </Reveal>
             </>
           )}
         </div>
@@ -327,36 +335,36 @@ export default function Landing() {
       {/* ═══ How It Works Section ═══ */}
       <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4">
-          <SectionHeader
-            badge="Proses"
-            title="Cara Kerja"
-            subtitle="Tiga tahap dari brief sampai barang diterima"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative">
+          <Reveal>
+            <SectionHeader
+              badge="Proses"
+              title="Cara Kerja"
+              subtitle="Tiga tahap dari brief sampai barang diterima"
+            />
+          </Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 lg:gap-8 relative">
             <div className="hidden md:block absolute top-[18px] left-[calc(16.67%+18px)] right-[calc(16.67%+18px)] connecting-line" />
 
-            {howItWorks.map((item) => {
+            {howItWorks.map((item, i) => {
               const Icon = item.icon
               return (
-                <motion.div
+                <Reveal
                   key={item.step}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: item.step * 0.12, ease: 'easeOut' }}
+                  delay={i * 0.12}
                   className="relative flex flex-col items-center text-center"
                 >
                   <div className="step-num mb-5 z-10">
                     {item.step}
                   </div>
-                  <div className="corp-card jp-corner-accents p-6 w-full max-w-xs">
+                  {/* flex-1 keeps the three cards the same height in a row */}
+                  <div className="corp-card jp-corner-accents jp-corner-accents-tight p-6 w-full max-w-sm md:max-w-none flex-1">
                     <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mx-auto mb-4">
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="font-semibold text-ink mb-2 text-[15px]">{item.title}</h3>
                     <p className="text-sm text-ink-muted leading-relaxed">{item.desc}</p>
                   </div>
-                </motion.div>
+                </Reveal>
               )
             })}
           </div>
@@ -366,27 +374,30 @@ export default function Landing() {
       {/* ═══ USP Section ═══ */}
       <section className="section-gray py-16 md:py-24 jp-washi-bg">
         <div className="max-w-5xl mx-auto px-4">
-          <SectionHeader
-            badge="Keunggulan"
-            title="Yang Kami Tangani untuk Anda"
-            subtitle="Stok, desain, dan dokumen administrasi tidak perlu Anda urus sendiri"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-children">
-            {usps.map((usp) => {
+          <Reveal>
+            <SectionHeader
+              badge="Keunggulan"
+              title="Yang Kami Tangani untuk Anda"
+              subtitle="Stok, desain, dan dokumen administrasi tidak perlu Anda urus sendiri"
+            />
+          </Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+            {usps.map((usp, i) => {
               const Icon = usp.icon
               return (
-                <motion.div
-                  key={usp.title}
-                  whileHover={{ y: -2 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="corp-card jp-corner-accents p-6"
-                >
-                  <div className={`w-10 h-10 rounded-lg ${usp.iconClass} flex items-center justify-center mb-4`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-semibold text-ink mb-2 text-[15px]">{usp.title}</h3>
-                  <p className="text-sm text-ink-muted leading-relaxed">{usp.desc}</p>
-                </motion.div>
+                <Reveal key={usp.title} delay={i * 0.1}>
+                  <motion.div
+                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    className="corp-card jp-corner-accents jp-corner-accents-tight p-6 h-full"
+                  >
+                    <div className={`w-10 h-10 rounded-lg ${usp.iconClass} flex items-center justify-center mb-4`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-semibold text-ink mb-2 text-[15px]">{usp.title}</h3>
+                    <p className="text-sm text-ink-muted leading-relaxed">{usp.desc}</p>
+                  </motion.div>
+                </Reveal>
               )
             })}
           </div>
@@ -397,20 +408,19 @@ export default function Landing() {
       {testimonials.length > 0 && (
         <section className="py-16 md:py-24">
           <div className="max-w-6xl mx-auto px-4">
-            <SectionHeader
-              badge="Testimoni"
-              title="Kata Klien Kami"
-              subtitle="Pengalaman klien yang pernah memesan di Omamori Souvenir"
-            />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Reveal>
+              <SectionHeader
+                badge="Testimoni"
+                title="Kata Klien Kami"
+                subtitle="Pengalaman klien yang pernah memesan di Omamori Souvenir"
+              />
+            </Reveal>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {testimonials.map((item, i) => (
-                <motion.div
+                <Reveal
                   key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.1, ease: 'easeOut' }}
-                  className="corp-card jp-corner-accents p-6 flex flex-col"
+                  delay={(i % 3) * 0.1}
+                  className="corp-card jp-corner-accents jp-corner-accents-tight p-6 flex flex-col"
                 >
                   <Quote className="w-6 h-6 text-primary/15 mb-4 shrink-0" />
                   <p className="text-[15px] text-ink-soft leading-relaxed flex-1">
@@ -421,12 +431,12 @@ export default function Landing() {
                     <div className="w-9 h-9 rounded-full bg-primary-soft flex items-center justify-center text-sm font-semibold text-primary shrink-0">
                       {item.name.charAt(0)}
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-semibold text-ink">{item.name}</p>
                       <p className="text-xs text-ink-muted mt-0.5">{item.title}</p>
                     </div>
                   </div>
-                </motion.div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -436,7 +446,7 @@ export default function Landing() {
       {/* ═══ Final CTA ═══ */}
       <section className="py-16 md:py-24 jp-seigaiha-bg">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="relative bg-primary rounded-lg p-10 md:p-14 text-center text-white overflow-hidden">
+          <Reveal className="relative bg-primary rounded-lg px-6 py-10 sm:p-10 md:p-14 text-center text-white overflow-hidden">
             <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
             <div className="relative">
               <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">
@@ -448,14 +458,14 @@ export default function Landing() {
               </p>
               <Button
                 size="lg"
-                className="bg-white text-primary hover:bg-white/90 text-sm px-8 h-11 rounded-sm font-semibold tracking-wide"
+                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 text-sm px-8 h-11 rounded-sm font-semibold tracking-wide"
                 onClick={() => navigate('request-quote')}
               >
                 Minta Penawaran Sekarang
                 <Send className="w-4 h-4 ml-2" />
               </Button>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>

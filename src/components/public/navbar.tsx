@@ -38,7 +38,7 @@ export default function Navbar() {
         </button>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1" role="navigation">
+        <nav className="hidden lg:flex items-center gap-1" role="navigation">
           {navLinks.map((link) => (
             <button
               key={link.page}
@@ -56,7 +56,7 @@ export default function Navbar() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2">
           <Button
             size="sm"
             onClick={() => navigate('request-quote')}
@@ -70,7 +70,7 @@ export default function Navbar() {
         {/* Mobile Hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden text-ink">
+            <Button variant="ghost" size="icon" className="lg:hidden text-ink">
               <Menu className="w-5 h-5" />
               <span className="sr-only">Menu</span>
             </Button>

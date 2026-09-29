@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import SectionHeader from '@/components/public/section-header'
+import Reveal from '@/components/public/reveal'
 import { ORDER_STATUSES, getStatusLabel, getStatusColor, formatDate } from '@/lib/types'
 
 interface TrackResult {
@@ -75,10 +76,12 @@ export default function TrackOrder() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 md:py-20 space-y-8">
       {/* Header */}
-      <SectionHeader as="h1" badge="Lacak" title="Lacak Pesanan" subtitle="Masukkan nomor pesanan untuk melihat status terbaru" />
+      <Reveal>
+        <SectionHeader as="h1" badge="Lacak" title="Lacak Pesanan" subtitle="Masukkan nomor pesanan untuk melihat status terbaru" />
+      </Reveal>
 
       {/* Search */}
-      <div className="corp-card jp-corner-accents p-6">
+      <Reveal delay={0.1} className="corp-card jp-corner-accents jp-corner-accents-tight p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" />
@@ -104,11 +107,11 @@ export default function TrackOrder() {
             )}
           </Button>
         </div>
-      </div>
+      </Reveal>
 
       {/* Loading */}
       {loading && (
-        <div className="corp-card jp-corner-accents p-6 space-y-4">
+        <div className="corp-card jp-corner-accents jp-corner-accents-tight p-5 sm:p-6 space-y-4">
           <Skeleton className="h-6 w-1/3" />
           <Skeleton className="h-4 w-1/2" />
           <div className="corp-divider" />
@@ -125,7 +128,7 @@ export default function TrackOrder() {
 
       {/* Error */}
       {searched && !loading && error && (
-        <div className="corp-card jp-corner-accents p-8 text-center">
+        <div className="corp-card jp-corner-accents jp-corner-accents-tight p-6 sm:p-8 text-center animate-fade-in-up">
           <AlertCircle className="w-10 h-10 text-destructive mx-auto mb-4" />
           {/* The server message ("Pesanan tidak ditemukan", rate limit, …) is the headline */}
           <h3 role="alert" className="text-lg font-medium text-ink mb-1">{error}</h3>
@@ -135,19 +138,19 @@ export default function TrackOrder() {
 
       {/* Result */}
       {result && !loading && (
-        <div className="corp-card jp-corner-accents p-6 space-y-6 animate-fade-in-up">
+        <div className="corp-card jp-corner-accents jp-corner-accents-tight p-5 sm:p-6 space-y-6 animate-fade-in-up">
           {/* Order Info */}
           <div className="space-y-2">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div>
+              <div className="min-w-0">
                 <p className="eyebrow text-ink-muted">Nomor Pesanan</p>
-                <p className="font-mono font-semibold text-lg text-ink mt-0.5">{result.orderNumber}</p>
+                <p className="font-mono font-semibold text-lg text-ink mt-0.5 break-all">{result.orderNumber}</p>
               </div>
-              <Badge className={getStatusColor(result.status, ORDER_STATUSES)}>
+              <Badge className={`self-start sm:self-auto shrink-0 ${getStatusColor(result.status, ORDER_STATUSES)}`}>
                 {getStatusLabel(result.status, ORDER_STATUSES)}
               </Badge>
             </div>
-            <p className="text-[13px] text-ink-muted">
+            <p className="text-[13px] text-ink-muted wrap-break-word">
               Perusahaan: <span className="text-ink font-medium">{result.companyName || '-'}</span>
             </p>
             <p className="text-[12px] text-ink-muted">
@@ -170,7 +173,7 @@ export default function TrackOrder() {
                 const Icon = meta?.icon || CircleDot
 
                 return (
-                  <div key={stage.value} className="flex gap-4">
+                  <Reveal key={stage.value} delay={idx * 0.05} className="flex gap-4">
                     <div className="flex flex-col items-center">
                       <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
                         isCompleted
@@ -185,7 +188,7 @@ export default function TrackOrder() {
                         }`} />
                       )}
                     </div>
-                    <div className={`pb-6 ${isLast ? 'pb-0' : ''}`}>
+                    <div className={`min-w-0 ${isLast ? 'pb-0' : 'pb-6'}`}>
                       <p className={`text-[13px] font-medium ${isCompleted ? 'text-ink' : 'text-ink-muted'}`}>
                         {stage.label}
                       </p>
@@ -196,7 +199,7 @@ export default function TrackOrder() {
                         <p className="text-[11px] text-ink-muted mt-0.5">Menunggu</p>
                       )}
                     </div>
-                  </div>
+                  </Reveal>
                 )
               })}
             </div>
@@ -206,13 +209,14 @@ export default function TrackOrder() {
           {result.vendorTracking && (
             <>
               <div className="corp-divider" />
-              <div className="flex items-center justify-between p-4 rounded-lg bg-surface">
-                <div>
+              {/* Stacks on phones so a long tracking number never runs into the date */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-4 rounded-lg bg-surface">
+                <div className="min-w-0">
                   <p className="eyebrow text-ink-muted">Nomor Resi / Tracking</p>
-                  <p className="font-mono font-medium text-ink mt-0.5">{result.vendorTracking}</p>
+                  <p className="font-mono font-medium text-ink mt-0.5 break-all">{result.vendorTracking}</p>
                 </div>
                 {result.shippedAt && (
-                  <p className="text-[12px] text-ink-muted">
+                  <p className="text-[12px] text-ink-muted shrink-0">
                     Dikirim: {formatDate(result.shippedAt)}
                   </p>
                 )}

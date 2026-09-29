@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { MessageCircle, Mail, MapPin, CupSoda, Award, IdCard, Box, ShoppingBag, Briefcase, Instagram, Linkedin } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { BrandLogo } from '@/components/brand-logo'
+import Reveal from '@/components/public/reveal'
 
 const defaultContact = { whatsapp: '6281234567890', email: 'info@omamorisouvenir.id', address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia' }
 
@@ -47,10 +48,12 @@ export default function Footer() {
   return (
     <footer className="mt-auto">
       <div className="bg-white border-t border-line">
-        <div className="max-w-6xl mx-auto px-4 py-16 pb-20">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        <div className="max-w-6xl mx-auto px-4 py-12 md:py-16 pb-20">
+          {/* Phones: company info and contact span the full width, the two link lists
+              sit side by side, which keeps the footer about half as tall */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 lg:gap-12">
             {/* Company Info */}
-            <div className="space-y-5">
+            <Reveal className="col-span-2 sm:col-span-1 space-y-5">
               <div className="flex items-center gap-2.5">
               <BrandLogo />
                 <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
@@ -81,12 +84,12 @@ export default function Footer() {
               </div>
               <div className="flex items-start gap-2 text-sm md:text-[13px] text-ink-muted">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-ink-faint" />
-                <span>{contact.address}</span>
+                <span className="min-w-0 wrap-break-word">{contact.address}</span>
               </div>
-            </div>
+            </Reveal>
 
             {/* Quick Links */}
-            <div className="space-y-5">
+            <Reveal delay={0.08} className="min-w-0 space-y-5">
               <h3 className="eyebrow text-ink">Quick Links</h3>
               <nav className="flex flex-col gap-2.5 pointer-coarse:gap-2" role="navigation">
                 {quickLinks.map((link) => (
@@ -99,10 +102,10 @@ export default function Footer() {
                   </button>
                 ))}
               </nav>
-            </div>
+            </Reveal>
 
             {/* Kategori */}
-            <div className="space-y-5">
+            <Reveal delay={0.16} className="min-w-0 space-y-5">
               <h3 className="eyebrow text-ink">Kategori</h3>
               <div className="flex flex-col gap-2.5 pointer-coarse:gap-2">
                 {categories.map((cat) => {
@@ -113,16 +116,16 @@ export default function Footer() {
                       onClick={() => { setCatalogCategory(cat.value); navigate('catalog') }}
                       className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-sm md:text-[13px] text-ink-muted hover:text-primary text-left transition-colors duration-200"
                     >
-                      <Icon className="w-4 h-4 text-ink-faint" />
+                      <Icon className="w-4 h-4 shrink-0 text-ink-faint" />
                       {cat.label}
                     </button>
                   )
                 })}
               </div>
-            </div>
+            </Reveal>
 
             {/* Kontak */}
-            <div className="space-y-5">
+            <Reveal delay={0.24} className="col-span-2 sm:col-span-1 min-w-0 space-y-5">
               <h3 className="eyebrow text-ink">Kontak</h3>
               <div className="flex flex-col gap-3 pointer-coarse:gap-2">
                 <a
@@ -139,17 +142,19 @@ export default function Footer() {
                   className="pointer-coarse:min-h-11 flex items-center gap-2.5 text-sm md:text-[13px] text-ink-muted hover:text-primary transition-colors duration-200"
                 >
                   <Mail className="w-4 h-4 shrink-0 text-ink-faint" />
-                  {contact.email}
+                  <span className="min-w-0 wrap-break-word">{contact.email}</span>
                 </a>
               </div>
-            </div>
+            </Reveal>
           </div>
 
-          <div className="corp-divider my-10" />
+          <Reveal from="fade">
+            <div className="corp-divider my-10" />
 
-          <p className="text-center text-[12px] text-ink-muted tracking-wide">
-            &copy; {year} Omamori Souvenir. Hak cipta dilindungi.
-          </p>
+            <p className="text-center text-[12px] text-ink-muted tracking-wide">
+              &copy; {year} Omamori Souvenir. Hak cipta dilindungi.
+            </p>
+          </Reveal>
         </div>
       </div>
 

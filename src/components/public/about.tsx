@@ -10,27 +10,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import SectionHeader from '@/components/public/section-header';
+import Reveal from '@/components/public/reveal';
 import { useAppStore } from '@/lib/store';
-
-/* ── Animation Variants ───────────────────────────────── */
-const fadeInUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.08, ease: 'easeOut' as const },
-  }),
-};
-
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' as const } },
-};
 
 /* ── Icon & Color Maps ─────────────────────────────────── */
 const iconMap: Record<string, React.ElementType> = {
@@ -114,7 +95,8 @@ export default function About() {
     <div className="min-h-screen flex flex-col">
 
       {/* ═══ 1. HERO BANNER ═══ */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 bg-linear-to-br from-primary to-emerald-700 text-white overflow-hidden">
+      {/* The navbar is sticky (it takes its own space), so no extra top offset is needed */}
+      <section className="relative py-16 md:py-24 lg:py-28 bg-linear-to-br from-primary to-emerald-700 text-white overflow-hidden">
         <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}>
@@ -123,7 +105,7 @@ export default function About() {
             </span>
           </motion.div>
           <motion.h1
-            className="text-3xl md:text-4xl xl:text-[42px] font-bold leading-[1.2] mb-5 tracking-tight"
+            className="text-[28px] sm:text-3xl md:text-4xl xl:text-[42px] font-bold leading-[1.2] mb-5 tracking-tight wrap-break-word"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
@@ -151,28 +133,24 @@ export default function About() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
-            <div className="jp-ornament-diamond max-w-[60px] mx-auto" />
+            {/* White diamonds: the default primary green disappears on this banner */}
+            <div className="jp-ornament-diamond max-w-[60px] mx-auto [--primary:#fff]" />
           </motion.div>
         </div>
       </section>
 
       {/* ═══ 2. TENTANG BISNIS ═══ */}
-      <section className="py-16 md:py-24">
+      {/* overflow-hidden: the image and text slide in from the sides */}
+      <section className="py-16 md:py-24 overflow-hidden">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
             {/* Left — Image */}
-            <motion.div
-              className="rounded-lg overflow-hidden jp-corner-accents"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            >
+            <Reveal from="left" className="min-w-0 rounded-lg overflow-hidden jp-corner-accents">
               {loading ? (
-                <Skeleton className="w-full h-72 md:h-[360px]" />
+                <Skeleton className="w-full h-64 sm:h-80 lg:h-[380px]" />
               ) : (
-                <div className="relative w-full h-72 md:h-[360px]">
+                <div className="relative w-full h-64 sm:h-80 lg:h-[380px]">
                   {!imgError ? (
                     <img
                       src={settings.about_image || '/about-team.png'}
@@ -190,15 +168,10 @@ export default function About() {
                   )}
                 </div>
               )}
-            </motion.div>
+            </Reveal>
 
             {/* Right — Content */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-            >
+            <Reveal from="right" delay={0.1} className="min-w-0">
               {loading ? (
                 <div className="space-y-4">
                   <Skeleton className="h-8 w-48" />
@@ -217,19 +190,19 @@ export default function About() {
                     Siapa Kami
                   </h2>
                   {description.split('\n').filter(Boolean).map((para, idx) => (
-                    <div key={idx} className="text-ink-muted leading-relaxed mb-4 text-[15px]">{para}</div>
+                    <div key={idx} className="text-ink-muted leading-relaxed mb-4 text-[15px] wrap-break-word">{para}</div>
                   ))}
                   <div className="corp-divider my-6" />
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <Button
-                      className="bg-primary hover:bg-primary-hover text-white font-medium px-6 rounded-sm text-sm tracking-wide"
+                      className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white font-medium px-6 h-10 rounded-sm text-sm tracking-wide"
                       onClick={() => navigate('request-quote')}
                     >
                       Minta Penawaran <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
-                      className="border-line-hover text-ink-soft hover:text-ink hover:bg-surface font-medium px-6 rounded-sm text-sm tracking-wide"
+                      className="w-full sm:w-auto border-line-hover text-ink-soft hover:text-ink hover:bg-surface font-medium px-6 h-10 rounded-sm text-sm tracking-wide"
                       onClick={() => navigate('catalog')}
                     >
                       Lihat Katalog
@@ -237,7 +210,7 @@ export default function About() {
                   </div>
                 </>
               )}
-            </motion.div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -245,112 +218,95 @@ export default function About() {
       {/* ═══ 3. KEUNGULAN KAMI — 6 Cards ═══ */}
       <section className="py-16 md:py-24 section-gray jp-asanoha-bg">
         <div className="max-w-6xl mx-auto px-4">
-          <SectionHeader badge="Keunggulan Kami" title="Apa yang Membuat Kami Berbeda" />
-          <motion.div
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-          >
+          <Reveal>
+            <SectionHeader badge="Keunggulan Kami" title="Apa yang Membuat Kami Berbeda" />
+          </Reveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {advantages.map((item: { icon: string; title: string; desc: string }, i: number) => {
               const Icon = getIcon(item.icon);
               return (
-                <motion.div
+                <Reveal
                   key={i}
-                  className="corp-card jp-corner-accents p-6"
-                  variants={fadeInUp}
-                  custom={i}
+                  delay={(i % 3) * 0.08}
+                  className="corp-card jp-corner-accents jp-corner-accents-tight p-6"
                 >
                   <div className={`w-11 h-11 ${getColor(item.icon)} rounded-lg flex items-center justify-center mb-4`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <h3 className="font-semibold text-ink text-[15px] mb-2">{item.title}</h3>
-                  <div className="text-ink-muted text-sm leading-relaxed">{item.desc}</div>
-                </motion.div>
+                  <div className="text-ink-muted text-sm leading-relaxed wrap-break-word">{item.desc}</div>
+                </Reveal>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ═══ 4. KEUNTUNGAN PRODUK — 4 Items ═══ */}
       <section className="py-16 md:py-24 jp-washi-bg">
         <div className="max-w-5xl mx-auto px-4">
-          <SectionHeader badge="Keuntungan Produk" title="Manfaat untuk Bisnis Anda" />
-          <motion.div
-            className="grid sm:grid-cols-2 gap-5"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-          >
+          <Reveal>
+            <SectionHeader badge="Keuntungan Produk" title="Manfaat untuk Bisnis Anda" />
+          </Reveal>
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
             {benefits.map((item: { icon: string; title: string; desc: string }, i: number) => {
               const Icon = getIcon(item.icon);
               return (
-                <motion.div
+                <Reveal
                   key={i}
-                  className="flex gap-5 p-6 rounded-lg border border-line bg-white hover:border-line-hover transition-all duration-200"
-                  variants={fadeInUp}
-                  custom={i}
+                  delay={(i % 2) * 0.1}
+                  className="flex gap-4 sm:gap-5 p-5 sm:p-6 rounded-lg border border-line bg-white hover:border-line-hover transition-colors duration-200"
                 >
                   <div className={`shrink-0 w-11 h-11 ${getColor(item.icon)} rounded-lg flex items-center justify-center`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-ink text-[15px] mb-1.5">{item.title}</h3>
-                    <div className="text-ink-muted text-sm leading-relaxed">{item.desc}</div>
+                    <div className="text-ink-muted text-sm leading-relaxed wrap-break-word">{item.desc}</div>
                   </div>
-                </motion.div>
+                </Reveal>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ═══ 5. HUBUNGI KAMI ═══ */}
       <section className="py-16 md:py-24 section-gray">
         <div className="max-w-5xl mx-auto px-4">
-          <SectionHeader badge="Hubungi Kami" title="Kami Siap Membantu Anda" subtitle="Hubungi kami untuk konsultasi dan pemesanan" />
+          <Reveal>
+            <SectionHeader badge="Hubungi Kami" title="Kami Siap Membantu Anda" subtitle="Hubungi kami untuk konsultasi dan pemesanan" />
+          </Reveal>
 
-          <motion.div
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-          >
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-10">
             {[
               { icon: MessageCircle, label: 'WhatsApp', value: `+${contact.whatsapp}`, href: `https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`, external: true },
               { icon: Mail, label: 'Email', value: contact.email, href: `mailto:${(contact.email || '').replace(/[^\w@.\-+]/g, '')}`, external: false },
               { icon: Phone, label: 'Telepon', value: contact.phone, href: `tel:${(contact.phone || '').replace(/[^\d+]/g, '')}`, external: false },
               { icon: MapPin, label: 'Lokasi', value: contact.address, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`, external: true },
             ].map((c, i) => (
-              <motion.a
-                key={i}
-                href={c.href}
-                target={c.external ? '_blank' : undefined}
-                rel={c.external ? 'noopener noreferrer' : undefined}
-                className="corp-card jp-corner-accents p-5 text-center group cursor-pointer"
-                variants={scaleIn}
-              >
-                <div className="w-11 h-11 kpi-icon-green rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <c.icon className="w-5 h-5" />
-                </div>
-                <div className="font-semibold text-ink text-sm mb-1">{c.label}</div>
-                <div className="text-ink-muted text-sm leading-snug wrap-break-word">{c.value}</div>
-              </motion.a>
+              <Reveal key={i} delay={i * 0.08}>
+                {/* Phones: icon beside the text, one compact row per contact. sm up: centered tile. */}
+                <a
+                  href={c.href}
+                  target={c.external ? '_blank' : undefined}
+                  rel={c.external ? 'noopener noreferrer' : undefined}
+                  className="corp-card jp-corner-accents jp-corner-accents-tight h-full p-5 flex items-center gap-4 text-left sm:flex-col sm:gap-0 sm:text-center group cursor-pointer"
+                >
+                  <div className="w-11 h-11 shrink-0 kpi-icon-green rounded-lg flex items-center justify-center sm:mb-3">
+                    <c.icon className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-semibold text-ink text-sm mb-1">{c.label}</div>
+                    <div className="text-ink-muted text-sm leading-snug wrap-break-word">{c.value}</div>
+                  </div>
+                </a>
+              </Reveal>
             ))}
-          </motion.div>
+          </div>
 
           {/* Operating Hours */}
-          <motion.div
-            className="flex justify-center"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6, ease: 'easeOut' }}
-          >
+          <Reveal delay={0.2} className="flex justify-center">
             <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white rounded-2xl sm:rounded-full border border-line text-sm text-ink-muted">
               <Clock className="w-4 h-4 text-primary shrink-0" />
               {/* one line per schedule on phones, a single row from sm up */}
@@ -360,7 +316,7 @@ export default function About() {
                 <span>Sabtu: 08.00 — 12.00 WIB</span>
               </span>
             </div>
-          </motion.div>
+          </Reveal>
         </div>
       </section>
 
@@ -368,12 +324,7 @@ export default function About() {
       <section className="py-16 md:py-24 bg-primary text-white relative overflow-hidden">
         <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          >
+          <Reveal>
             <div className="w-14 h-14 bg-white/10 rounded-lg flex items-center justify-center mx-auto mb-6">
               <Send className="w-7 h-7 text-white" />
             </div>
@@ -385,12 +336,12 @@ export default function About() {
             </p>
             <Button
               size="lg"
-              className="bg-white text-primary hover:bg-white/90 font-semibold px-8 h-11 rounded-sm text-sm tracking-wide"
+              className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 font-semibold px-8 h-11 rounded-sm text-sm tracking-wide"
               onClick={() => navigate('request-quote')}
             >
               Minta Penawaran Sekarang <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </motion.div>
+          </Reveal>
         </div>
       </section>
     </div>

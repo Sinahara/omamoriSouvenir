@@ -132,7 +132,7 @@ export default function TrackOrder() {
           <AlertCircle className="w-10 h-10 text-destructive mx-auto mb-4" />
           {/* The server message ("Pesanan tidak ditemukan", rate limit, …) is the headline */}
           <h3 role="alert" className="text-lg font-medium text-ink mb-1">{error}</h3>
-          <p className="text-sm text-ink-muted mt-2">Pastikan nomor pesanan sesuai format ORD/YYYY/MM/XXXX</p>
+          <p className="text-sm text-ink-soft mt-2">Pastikan nomor pesanan sesuai format ORD/YYYY/MM/XXXX</p>
         </div>
       )}
 

@@ -17,7 +17,7 @@ export default function SectionHeader({ badge, title, subtitle, as: Heading = 'h
     <div className={cn('mb-10 md:mb-12', centered && 'text-center', className)}>
       <span className="inline-block eyebrow text-primary border border-primary/20 px-4 py-1 rounded-sm mb-4">{badge}</span>
       <Heading className="text-2xl md:text-3xl font-bold text-ink tracking-tight">{title}</Heading>
-      {subtitle && <p className={cn('text-ink-muted mt-3 max-w-md', centered && 'mx-auto')}>{subtitle}</p>}
+      {subtitle && <p className={cn('text-ink-soft mt-3 max-w-md', centered && 'mx-auto')}>{subtitle}</p>}
     </div>
   )
 }

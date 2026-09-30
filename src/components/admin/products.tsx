@@ -45,6 +45,9 @@ import { useToast } from '@/hooks/use-toast'
 import { type Product, type PricingTier, type ProductImage, CATEGORIES, formatRupiah } from '@/lib/types'
 import { adminFetch } from '@/lib/admin-fetch'
 
+// Rows per page: the API limit, and the offset for each row number
+const PAGE_SIZE = 20
+
 const categoryOptions = CATEGORIES.filter(c => c.value !== 'all')
 
 interface ProductFormData {
@@ -94,7 +97,7 @@ export default function AdminProducts() {
       const params = new URLSearchParams()
       if (filterCategory !== 'all') params.set('category', filterCategory)
       params.set('page', String(page))
-      params.set('limit', '20')
+      params.set('limit', String(PAGE_SIZE))
       if (search) params.set('search', search)
       const res = await adminFetch(`/api/admin/products?${params.toString()}`)
       if (res.ok) {
@@ -293,7 +296,7 @@ export default function AdminProducts() {
                 <TableRow><TableCell colSpan={7} className="text-center text-ink-muted py-8">Tidak ada produk.</TableCell></TableRow>
               ) : products.map((p, i) => (
                 <TableRow key={p.id} className="hover:bg-muted">
-                  <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                  <TableCell className="text-sm text-ink-soft">{(page - 1) * PAGE_SIZE + i + 1}</TableCell>
                   <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{p.name}</TableCell>
                   <TableCell><Badge variant="outline" className="border-line-strong text-ink-soft">{CATEGORIES.find(c => c.value === p.category)?.label || p.category}</Badge></TableCell>
                   <TableCell className="text-right text-sm text-ink">{formatRupiah(p.basePrice)}</TableCell>

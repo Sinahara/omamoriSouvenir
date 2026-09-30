@@ -54,6 +54,9 @@ export default function ProductDetail() {
   const [activeThumb, setActiveThumb] = useState(0)
   const [whatsapp, setWhatsapp] = useState('6281234567890')
   const [lightbox, setLightbox] = useState(false)
+  // Photos that failed to load show the placeholder icon instead of a broken image
+  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set())
+  const markImgError = (src: string) => setImgErrors(prev => new Set(prev).add(src))
 
   // Fetch WhatsApp from site settings
   useEffect(() => {
@@ -108,7 +111,7 @@ export default function ProductDetail() {
           <ArrowLeft className="w-4 h-4 mr-1" /> Kembali ke Katalog
         </Button>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <Skeleton className="h-96 rounded-lg" />
+          <Skeleton className="aspect-square w-full max-w-xl mx-auto lg:max-w-none lg:mx-0 rounded-2xl" />
           <div className="space-y-4">
             <Skeleton className="h-8 w-1/3" />
             <Skeleton className="h-10 w-3/4" />
@@ -125,7 +128,7 @@ export default function ProductDetail() {
       <div className="max-w-6xl mx-auto px-4 py-24 text-center">
         <Package className="w-12 h-12 text-ink-faint mx-auto mb-4" />
         <h2 className="text-lg font-semibold text-ink mb-2">Produk Tidak Ditemukan</h2>
-        <p className="text-ink-muted text-sm mb-6">Produk ini mungkin sudah tidak dijual, atau tautannya salah.</p>
+        <p className="text-ink-soft text-sm mb-6">Produk ini mungkin sudah tidak dijual, atau tautannya salah.</p>
         <Button onClick={backToCatalog} className="rounded-sm text-[13px] tracking-wide">
           <ArrowLeft className="w-4 h-4 mr-1" /> Kembali ke Katalog
         </Button>
@@ -135,6 +138,8 @@ export default function ProductDetail() {
 
   const specs = parseSpecs(product.specs)
   const images = product.images?.length ? product.images : []
+  const activePath = images[activeThumb]?.path
+  const canZoom = !!activePath && !imgErrors.has(activePath)
   const showPrevImage = () => setActiveThumb(prev => (prev - 1 + images.length) % images.length)
   const showNextImage = () => setActiveThumb(prev => (prev + 1) % images.length)
 
@@ -151,26 +156,30 @@ export default function ProductDetail() {
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
-        {/* Image Gallery */}
-        <div className="space-y-4">
+        {/* Image Gallery — a square frame like the photos, so no part of the product is
+            cropped. Capped in the one-column tablet layout, where it would be screen-tall.
+            From lg it stays in view beside the specs, on screens tall enough to fit it. */}
+        <div className="space-y-4 w-full max-w-xl mx-auto lg:max-w-none lg:mx-0 lg:self-start lg:top-20 lg:[@media(min-height:720px)]:sticky">
           {/* Main Image */}
           <button
-            onClick={() => images.length > 0 && setLightbox(true)}
-            className="w-full rounded-2xl bg-media h-72 sm:h-96 flex items-center justify-center overflow-hidden relative group/main cursor-pointer"
+            onClick={() => setLightbox(true)}
+            disabled={!canZoom}
+            className="w-full aspect-square rounded-2xl bg-media flex items-center justify-center overflow-hidden relative group/main cursor-pointer disabled:cursor-default"
             aria-label="Perbesar gambar"
           >
-            {images.length > 0 && images[activeThumb]?.path ? (
+            {canZoom ? (
               <img
-                src={images[activeThumb].path}
+                src={activePath}
                 alt={product.name}
                 className="w-full h-full object-cover rounded-2xl"
                 loading="eager"
                 decoding="async"
+                onError={() => markImgError(activePath)}
               />
             ) : (
               <Package className="w-24 h-24 text-ink-faint" />
             )}
-            {images.length > 0 && images[activeThumb]?.path && (
+            {canZoom && (
               <div className="absolute inset-0 bg-black/0 group-hover/main:bg-black/10 transition-colors flex items-center justify-center">
                 <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover/main:opacity-70 transition-opacity" />
               </div>
@@ -189,8 +198,8 @@ export default function ProductDetail() {
                     idx === activeThumb ? 'border-primary shadow-sm' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  {img.path ? (
-                    <img src={img.path} alt={`Thumbnail ${product.name}`} className="w-full h-full object-cover rounded-2xl" loading="lazy" decoding="async" />
+                  {img.path && !imgErrors.has(img.path) ? (
+                    <img src={img.path} alt={`Thumbnail ${product.name}`} className="w-full h-full object-cover rounded-2xl" loading="lazy" decoding="async" onError={() => markImgError(img.path)} />
                   ) : (
                     <Package className="w-8 h-8 text-ink-faint" />
                   )}
@@ -219,7 +228,7 @@ export default function ProductDetail() {
           {product.description && (
             <div>
               <h3 className="eyebrow text-ink mb-2">Deskripsi</h3>
-              <p className="text-[15px] text-ink-muted leading-relaxed whitespace-pre-line">
+              <p className="text-[15px] text-ink-soft leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
             </div>
@@ -236,7 +245,7 @@ export default function ProductDetail() {
                         <td className="px-4 py-3 font-medium text-ink bg-surface w-1/3">
                           {formatSpecName(spec.name)}
                         </td>
-                        <td className="px-4 py-3 text-ink-muted">
+                        <td className="px-4 py-3 text-ink-soft">
                           {spec.value}
                         </td>
                       </tr>
@@ -265,7 +274,7 @@ export default function ProductDetail() {
                   <tbody>
                     {product.pricingTiers.map((tier: PricingTier) => (
                       <tr key={tier.id} className="border-b border-line last:border-b-0">
-                        <td className="px-4 py-3 text-ink-muted">
+                        <td className="px-4 py-3 text-ink-soft">
                           {tier.maxQty ? `${tier.minQty} – ${tier.maxQty}` : `${tier.minQty}+`} {product.unit}
                         </td>
                         <td className="px-4 py-3 text-right font-medium text-ink">
@@ -281,11 +290,12 @@ export default function ProductDetail() {
 
           <div className="corp-divider" />
 
-          {/* Actions */}
+          {/* Actions. flex-1 only in the side-by-side row: in the stacked phone
+              column it squeezed the buttons down to the height of their text. */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
-              className="flex-1 bg-primary hover:bg-primary-hover text-white rounded-sm text-sm tracking-wide"
+              className="h-11 sm:flex-1 bg-primary hover:bg-primary-hover text-white rounded-sm text-sm tracking-wide"
               onClick={handleRequestQuote}
             >
               <Send className="w-4 h-4 mr-2" />
@@ -295,7 +305,7 @@ export default function ProductDetail() {
               asChild
               variant="outline"
               size="lg"
-              className="flex-1 border-line text-ink-muted hover:text-ink hover:bg-surface rounded-sm text-sm tracking-wide"
+              className="h-11 sm:flex-1 border-line-strong text-ink-soft hover:text-ink hover:bg-surface rounded-sm text-sm tracking-wide"
             >
               <a
                 href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Halo, saya tertarik dengan produk: ${product.name}`)}`}
@@ -339,12 +349,17 @@ export default function ProductDetail() {
               <ChevronLeft className="w-6 h-6" />
             </button>
           )}
-          {images.length > 0 && images[activeThumb]?.path && (
+          {canZoom ? (
             <img
-              src={images[activeThumb].path}
+              src={activePath}
               alt={product.name}
               className="w-full h-[85vh] object-contain"
+              onError={() => markImgError(activePath)}
             />
+          ) : (
+            <div className="w-full h-[85vh] flex items-center justify-center">
+              <Package className="w-16 h-16 text-white/30" />
+            </div>
           )}
           {images.length > 1 && (
             <button

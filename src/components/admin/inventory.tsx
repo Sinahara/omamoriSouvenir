@@ -45,6 +45,9 @@ import { useToast } from '@/hooks/use-toast'
 import { type InventoryItem, type InventoryTransaction, formatDateTime } from '@/lib/types'
 import { adminFetch } from '@/lib/admin-fetch'
 
+// Rows per page: the API limit, and the offset for each row number
+const PAGE_SIZE = 20
+
 interface InventoryFormData {
   name: string
   category: string
@@ -95,7 +98,7 @@ export default function AdminInventory() {
     try {
       const params = new URLSearchParams()
       params.set('page', String(page))
-      params.set('limit', '20')
+      params.set('limit', String(PAGE_SIZE))
       if (search) params.set('search', search)
       const res = await adminFetch(`/api/admin/inventory?${params.toString()}`)
       if (res.ok) {
@@ -263,7 +266,7 @@ export default function AdminInventory() {
                 const isLow = item.currentStock <= item.minimumStock
                 return (
                   <TableRow key={item.id} className={`${isLow ? 'bg-amber-50' : 'hover:bg-muted'}`}>
-                    <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                    <TableCell className="text-sm text-ink-soft">{(page - 1) * PAGE_SIZE + i + 1}</TableCell>
                     <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{item.name}</TableCell>
                     <TableCell className="text-sm text-ink-soft">{item.category || '-'}</TableCell>
                     <TableCell className={`text-right text-sm font-medium ${isLow ? 'text-amber-700' : 'text-ink'}`}>{item.currentStock}</TableCell>

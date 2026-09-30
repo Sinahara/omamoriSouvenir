@@ -8,12 +8,12 @@ import {
   Package, ClipboardCheck, Send, Briefcase,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import SectionHeader from '@/components/public/section-header'
 import Reveal from '@/components/public/reveal'
+import ProductCard, { ProductCardSkeleton } from '@/components/public/product-card'
 import { useAppStore } from '@/lib/store'
-import { CATEGORIES, formatRupiah, type Product } from '@/lib/types'
+import { type Product } from '@/lib/types'
 
 const categoryCards = [
   { value: 'tumbler', label: 'Tumbler', icon: CupSoda, desc: 'Tumbler custom untuk souvenir perusahaan & event' },
@@ -74,7 +74,6 @@ export default function Landing() {
   const { navigate, selectProduct, setCatalogCategory } = useAppStore()
   const [featured, setFeatured] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set())
 
   // Fallbacks only: the live hero text comes from Pengaturan → Tampilan Beranda
   const [settings, setSettings] = useState({
@@ -87,10 +86,6 @@ export default function Landing() {
   })
 
   const [settingsLoaded, setSettingsLoaded] = useState(false)
-  
-  const handleImgError = (src: string) => {
-    setImgErrors(prev => new Set(prev).add(src))
-  }
 
   useEffect(() => {
     fetch('/api/public/site-settings')
@@ -119,7 +114,7 @@ export default function Landing() {
     <div>
       {/* ═══ Hero Section ═══ */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.03]" />
+        <div className="absolute inset-0 jp-seigaiha-bg jp-hero-waves" />
         {/* Same max-w-6xl as the navbar, so the hero lines up with the logo */}
         <div className="relative max-w-6xl mx-auto px-4 py-12 md:py-16 lg:py-20">
           <div className="grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center">
@@ -150,7 +145,7 @@ export default function Landing() {
                   <h1 className="text-3xl md:text-4xl xl:text-[44px] font-bold text-ink leading-[1.2] tracking-tight wrap-break-word">
                     {settings.hero_title}
                   </h1>
-                  <p className="text-base text-ink-muted max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap wrap-break-word">
+                  <p className="text-base text-ink-soft max-w-md mx-auto lg:mx-0 leading-relaxed whitespace-pre-wrap wrap-break-word">
                     {settings.hero_subtitle}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2">
@@ -218,13 +213,13 @@ export default function Landing() {
                     whileHover={{ y: -3 }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="corp-card jp-corner-accents jp-corner-accents-tight p-5 sm:p-6 xl:p-5 h-full w-full text-left cursor-pointer group flex flex-col"
+                    className="corp-card p-4 sm:p-6 xl:p-5 h-full w-full text-left cursor-pointer group flex flex-col"
                   >
                     <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mb-4 shrink-0">
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="font-semibold text-ink mb-1.5 text-[15px]">{cat.label}</h3>
-                    <p className="text-[13px] sm:text-sm text-ink-muted leading-relaxed">{cat.desc}</p>
+                    <p className="text-sm text-ink-soft leading-relaxed">{cat.desc}</p>
                   </motion.button>
                 </Reveal>
               )
@@ -234,7 +229,7 @@ export default function Landing() {
       </section>
 
       {/* ═══ Featured Products Section ═══ */}
-      <section className="section-gray py-16 md:py-24 jp-asanoha-bg">
+      <section className="section-gray py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
           <Reveal>
             <SectionHeader
@@ -245,22 +240,14 @@ export default function Landing() {
           </Reveal>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="corp-card overflow-hidden">
-                  <Skeleton className="h-48 w-full" />
-                  <div className="p-5 space-y-3">
-                    <Skeleton className="h-5 w-3/4" />
-                    <Skeleton className="h-4 w-1/3" />
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 md:gap-6">
+              {[...Array(6)].map((_, i) => <ProductCardSkeleton key={i} />)}
             </div>
           ) : featured.length === 0 ? (
             <Reveal className="corp-card max-w-md mx-auto px-6 py-10 text-center">
               <Package className="w-10 h-10 text-ink-faint mx-auto mb-3" />
               <p className="font-medium text-ink">Produk belum bisa ditampilkan</p>
-              <p className="text-sm text-ink-muted mt-1 mb-5">
+              <p className="text-sm text-ink-soft mt-1 mb-5">
                 Anda tetap bisa mengirim kebutuhan lewat form penawaran, tim kami akan membantu memilih produknya.
               </p>
               <Button
@@ -273,46 +260,10 @@ export default function Landing() {
             </Reveal>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 md:gap-6">
                 {featured.map((product, i) => (
                   <Reveal key={product.id} delay={(i % 3) * 0.08}>
-                    <motion.button
-                      onClick={() => selectProduct(product.slug)}
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                      className="corp-card overflow-hidden h-full w-full text-left cursor-pointer group flex flex-col"
-                    >
-                      <div className="p-3 pb-0">
-                        <div className="h-44 bg-media rounded-2xl flex items-center justify-center relative overflow-hidden">
-                          {product.images?.[0]?.path && !imgErrors.has(product.images[0].path) ? (
-                            <img
-                              src={product.images[0].path}
-                              alt={product.name}
-                              loading="lazy"
-                              decoding="async"
-                              onError={() => handleImgError(product.images[0].path)}
-                              className="w-full h-full object-cover rounded-2xl group-hover:scale-[1.03] transition-transform duration-700"
-                            />
-                          ) : (
-                            <Package className="w-16 h-16 text-ink-faint group-hover:text-ink-muted transition-colors" />
-                          )}
-                          <div className="absolute top-3 left-3 right-3">
-                            <Badge variant="secondary" className="max-w-full truncate text-[10px] tracking-wide bg-white/80 text-ink-soft rounded-sm">
-                              {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-1 flex-col gap-2 px-5 pb-5 pt-4">
-                        <h3 className="font-semibold text-ink line-clamp-2 wrap-break-word group-hover:text-primary transition-colors text-[15px]">
-                          {product.name}
-                        </h3>
-                        <p className="mt-auto text-sm text-primary font-semibold">
-                          Mulai dari {formatRupiah(product.basePrice)}
-                        </p>
-                      </div>
-                    </motion.button>
+                    <ProductCard product={product} onSelect={selectProduct} />
                   </Reveal>
                 ))}
               </div>
@@ -357,12 +308,12 @@ export default function Landing() {
                     {item.step}
                   </div>
                   {/* flex-1 keeps the three cards the same height in a row */}
-                  <div className="corp-card jp-corner-accents jp-corner-accents-tight p-6 w-full max-w-sm md:max-w-none flex-1">
+                  <div className="corp-card p-6 w-full max-w-sm md:max-w-none flex-1">
                     <div className="w-10 h-10 rounded-lg kpi-icon-green flex items-center justify-center mx-auto mb-4">
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="font-semibold text-ink mb-2 text-[15px]">{item.title}</h3>
-                    <p className="text-sm text-ink-muted leading-relaxed">{item.desc}</p>
+                    <p className="text-sm text-ink-soft leading-relaxed">{item.desc}</p>
                   </div>
                 </Reveal>
               )
@@ -389,13 +340,13 @@ export default function Landing() {
                   <motion.div
                     whileHover={{ y: -2 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="corp-card jp-corner-accents jp-corner-accents-tight p-6 h-full"
+                    className="corp-card p-6 h-full"
                   >
                     <div className={`w-10 h-10 rounded-lg ${usp.iconClass} flex items-center justify-center mb-4`}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="font-semibold text-ink mb-2 text-[15px]">{usp.title}</h3>
-                    <p className="text-sm text-ink-muted leading-relaxed">{usp.desc}</p>
+                    <p className="text-sm text-ink-soft leading-relaxed">{usp.desc}</p>
                   </motion.div>
                 </Reveal>
               )
@@ -420,7 +371,7 @@ export default function Landing() {
                 <Reveal
                   key={i}
                   delay={(i % 3) * 0.1}
-                  className="corp-card jp-corner-accents jp-corner-accents-tight p-6 flex flex-col"
+                  className="corp-card p-6 flex flex-col"
                 >
                   <Quote className="w-6 h-6 text-primary/15 mb-4 shrink-0" />
                   <p className="text-[15px] text-ink-soft leading-relaxed flex-1">
@@ -444,10 +395,10 @@ export default function Landing() {
       )}
 
       {/* ═══ Final CTA ═══ */}
-      <section className="py-16 md:py-24 jp-seigaiha-bg">
+      <section className="py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4">
           <Reveal className="relative bg-primary rounded-lg px-6 py-10 sm:p-10 md:p-14 text-center text-white overflow-hidden">
-            <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
+            <div className="absolute inset-0 jp-seigaiha-light" />
             <div className="relative">
               <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">
                 Siap Memulai Pesanan?

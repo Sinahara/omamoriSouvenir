@@ -238,14 +238,27 @@
 
   /* Seigaiha (青海波) — Wave pattern */
   .jp-seigaiha-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 C10 5, 20 5, 30 15 C40 25, 50 25, 60 15' fill='none' stroke='%2300a651' stroke-width='0.5' opacity='0.15'/%3E%3Cpath d='M0 25 C10 15, 20 15, 30 25 C40 35, 50 35, 60 25' fill='none' stroke='%2300a651' stroke-width='0.5' opacity='0.10'/%3E%3Cpath d='M0 5 C10 -5, 20 -5, 30 5 C40 15, 50 15, 60 5' fill='none' stroke='%2300a651' stroke-width='0.5' opacity='0.10'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 C10 5, 20 5, 30 15 C40 25, 50 25, 60 15' fill='none' stroke='%2300a651' stroke-width='0.7' opacity='0.24'/%3E%3Cpath d='M0 25 C10 15, 20 15, 30 25 C40 35, 50 35, 60 25' fill='none' stroke='%2300a651' stroke-width='0.7' opacity='0.16'/%3E%3Cpath d='M0 5 C10 -5, 20 -5, 30 5 C40 15, 50 15, 60 5' fill='none' stroke='%2300a651' stroke-width='0.7' opacity='0.16'/%3E%3C/svg%3E");
     background-size: 60px 30px;
   }
 
-  /* Asanoha (麻の葉) — Hemp leaf geometric pattern */
-  .jp-asanoha-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='56' height='100' viewBox='0 0 56 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28 66L0 50L28 34L56 50L28 66Z' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M28 34L0 18L28 2L56 18L28 34Z' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M28 98L0 82L28 66L56 82L28 98Z' fill='none' stroke='%2300a651' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M14 83L28 74L42 83L28 92L14 83Z' fill='none' stroke='%2300a651' stroke-width='0.3' opacity='0.06'/%3E%3Cpath d='M14 49L28 40L42 49L28 58L14 49Z' fill='none' stroke='%2300a651' stroke-width='0.3' opacity='0.06'/%3E%3Cpath d='M14 15L28 6L42 15L28 24L14 15Z' fill='none' stroke='%2300a651' stroke-width='0.3' opacity='0.06'/%3E%3C/svg%3E");
-    background-size: 56px 100px;
+  /* Seigaiha in white, for the green banners (the green version vanishes on them) */
+  .jp-seigaiha-light {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 C10 5, 20 5, 30 15 C40 25, 50 25, 60 15' fill='none' stroke='%23ffffff' stroke-width='0.6' opacity='0.28'/%3E%3Cpath d='M0 25 C10 15, 20 15, 30 25 C40 35, 50 35, 60 25' fill='none' stroke='%23ffffff' stroke-width='0.6' opacity='0.18'/%3E%3Cpath d='M0 5 C10 -5, 20 -5, 30 5 C40 15, 50 15, 60 5' fill='none' stroke='%23ffffff' stroke-width='0.6' opacity='0.18'/%3E%3C/svg%3E");
+    background-size: 60px 30px;
+  }
+
+  /* Landing hero: the waves gather behind the product photo and fade out
+     before they reach the headline (photo below the text on phones, beside it from lg) */
+  .jp-hero-waves {
+    -webkit-mask-image: radial-gradient(ellipse 85% 45% at 50% 82%, #000 25%, transparent 75%);
+    mask-image: radial-gradient(ellipse 85% 45% at 50% 82%, #000 25%, transparent 75%);
+  }
+  @media (min-width: 1024px) {
+    .jp-hero-waves {
+      -webkit-mask-image: radial-gradient(ellipse 42% 80% at 78% 50%, #000 25%, transparent 75%);
+      mask-image: radial-gradient(ellipse 42% 80% at 78% 50%, #000 25%, transparent 75%);
+    }
   }
 
   /* Washi (和紙) — Subtle Japanese paper texture */
@@ -283,7 +296,9 @@
     opacity: 0.25;
   }
 
-  /* Corner accents — subtle L-shaped decorations */
+  /* Corner accents — L-shaped marks reserved for the main panels of the quote
+     form and order tracking. Kept off repeated grid cards so they stay a
+     signature rather than noise, which lets them show at a readable strength. */
   .jp-corner-accents {
     position: relative;
   }
@@ -294,7 +309,7 @@
     width: var(--corner-size, 20px);
     height: var(--corner-size, 20px);
     pointer-events: none;
-    opacity: 0.25;
+    opacity: 0.55;
   }
   .jp-corner-accents::before {
     top: var(--corner-inset, 8px);

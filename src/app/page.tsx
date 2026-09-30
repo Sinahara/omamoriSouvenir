@@ -45,7 +45,7 @@ const Landing = dynamic(() => import('@/components/public/landing'), { ssr: fals
 const About = dynamic(() => import('@/components/public/about'), { ssr: false, loading: pageLoader })
 const Catalog = dynamic(() => import('@/components/public/catalog'), {
   ssr: false,
-  loading: () => <div className="max-w-6xl mx-auto px-4 py-12 md:py-20 space-y-6"><Skeleton className="h-8 w-48 mx-auto" /><Skeleton className="h-5 w-full max-w-sm mx-auto" /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><Skeleton className="h-72 w-full" /><Skeleton className="h-72 w-full" /><Skeleton className="h-72 w-full" /></div></div>,
+  loading: () => <div className="max-w-6xl mx-auto px-4 py-12 md:py-20 space-y-6"><Skeleton className="h-8 w-48 mx-auto" /><Skeleton className="h-5 w-full max-w-sm mx-auto" /><div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 md:gap-6"><Skeleton className="aspect-square w-full" /><Skeleton className="aspect-square w-full" /><Skeleton className="aspect-square w-full" /></div></div>,
 })
 const ProductDetail = dynamic(() => import('@/components/public/product-detail'), { ssr: false, loading: pageLoader })
 const RequestQuote = dynamic(() => import('@/components/public/request-quote'), { ssr: false, loading: pageLoader })

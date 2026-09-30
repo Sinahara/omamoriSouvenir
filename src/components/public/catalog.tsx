@@ -1,16 +1,14 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { motion } from 'framer-motion'
-import { Search, Package, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import SectionHeader from '@/components/public/section-header'
 import Reveal from '@/components/public/reveal'
+import ProductCard, { ProductCardSkeleton } from '@/components/public/product-card'
 import { useAppStore } from '@/lib/store'
-import { CATEGORIES, formatRupiah, type Product } from '@/lib/types'
+import { CATEGORIES, type Product } from '@/lib/types'
 
 type SortOption = 'terbaru' | 'harga_rendah' | 'harga_tinggi'
 
@@ -23,11 +21,6 @@ export default function Catalog() {
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [sort, setSort] = useState<SortOption>('terbaru')
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined)
-  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set())
-
-  const handleImgError = (src: string) => {
-    setImgErrors(prev => new Set(prev).add(src))
-  }
 
   // Debounce search input
   useEffect(() => {
@@ -145,22 +138,14 @@ export default function Catalog() {
       {/* Product Grid */}
       <section>
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="corp-card overflow-hidden">
-              <Skeleton className="h-48 w-full" />
-              <div className="p-5 space-y-3">
-                <Skeleton className="h-5 w-3/4" />
-                <Skeleton className="h-4 w-1/3" />
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 md:gap-6">
+          {[...Array(6)].map((_, i) => <ProductCardSkeleton key={i} />)}
         </div>
       ) : products.length === 0 ? (
         <Reveal className="text-center py-16 md:py-24">
           <SlidersHorizontal className="w-10 h-10 text-ink-faint mx-auto mb-4" />
           <h3 className="text-lg font-medium text-ink mb-1">Tidak ada produk ditemukan</h3>
-          <p className="text-ink-muted text-sm mb-6">
+          <p className="text-ink-soft text-sm mb-6">
             Coba ubah filter atau kata kunci pencarian Anda
           </p>
           <Button
@@ -177,52 +162,10 @@ export default function Catalog() {
           </Button>
         </Reveal>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 md:gap-6">
           {products.map((product, i) => (
             <Reveal key={product.id} delay={(i % 3) * 0.08}>
-              <motion.button
-                onClick={() => selectProduct(product.slug)}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="corp-card overflow-hidden h-full w-full text-left cursor-pointer group flex flex-col"
-              >
-                <div className="p-3 pb-0">
-                  <div className="h-44 bg-media rounded-2xl flex items-center justify-center relative overflow-hidden">
-                    {product.images?.[0]?.path && !imgErrors.has(product.images[0].path) ? (
-                      <img
-                        src={product.images[0].path}
-                        alt={product.name}
-                        loading="lazy"
-                        decoding="async"
-                        onError={() => handleImgError(product.images[0].path)}
-                        className="w-full h-full object-cover rounded-2xl group-hover:scale-[1.03] transition-transform duration-700"
-                      />
-                    ) : (
-                      <Package className="w-16 h-16 text-ink-faint group-hover:text-ink-muted transition-colors" />
-                    )}
-                    <div className="absolute top-3 left-3 right-3">
-                      <Badge variant="secondary" className="max-w-full truncate text-[10px] tracking-wide bg-white/80 text-ink-soft rounded-sm">
-                        {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-1 flex-col gap-2 px-5 pb-5 pt-4">
-                  <h3 className="font-semibold text-ink line-clamp-2 wrap-break-word group-hover:text-primary transition-colors text-[15px]">
-                    {product.name}
-                  </h3>
-                  {/* wraps instead of colliding when the price or unit is long */}
-                  <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                    <p className="text-sm text-primary font-semibold">
-                      Mulai dari {formatRupiah(product.basePrice)}
-                    </p>
-                    <span className="text-xs text-ink-muted">
-                      Min. {product.minQty} {product.unit}
-                    </span>
-                  </div>
-                </div>
-              </motion.button>
+              <ProductCard product={product} onSelect={selectProduct} showMinQty />
             </Reveal>
           ))}
         </div>

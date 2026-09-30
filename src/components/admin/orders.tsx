@@ -19,6 +19,9 @@ import { useAppStore } from '@/lib/store'
 import { type Order, ORDER_STATUSES, formatRupiah, formatDate, getStatusLabel, getStatusColor } from '@/lib/types'
 import { adminFetch } from '@/lib/admin-fetch'
 
+// Rows per page: the API limit, and the offset for each row number
+const PAGE_SIZE = 20
+
 const statusTabs = [
   { value: 'all', label: 'Semua' },
   ...ORDER_STATUSES.map(s => ({ value: s.value, label: s.label })),
@@ -41,7 +44,7 @@ export default function AdminOrders() {
       const params = new URLSearchParams()
       if (activeTab !== 'all') params.set('status', activeTab)
       params.set('page', String(page))
-      params.set('limit', '20')
+      params.set('limit', String(PAGE_SIZE))
       if (search) params.set('search', search)
       const res = await adminFetch(`/api/admin/orders?${params.toString()}`)
       if (res.ok) {
@@ -116,7 +119,7 @@ export default function AdminOrders() {
                 <TableRow><TableCell colSpan={6} className="text-center text-ink-muted py-8">Tidak ada pesanan.</TableCell></TableRow>
               ) : orders.map((o, i) => (
                 <TableRow key={o.id} tabIndex={0} className="cursor-pointer hover:bg-muted" onClick={() => selectOrder(o.id)} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); selectOrder(o.id) } }}>
-                  <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                  <TableCell className="text-sm text-ink-soft">{(page - 1) * PAGE_SIZE + i + 1}</TableCell>
                   <TableCell className="font-medium text-sm text-ink">{o.orderNumber}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{o.client?.companyName ?? '-'}</TableCell>
                   <TableCell className="text-right text-sm text-ink">{formatRupiah(o.quote?.total ?? o.dpAmount)}</TableCell>

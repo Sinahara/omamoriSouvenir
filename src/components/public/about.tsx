@@ -97,7 +97,7 @@ export default function About() {
       {/* ═══ 1. HERO BANNER ═══ */}
       {/* The navbar is sticky (it takes its own space), so no extra top offset is needed */}
       <section className="relative py-16 md:py-24 lg:py-28 bg-linear-to-br from-primary to-emerald-700 text-white overflow-hidden">
-        <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
+        <div className="absolute inset-0 jp-seigaiha-light" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}>
             <span className="inline-block eyebrow text-white/80 border border-white/20 px-4 py-1 rounded-sm mb-6">
@@ -146,7 +146,7 @@ export default function About() {
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
             {/* Left — Image */}
-            <Reveal from="left" className="min-w-0 rounded-lg overflow-hidden jp-corner-accents">
+            <Reveal from="left" className="min-w-0 rounded-lg overflow-hidden">
               {loading ? (
                 <Skeleton className="w-full h-64 sm:h-80 lg:h-[380px]" />
               ) : (
@@ -190,7 +190,7 @@ export default function About() {
                     Siapa Kami
                   </h2>
                   {description.split('\n').filter(Boolean).map((para, idx) => (
-                    <div key={idx} className="text-ink-muted leading-relaxed mb-4 text-[15px] wrap-break-word">{para}</div>
+                    <div key={idx} className="text-ink-soft leading-relaxed mb-4 text-[15px] wrap-break-word">{para}</div>
                   ))}
                   <div className="corp-divider my-6" />
                   <div className="flex flex-col sm:flex-row gap-3">
@@ -216,7 +216,7 @@ export default function About() {
       </section>
 
       {/* ═══ 3. KEUNGULAN KAMI — 6 Cards ═══ */}
-      <section className="py-16 md:py-24 section-gray jp-asanoha-bg">
+      <section className="py-16 md:py-24 section-gray">
         <div className="max-w-6xl mx-auto px-4">
           <Reveal>
             <SectionHeader badge="Keunggulan Kami" title="Apa yang Membuat Kami Berbeda" />
@@ -228,13 +228,13 @@ export default function About() {
                 <Reveal
                   key={i}
                   delay={(i % 3) * 0.08}
-                  className="corp-card jp-corner-accents jp-corner-accents-tight p-6"
+                  className="corp-card p-6"
                 >
                   <div className={`w-11 h-11 ${getColor(item.icon)} rounded-lg flex items-center justify-center mb-4`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <h3 className="font-semibold text-ink text-[15px] mb-2">{item.title}</h3>
-                  <div className="text-ink-muted text-sm leading-relaxed wrap-break-word">{item.desc}</div>
+                  <div className="text-ink-soft text-sm leading-relaxed wrap-break-word">{item.desc}</div>
                 </Reveal>
               );
             })}
@@ -262,7 +262,7 @@ export default function About() {
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-ink text-[15px] mb-1.5">{item.title}</h3>
-                    <div className="text-ink-muted text-sm leading-relaxed wrap-break-word">{item.desc}</div>
+                    <div className="text-ink-soft text-sm leading-relaxed wrap-break-word">{item.desc}</div>
                   </div>
                 </Reveal>
               );
@@ -291,14 +291,14 @@ export default function About() {
                   href={c.href}
                   target={c.external ? '_blank' : undefined}
                   rel={c.external ? 'noopener noreferrer' : undefined}
-                  className="corp-card jp-corner-accents jp-corner-accents-tight h-full p-5 flex items-center gap-4 text-left sm:flex-col sm:gap-0 sm:text-center group cursor-pointer"
+                  className="corp-card h-full p-5 flex items-center gap-4 text-left sm:flex-col sm:gap-0 sm:text-center group cursor-pointer"
                 >
                   <div className="w-11 h-11 shrink-0 kpi-icon-green rounded-lg flex items-center justify-center sm:mb-3">
                     <c.icon className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
                     <div className="font-semibold text-ink text-sm mb-1">{c.label}</div>
-                    <div className="text-ink-muted text-sm leading-snug wrap-break-word">{c.value}</div>
+                    <div className="text-ink-soft text-sm leading-snug wrap-break-word">{c.value}</div>
                   </div>
                 </a>
               </Reveal>
@@ -307,7 +307,7 @@ export default function About() {
 
           {/* Operating Hours */}
           <Reveal delay={0.2} className="flex justify-center">
-            <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white rounded-2xl sm:rounded-full border border-line text-sm text-ink-muted">
+            <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white rounded-2xl sm:rounded-full border border-line text-sm text-ink-soft">
               <Clock className="w-4 h-4 text-primary shrink-0" />
               {/* one line per schedule on phones, a single row from sm up */}
               <span className="flex flex-col sm:flex-row sm:gap-2">
@@ -322,7 +322,7 @@ export default function About() {
 
       {/* ═══ 6. CTA SECTION ═══ */}
       <section className="py-16 md:py-24 bg-primary text-white relative overflow-hidden">
-        <div className="absolute inset-0 jp-seigaiha-bg opacity-[0.06]" />
+        <div className="absolute inset-0 jp-seigaiha-light" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
           <Reveal>
             <div className="w-14 h-14 bg-white/10 rounded-lg flex items-center justify-center mx-auto mb-6">

@@ -308,11 +308,11 @@ export default function RequestQuote() {
             <CheckCircle2 className="w-10 h-10 text-primary" />
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-ink">Penawaran Berhasil Terkirim!</h2>
-          <p className="text-ink-muted max-w-md mx-auto">
+          <p className="text-ink-soft max-w-md mx-auto">
             Tim kami akan menghubungi Anda dalam 1×24 jam melalui WhatsApp atau email untuk mengirimkan quotation resmi.
           </p>
           <div className="flex gap-3 justify-center pt-4">
-            <Button onClick={() => navigate('catalog')} variant="outline" className="border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm">
+            <Button onClick={() => navigate('catalog')} variant="outline" className="border-line-strong text-ink-soft hover:text-ink hover:bg-surface rounded-sm">
               Lihat Katalog
             </Button>
             <Button onClick={() => { setSubmitted(false); setStep(1) }} className="bg-primary hover:bg-primary-hover text-white rounded-sm">
@@ -482,7 +482,7 @@ export default function RequestQuote() {
             variant="outline"
             size="sm"
             onClick={addItem}
-            className="w-full sm:w-auto border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm tracking-wide text-[13px]"
+            className="w-full sm:w-auto border-line-strong text-ink-soft hover:text-ink hover:bg-surface rounded-sm tracking-wide text-[13px]"
           >
             <Plus className="w-4 h-4 mr-1" /> Tambah Produk
           </Button>
@@ -575,7 +575,7 @@ export default function RequestQuote() {
           {/* CAPTCHA Verification */}
           <div className="corp-card jp-corner-accents p-6 space-y-4">
             <h3 className="font-semibold text-ink">Verifikasi</h3>
-            <p className="text-sm text-ink-muted">Untuk mencegah spam, jawab pertanyaan berikut:</p>
+            <p className="text-sm text-ink-soft">Untuk mencegah spam, jawab pertanyaan berikut:</p>
             <div className="flex items-center gap-3">
               <div className="flex-1 sm:w-auto">
                 <Label htmlFor="captcha-question" className="text-[13px] text-ink">
@@ -619,7 +619,7 @@ export default function RequestQuote() {
             variant="outline"
             onClick={handlePrev}
             disabled={submitting}
-            className="border-line text-ink-soft hover:text-ink hover:bg-surface rounded-sm tracking-wide text-[13px]"
+            className="border-line-strong text-ink-soft hover:text-ink hover:bg-surface rounded-sm tracking-wide text-[13px]"
           >
             <ArrowLeft className="w-4 h-4 mr-1" /> Sebelumnya
           </Button>

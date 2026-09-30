@@ -43,6 +43,9 @@ import { useToast } from '@/hooks/use-toast'
 import { useAppStore } from '@/lib/store'
 import { adminFetch } from '@/lib/admin-fetch'
 
+// Rows per page: the API limit, and the offset for each row number
+const PAGE_SIZE = 20
+
 interface UserRecord {
   id: string
   name: string
@@ -79,7 +82,7 @@ export default function AdminUsers() {
     try {
       const params = new URLSearchParams()
       params.set('page', String(page))
-      params.set('limit', '20')
+      params.set('limit', String(PAGE_SIZE))
       if (search) params.set('search', search)
       const res = await adminFetch(`/api/admin/users?${params.toString()}`)
       if (res.ok) {
@@ -199,7 +202,7 @@ export default function AdminUsers() {
                 <TableRow><TableCell colSpan={5} className="text-center text-ink-muted py-8">Tidak ada user.</TableCell></TableRow>
               ) : users.map((u, i) => (
                 <TableRow key={u.id} className="hover:bg-muted">
-                  <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                  <TableCell className="text-sm text-ink-soft">{(page - 1) * PAGE_SIZE + i + 1}</TableCell>
                   <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{u.name}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{u.email}</TableCell>
                   <TableCell>

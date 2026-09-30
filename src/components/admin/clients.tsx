@@ -36,6 +36,9 @@ import { useToast } from '@/hooks/use-toast'
 import { type Client } from '@/lib/types'
 import { adminFetch } from '@/lib/admin-fetch'
 
+// Rows per page: the API limit, and the offset for each row number
+const PAGE_SIZE = 20
+
 interface ClientFormData {
   companyName: string
   npwp: string
@@ -71,7 +74,7 @@ export default function AdminClients() {
     try {
       const params = new URLSearchParams()
       params.set('page', String(page))
-      params.set('limit', '20')
+      params.set('limit', String(PAGE_SIZE))
       if (search) params.set('search', search)
       const res = await adminFetch(`/api/admin/clients?${params.toString()}`)
       if (res.ok) {
@@ -193,7 +196,7 @@ export default function AdminClients() {
                 <TableRow><TableCell colSpan={7} className="text-center text-ink-muted py-8">Tidak ada klien.</TableCell></TableRow>
               ) : clients.map((c, i) => (
                 <TableRow key={c.id} className="hover:bg-muted">
-                  <TableCell className="text-sm text-ink-soft">{i + 1}</TableCell>
+                  <TableCell className="text-sm text-ink-soft">{(page - 1) * PAGE_SIZE + i + 1}</TableCell>
                   <TableCell className="font-medium text-sm text-ink whitespace-normal min-w-32">{c.companyName}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{c.picName}{c.picTitle ? ` (${c.picTitle})` : ''}</TableCell>
                   <TableCell className="text-sm text-ink-soft">{c.whatsapp}</TableCell>

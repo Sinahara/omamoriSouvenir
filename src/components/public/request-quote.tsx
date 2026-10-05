@@ -281,7 +281,7 @@ export default function RequestQuote() {
         throw new Error(data.error || 'Gagal mengirim penawaran')
       }
 
-      toast({ title: 'Penawaran Terkirim!', description: 'Tim kami akan menghubungi Anda dalam 1×24 jam.' })
+      toast({ title: 'Penawaran Terkirim!', description: 'Kami akan menghubungi Anda dalam 1×24 jam.' })
       setCompany({ ...emptyCompany })
       setOrder({ items: [{ id: generateId(), productId: '', qty: 0, notes: '', product: null, pricePerUnit: 0, subtotal: 0 }], deadline: '', notes: '' })
       await refreshCaptcha()
@@ -309,7 +309,7 @@ export default function RequestQuote() {
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-ink">Penawaran Berhasil Terkirim!</h2>
           <p className="text-ink-soft max-w-md mx-auto">
-            Tim kami akan menghubungi Anda dalam 1×24 jam melalui WhatsApp atau email untuk mengirimkan quotation resmi.
+            Kami akan menghubungi Anda dalam 1×24 jam melalui WhatsApp atau email untuk mengirimkan quotation resmi.
           </p>
           <div className="flex gap-3 justify-center pt-4">
             <Button onClick={() => navigate('catalog')} variant="outline" className="border-line-strong text-ink-soft hover:text-ink hover:bg-surface rounded-sm">

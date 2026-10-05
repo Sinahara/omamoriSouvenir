@@ -34,14 +34,13 @@ const colorMap: Record<string, string> = {
 
 /* ── Default Data ──────────────────────────────────────── */
 // Fallbacks only: the live text comes from Pengaturan → Tentang Kami. Keep them to
-// facts the site itself shows (order stages, tier pricing, catalog specs).
+// facts the site itself shows (order stages, tier pricing, catalog specs) and claims
+// the owner can back up (see audit-website-omamori-souvenir.md).
 const defaultAdvantages = [
-  { icon: 'Package', title: 'Zero Inventory', desc: 'Barang diproduksi setelah DP masuk, jadi Anda tidak perlu menyimpan stok.' },
-  { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, dan kuitansi bermeterai kami siapkan untuk administrasi kantor Anda.' },
-  { icon: 'Sparkles', title: 'Mockup Premium', desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai.' },
-  { icon: 'Shield', title: 'Quality Control', desc: 'Setiap pesanan melewati tahap QC sebelum dikirim.' },
-  { icon: 'Truck', title: 'Pengiriman Terpantau', desc: 'Status pesanan, dari DP sampai barang diterima, bisa dicek di halaman Lacak Pesanan. Nomor resi tampil begitu barang dikirim.' },
-  { icon: 'Users', title: 'Konsultasi Langsung', desc: 'Pilih produk, kirim logo, dan tanyakan jadwal produksi langsung lewat WhatsApp.' },
+  { icon: 'Sparkles', title: 'Mockup Sebelum Produksi', desc: 'Anda melihat gambaran desain dan menyetujuinya terlebih dulu. Mockup adalah ilustrasi; hasil produksi bisa sedikit berbeda dan dikonfirmasi lewat persetujuan sebelum produksi.' },
+  { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, dan kuitansi bermeterai siap untuk administrasi kantor Anda.' },
+  { icon: 'Package', title: 'Tanpa Stok di Kantor Anda', desc: 'Produksi dimulai setelah DP, jumlah mengikuti kebutuhan.' },
+  { icon: 'Users', title: 'Ditangani Langsung Pendiri', desc: 'Setiap permintaan dibalas dalam 1×24 jam lewat WhatsApp, setiap hari pukul 18.00–21.00 WIB.' },
 ];
 
 const defaultBenefits = [
@@ -51,7 +50,7 @@ const defaultBenefits = [
   { icon: 'CheckCircle2', title: 'Desain Custom', desc: 'Desain dan warna disesuaikan dengan identitas visual brand Anda.' },
 ];
 
-const defaultContact = { whatsapp: '6281234567890', email: 'info@omamorisouvenir.id', phone: '031-1234-5678', address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia' };
+const defaultContact = { whatsapp: '6285606381770', email: 'omamori@gmail.com', phone: '085606381770', address: 'Surabaya — Sidoarjo — Pasuruan, Jawa Timur, Indonesia' };
 
 interface Settings {
   about_title?: string; about_subtitle?: string; about_description?: string;
@@ -77,9 +76,9 @@ export default function About() {
 
   /* ── Parsed settings with fallbacks ─── */
   const title = settings.about_title || 'Souvenir & Corporate Gift Custom untuk Perusahaan';
-  const subtitle = settings.about_subtitle || 'Melayani perusahaan di Surabaya dan Sidoarjo, dari satu jenis produk sampai paket onboarding karyawan.';
+  const subtitle = settings.about_subtitle || 'Welcome kit karyawan baru dan souvenir perusahaan untuk Surabaya, Sidoarjo, dan Pasuruan, ditangani langsung oleh pendiri.';
   const description = settings.about_description
-    || 'Omamori Souvenir membuat corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo: tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda.\n\nSetiap pesanan dimulai dari penawaran resmi. Mockup dikirim untuk disetujui sebelum produksi, dan produksi dimulai setelah DP diterima. Status setiap tahap, dari produksi sampai pengiriman, bisa Anda pantau di halaman Lacak Pesanan.';
+    || 'Omamori Souvenir dirintis di Surabaya untuk membantu perusahaan menyiapkan welcome kit karyawan baru dan souvenir acara. Kami masih baru, dan itu berarti setiap klien awal ditangani langsung oleh pendirinya, dari konsultasi sampai pengiriman.\n\nSetiap pesanan dimulai dari penawaran resmi. Mockup dikirim untuk disetujui sebelum produksi, dan produksi dimulai setelah DP diterima. Status setiap tahap, dari produksi sampai pengiriman, bisa Anda pantau di halaman Lacak Pesanan.';
 
   const advantages = (() => { try { const p = JSON.parse(settings.about_advantages || 'null'); return Array.isArray(p) && p.length > 0 ? p : defaultAdvantages; } catch { return defaultAdvantages; } })();
   const benefits = (() => { try { const p = JSON.parse(settings.about_benefits || 'null'); return Array.isArray(p) && p.length > 0 ? p : defaultBenefits; } catch { return defaultBenefits; } })();
@@ -221,7 +220,8 @@ export default function About() {
           <Reveal>
             <SectionHeader badge="Keunggulan Kami" title="Apa yang Membuat Kami Berbeda" />
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {/* Three columns only when the cards fill every row; four cards sit 2×2 */}
+          <div className={`grid sm:grid-cols-2 ${advantages.length % 3 === 0 ? 'lg:grid-cols-3' : ''} gap-4 sm:gap-5`}>
             {advantages.map((item: { icon: string; title: string; desc: string }, i: number) => {
               const Icon = getIcon(item.icon);
               return (
@@ -309,12 +309,7 @@ export default function About() {
           <Reveal delay={0.2} className="flex justify-center">
             <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-white rounded-2xl sm:rounded-full border border-line text-sm text-ink-soft">
               <Clock className="w-4 h-4 text-primary shrink-0" />
-              {/* one line per schedule on phones, a single row from sm up */}
-              <span className="flex flex-col sm:flex-row sm:gap-2">
-                <span>Senin — Jumat: 08.00 — 17.00 WIB</span>
-                <span className="hidden sm:inline" aria-hidden="true">·</span>
-                <span>Sabtu: 08.00 — 12.00 WIB</span>
-              </span>
+              <span>Balasan WhatsApp setiap hari: 18.00 — 21.00 WIB</span>
             </div>
           </Reveal>
         </div>

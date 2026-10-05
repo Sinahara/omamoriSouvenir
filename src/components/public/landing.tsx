@@ -29,7 +29,7 @@ const howItWorks = [
     step: 1,
     icon: Upload,
     title: 'Kirim Permintaan',
-    desc: 'Kirim brief atau isi form Minta Penawaran. Tim kami merespons dalam 1×24 jam.',
+    desc: 'Kirim brief atau isi form Minta Penawaran. Kami membalas dalam 1×24 jam.',
   },
   {
     step: 2,
@@ -61,7 +61,7 @@ const usps = [
   {
     icon: Sparkles,
     title: 'Mockup Premium',
-    desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai.',
+    desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai. Mockup adalah ilustrasi; hasil produksi bisa sedikit berbeda dan dikonfirmasi lewat persetujuan sebelum produksi.',
     iconClass: 'kpi-icon-blue',
   },
 ]
@@ -77,9 +77,9 @@ export default function Landing() {
 
   // Fallbacks only: the live hero text comes from Pengaturan → Tampilan Beranda
   const [settings, setSettings] = useState({
-    hero_badge: 'Corporate Gift Custom',
-    hero_title: 'Corporate Gift Custom untuk Perusahaan di Surabaya & Sidoarjo',
-    hero_subtitle: 'Tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda. Diproduksi setelah DP, dengan mockup sebelum produksi.',
+    hero_badge: 'Welcome Kit Karyawan Baru',
+    hero_title: 'Kesan pertama karyawan baru dimulai dari hari pertama.',
+    hero_subtitle: 'Kami siapkan welcome kit bermerek perusahaan Anda, lengkap dengan mockup, quotation, dan invoice. Melayani perusahaan di Surabaya, Sidoarjo, dan Pasuruan.',
     hero_btn_primary_text: 'Minta Penawaran',
     hero_btn_secondary_text: 'Lihat Katalog',
     hero_image: '/hero-3d-product.png',
@@ -248,7 +248,7 @@ export default function Landing() {
               <Package className="w-10 h-10 text-ink-faint mx-auto mb-3" />
               <p className="font-medium text-ink">Produk belum bisa ditampilkan</p>
               <p className="text-sm text-ink-soft mt-1 mb-5">
-                Anda tetap bisa mengirim kebutuhan lewat form penawaran, tim kami akan membantu memilih produknya.
+                Anda tetap bisa mengirim kebutuhan lewat form penawaran, kami akan membantu memilih produknya.
               </p>
               <Button
                 variant="outline"

@@ -6,7 +6,10 @@ import { useAppStore } from '@/lib/store'
 import { BrandLogo } from '@/components/brand-logo'
 import Reveal from '@/components/public/reveal'
 
-const defaultContact = { whatsapp: '6281234567890', email: 'info@omamorisouvenir.id', address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia' }
+const defaultContact = { whatsapp: '6285606381770', email: 'omamori@gmail.com', address: 'Surabaya — Sidoarjo — Pasuruan, Jawa Timur, Indonesia' }
+
+// Pre-filled chat text for the floating WhatsApp button
+const waMessage = 'Halo Omamori Souvenir, kami dari [Nama Perusahaan]. Kami ingin menanyakan welcome kit untuk [jumlah] karyawan baru. Mohon info contoh dan penawaran.'
 
 const quickLinks = [
   { label: 'Beranda', page: 'landing' as const },
@@ -59,8 +62,8 @@ export default function Footer() {
                 <span className="font-bold text-[17px] text-ink tracking-tight">Omamori Souvenir</span>
               </div>
               <p className="text-sm md:text-[13px] text-ink-muted leading-relaxed">
-                Corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo, dari tumbler
-                sampai paket onboarding karyawan.
+                Welcome kit karyawan baru dan corporate gift custom untuk perusahaan di Surabaya,
+                Sidoarjo, dan Pasuruan.
               </p>
               <div className="flex gap-3 pt-1">
                 <a
@@ -162,7 +165,7 @@ export default function Footer() {
           the form's action buttons on phones (the footer still links to WhatsApp) */}
       {currentPage !== 'request-quote' && (
         <a
-          href={`https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}`}
+          href={`https://wa.me/${(contact.whatsapp || '').replace(/\D/g, '')}?text=${encodeURIComponent(waMessage)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 z-40 w-12 h-12 bg-primary hover:bg-primary-hover text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"

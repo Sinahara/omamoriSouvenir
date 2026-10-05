@@ -56,16 +56,16 @@ const defaultCompany: CompanySettings = {
   kota: 'Surabaya',
   npwp: '',
   telepon: '',
-  email: 'info@omamorisouvenir.id',
-  website: 'https://omamorisouvenir.id',
+  email: 'omamori@gmail.com',
+  website: 'https://omamorisouvenir.my.id',
 }
 
 // Text defaults match the public fallbacks in landing.tsx / about.tsx, so the form
 // shows what the site displays while nothing has been saved yet.
 const defaultHero: HeroSettings = {
-  hero_badge: 'Corporate Gift Custom',
-  hero_title: 'Corporate Gift Custom untuk Perusahaan di Surabaya & Sidoarjo',
-  hero_subtitle: 'Tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda. Diproduksi setelah DP, dengan mockup sebelum produksi.',
+  hero_badge: 'Welcome Kit Karyawan Baru',
+  hero_title: 'Kesan pertama karyawan baru dimulai dari hari pertama.',
+  hero_subtitle: 'Kami siapkan welcome kit bermerek perusahaan Anda, lengkap dengan mockup, quotation, dan invoice. Melayani perusahaan di Surabaya, Sidoarjo, dan Pasuruan.',
   hero_image: '/hero-3d-product.png',
   hero_btn_primary_text: 'Minta Penawaran',
   hero_btn_secondary_text: 'Lihat Katalog',
@@ -73,16 +73,14 @@ const defaultHero: HeroSettings = {
 
 const defaultAbout: AboutSettings = {
   about_title: 'Souvenir & Corporate Gift Custom untuk Perusahaan',
-  about_subtitle: 'Melayani perusahaan di Surabaya dan Sidoarjo, dari satu jenis produk sampai paket onboarding karyawan.',
-  about_description: 'Omamori Souvenir membuat corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo: tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit dengan logo perusahaan Anda.\n\nSetiap pesanan dimulai dari penawaran resmi. Mockup dikirim untuk disetujui sebelum produksi, dan produksi dimulai setelah DP diterima. Status setiap tahap, dari produksi sampai pengiriman, bisa Anda pantau di halaman Lacak Pesanan.',
+  about_subtitle: 'Welcome kit karyawan baru dan souvenir perusahaan untuk Surabaya, Sidoarjo, dan Pasuruan, ditangani langsung oleh pendiri.',
+  about_description: 'Omamori Souvenir dirintis di Surabaya untuk membantu perusahaan menyiapkan welcome kit karyawan baru dan souvenir acara. Kami masih baru, dan itu berarti setiap klien awal ditangani langsung oleh pendirinya, dari konsultasi sampai pengiriman.\n\nSetiap pesanan dimulai dari penawaran resmi. Mockup dikirim untuk disetujui sebelum produksi, dan produksi dimulai setelah DP diterima. Status setiap tahap, dari produksi sampai pengiriman, bisa Anda pantau di halaman Lacak Pesanan.',
   about_image: '/about-team.png',
   about_advantages: JSON.stringify([
-    { icon: 'Package', title: 'Zero Inventory', desc: 'Barang diproduksi setelah DP masuk, jadi Anda tidak perlu menyimpan stok.' },
-    { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, dan kuitansi bermeterai kami siapkan untuk administrasi kantor Anda.' },
-    { icon: 'Sparkles', title: 'Mockup Premium', desc: 'Mockup berbasis AI memperlihatkan produk dengan desain Anda sebelum produksi dimulai.' },
-    { icon: 'Shield', title: 'Quality Control', desc: 'Setiap pesanan melewati tahap QC sebelum dikirim.' },
-    { icon: 'Truck', title: 'Pengiriman Terpantau', desc: 'Status pesanan, dari DP sampai barang diterima, bisa dicek di halaman Lacak Pesanan. Nomor resi tampil begitu barang dikirim.' },
-    { icon: 'Users', title: 'Konsultasi Langsung', desc: 'Pilih produk, kirim logo, dan tanyakan jadwal produksi langsung lewat WhatsApp.' },
+    { icon: 'Sparkles', title: 'Mockup Sebelum Produksi', desc: 'Anda melihat gambaran desain dan menyetujuinya terlebih dulu. Mockup adalah ilustrasi; hasil produksi bisa sedikit berbeda dan dikonfirmasi lewat persetujuan sebelum produksi.' },
+    { icon: 'FileText', title: 'Dokumen Lengkap', desc: 'Quotation, invoice, dan kuitansi bermeterai siap untuk administrasi kantor Anda.' },
+    { icon: 'Package', title: 'Tanpa Stok di Kantor Anda', desc: 'Produksi dimulai setelah DP, jumlah mengikuti kebutuhan.' },
+    { icon: 'Users', title: 'Ditangani Langsung Pendiri', desc: 'Setiap permintaan dibalas dalam 1×24 jam lewat WhatsApp, setiap hari pukul 18.00–21.00 WIB.' },
   ], null, 2),
   about_benefits: JSON.stringify([
     { icon: 'Target', title: 'Hemat Biaya', desc: 'Harga per unit turun sesuai jumlah pesanan. Daftar harga bertingkatnya tercantum di halaman setiap produk.' },
@@ -90,10 +88,10 @@ const defaultAbout: AboutSettings = {
     { icon: 'Award', title: 'Spesifikasi Jelas', desc: 'Material dan spesifikasi setiap produk tercantum di katalog, jadi Anda tahu barang yang dipesan sebelum membayar DP.' },
     { icon: 'CheckCircle2', title: 'Desain Custom', desc: 'Desain dan warna disesuaikan dengan identitas visual brand Anda.' },
   ], null, 2),
-  about_whatsapp: '6281234567890',
-  about_email: 'info@omamorisouvenir.id',
-  about_phone: '031-1234-5678',
-  about_address: 'Surabaya — Sidoarjo, Jawa Timur, Indonesia',
+  about_whatsapp: '6285606381770',
+  about_email: 'omamori@gmail.com',
+  about_phone: '085606381770',
+  about_address: 'Surabaya — Sidoarjo — Pasuruan, Jawa Timur, Indonesia',
 }
 
 const iconOptions = [

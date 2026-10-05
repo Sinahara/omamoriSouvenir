@@ -9,7 +9,7 @@ import { PageSkeleton, HeaderSkeleton, HeroSkeleton } from '@/components/page-sk
 import { ErrorBoundary } from '@/components/error-boundary'
 
 const PAGE_TITLES: Record<string, string> = {
-  landing: 'Omamori Souvenir — Solusi Corporate Gift Premium',
+  landing: 'Omamori Souvenir — Corporate Gift & Welcome Kit',
   about: 'Tentang Kami — Omamori Souvenir',
   catalog: 'Katalog Produk — Omamori Souvenir',
   'product-detail': 'Detail Produk — Omamori Souvenir',
@@ -27,12 +27,12 @@ const PAGE_TITLES: Record<string, string> = {
 }
 
 const PAGE_DESCRIPTIONS: Record<string, string> = {
-  landing: 'Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap. Melayani area Surabaya & Sidoarjo.',
-  about: 'Kenali Omamori Souvenir: corporate gift custom untuk perusahaan di Surabaya dan Sidoarjo, dari tumbler sampai paket onboarding karyawan.',
+  landing: 'Welcome kit karyawan baru dan souvenir korporat untuk perusahaan di Surabaya, Sidoarjo, dan Pasuruan.',
+  about: 'Kenali Omamori Souvenir: welcome kit karyawan baru dan corporate gift custom untuk perusahaan di Surabaya, Sidoarjo, dan Pasuruan.',
   catalog: 'Temukan corporate gift yang tepat untuk bisnis Anda. Tumbler, plakat, lanyard, hardbox, goodie bag, dan starter kit.',
   'product-detail': 'Lihat detail produk, spesifikasi, dan harga corporate gift premium dari Omamori Souvenir.',
   'request-quote': 'Minta penawaran corporate gift custom. Isi form, dapatkan quotation resmi dalam 1x24 jam.',
-  track: 'Lacak status pesanan corporate gift Anda secara real-time dengan nomor pesanan.',
+  track: 'Lacak status pesanan corporate gift Anda dengan nomor pesanan.',
 }
 
 // Shown while a page's code chunk downloads (slow networks, low-end phones)

@@ -14,12 +14,15 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-const SITE_URL = "https://omamorisouvenir.id";
+const SITE_URL = "https://omamorisouvenir.my.id";
+
+const SITE_TITLE = "Omamori Souvenir — Corporate Gift & Welcome Kit";
+const SITE_DESCRIPTION = "Welcome kit karyawan baru dan souvenir korporat untuk perusahaan di Surabaya, Sidoarjo, dan Pasuruan.";
 
 export const metadata: Metadata = {
-  title: "Omamori Souvenir — Solusi Corporate Gift Premium",
-  description: "Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap. Melayani area Surabaya & Sidoarjo.",
-  keywords: ["corporate gift", "souvenir perusahaan", "tumbler custom", "plakat", "lanyard", "goodie bag", "Surabaya", "Sidoarjo"],
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  keywords: ["welcome kit karyawan baru", "corporate gift", "souvenir perusahaan", "tumbler custom", "plakat", "lanyard", "goodie bag", "Surabaya", "Sidoarjo", "Pasuruan"],
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "64x64" },
@@ -31,23 +34,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: SITE_URL,
+    url: "/",
     siteName: "Omamori Souvenir",
-    title: "Omamori Souvenir — Solusi Corporate Gift Premium",
-    description: "Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap. Melayani area Surabaya & Sidoarjo.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: [
       {
+        // Ganti dengan foto sampel nyata (1200x630) begitu tersedia
         url: "/hero-3d-product.png",
-        width: 800,
-        height: 600,
-        alt: "Omamori Souvenir — Corporate Gift Premium",
+        width: 1344,
+        height: 768,
+        alt: "Omamori Souvenir — Corporate Gift & Welcome Kit",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Omamori Souvenir — Solusi Corporate Gift Premium",
-    description: "Dari tumbler custom hingga employee onboarding kit lengkap. Zero inventory, mockup premium, dokumen lengkap.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: ["/hero-3d-product.png"],
   },
   robots: {
@@ -66,19 +70,20 @@ export default function RootLayout({
     "@type": "LocalBusiness",
     "@id": `${SITE_URL}/#business`,
     name: "Omamori Souvenir",
-    description: "Solusi corporate gift premium. Tumbler custom, plakat, lanyard, goodie bag, hardbox, dan starter kit untuk kebutuhan bisnis Anda.",
+    description: SITE_DESCRIPTION,
     url: SITE_URL,
-    email: "info@omamorisouvenir.id",
+    email: "omamori@gmail.com",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Surabaya",
       addressRegion: "Jawa Timur",
       addressCountry: "ID",
     },
-    areaServed: {
-      "@type": "City",
-      name: "Surabaya",
-    },
+    areaServed: [
+      { "@type": "City", name: "Surabaya" },
+      { "@type": "City", name: "Sidoarjo" },
+      { "@type": "City", name: "Pasuruan" },
+    ],
     priceRange: "$$",
     image: `${SITE_URL}/logo.png`,
     sameAs: [

@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 
-const SITE_URL = 'https://omamorisouvenir.id'
+const SITE_URL = 'https://omamorisouvenir.my.id'
 const SITE_NAME = 'Omamori Souvenir'
 
 export async function GET() {
@@ -37,10 +37,10 @@ export async function GET() {
         '@id': `${SITE_URL}/#business`,
         name: SITE_NAME,
         description:
-          'Penyedia corporate gift, souvenir perusahaan, dan employee onboarding kit premium di Surabaya. Tumbler custom, plakat penghargaan, lanyard, hardbox, goodie bag, starter kit.',
+          'Welcome kit karyawan baru dan souvenir korporat untuk perusahaan di Surabaya, Sidoarjo, dan Pasuruan. Tumbler custom, plakat penghargaan, lanyard, hardbox, goodie bag, starter kit.',
         url: SITE_URL,
-        telephone: '+6281234567890',
-        email: 'info@omamorisouvenir.id',
+        telephone: '+6285606381770',
+        email: 'omamori@gmail.com',
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'Surabaya',
@@ -57,17 +57,16 @@ export async function GET() {
         areaServed: [
           { '@type': 'City', name: 'Surabaya' },
           { '@type': 'City', name: 'Sidoarjo' },
-          { '@type': 'State', name: 'Jawa Timur' },
-          { '@type': 'Country', name: 'Indonesia' },
+          { '@type': 'City', name: 'Pasuruan' },
         ],
         priceRange: 'Rp8.000 - Rp250.000',
         openingHoursSpecification: {
           '@type': 'OpeningHoursSpecification',
-          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-          opens: '08:00',
-          closes: '17:00',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '18:00',
+          closes: '21:00',
         },
-        image: `${SITE_URL}/og-image.png`,
+        image: `${SITE_URL}/hero-3d-product.png`,
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: 'Katalog Corporate Gift',
